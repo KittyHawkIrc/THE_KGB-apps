@@ -29,28 +29,36 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             return
 
         if com == '+1':
-            
+
             if u not in pimpdb[chan]:
                 pimpdb[chan][u] = 1
-                return
+
             elif pimpdb[chan][u] > 0:
                 pimpdb[chan][u] = pimpdb[chan][u] - 1
+            else:
+                self.msg(channel, "%s: You ain't got no pimp points" % (u))
+                return
+
+            try: #modifies users points
                 pimpdb[chan][target] += 1
-            else:
-                self.msg(channel, "%s: You ain't got no pimp points" % (u))
-                return
-            
+            except:
+                pimpdb[chan][target] = 2
+
         elif com == '-1':
-            
+
             if u not in pimpdb[chan]:
                 pimpdb[chan][u] = 1
-                return
+
             elif pimpdb[chan][u] > 0:
                 pimpdb[chan][u] = pimpdb[chan][u] - 1
-                pimpdb[chan][target] -= 1
             else:
                 self.msg(channel, "%s: You ain't got no pimp points" % (u))
                 return
+
+            try: #also modifies users pounts
+                pimpdb[chan][target] = pimpdb[chan][target] - 1
+            except:
+                pimpdb[chan][chan][target] = 0
 
         elif com == 'get':
             try:
@@ -64,18 +72,18 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 
         else:
             self.msg(channel, "%s: Nigga, you really think you that og, just giving out more points like that?" % (u))
-    
+
     elif isop:
         var = msg.lower().split()
         com = var[1]
         chan = var[2]
         target = var[3]
-        
+
         try:
             val = var[4]
         except:
             val = 5
-        
+
         if com == 'set':
             try:
                 pimpdb[chan][target] = val
