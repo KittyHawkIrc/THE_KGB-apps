@@ -81,21 +81,26 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                 pimpdb[chan][target] = val
                 self.msg(u, "%s's score in %s is now set to %s" % (target, chan, val))
             except:
-                self.msg(u, "Ensure %s exists in %s" % (target, chan))
+                self.msg(u, "%s doesn't exist in %s" % (target, chan))
         elif com == 'add':
             try:
                 pimpdb[chan][target] += val
                 self.msg(u, "%s's score in %s is now set to %s" % (target, chan, val))
             except:
-                self.msg("Ensure %s exists in %s" % (target, chan))
+                self.msg("Doesn't %s exist in %s" % (target, chan))
         elif com == 'remove':
             if target in pimpdb[chan]:
+                pimpdb[chan].pop(target)
                 self.msg(u, "%s is now removed from that channel's list" % (target))
+            else:
+                self.msg(u, "%s is not in that channel's list")
         elif com == 'new':
             if chan not in pimpdb:
                 pimpdb['chan'] = {}
             if target not in pimpdb[chan]:
                 pimpdb[chan][target] = val
                 self.msg(u, "%s is now added to the channel with %s points" % (target, val))
+            else:
+                self.msg(u, "%s is already in the channel with %s points, please remove them before adding them again" % (target, val))
         else:
             self.msg(u, "unavailable")
