@@ -4,8 +4,8 @@ def declare():
     return {"pimp": "privmsg"}
 
 def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
+    u = user.split('!')[0]
     if channel.startswith('#'):
-        u = user.split('!')[0]
 
         chan = channel.lower()
 
@@ -79,23 +79,23 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
         if com == 'set':
             try:
                 pimpdb[chan][target] = val
-                self.msg(user, "%s's score in %s is now set to %s" % (target, chan, val))
+                self.msg(u, "%s's score in %s is now set to %s" % (target, chan, val))
             except:
-                self.msg(user, "Ensure %s exists in %s" % (target, chan))
+                self.msg(u, "Ensure %s exists in %s" % (target, chan))
         elif com == 'add':
             try:
                 pimpdb[chan][target] += val
-                self.msg(user, "%s's score in %s is now set to %s" % (target, chan, val))
+                self.msg(u, "%s's score in %s is now set to %s" % (target, chan, val))
             except:
                 self.msg("Ensure %s exists in %s" % (target, chan))
         elif com == 'remove':
             if target in pimpdb[chan]:
-                self.msg(user, "%s is now removed from that channel's list" % (target))
+                self.msg(u, "%s is now removed from that channel's list" % (target))
         elif com == 'new':
             if chan not in pimpdb:
                 pimpdb['chan'] = {}
             if target not in pimpdb[chan]:
                 pimpdb[chan][target] = val
-                self.msg(user, "%s is now added to the channel with %s points" % (val))
+                self.msg(u, "%s is now added to the channel with %s points" % (val))
         else:
-            self.msg(user, "unavailable")
+            self.msg(u, "unavailable")
