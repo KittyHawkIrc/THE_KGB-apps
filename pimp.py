@@ -1,3 +1,4 @@
+import urllib2
 pimpdb = {}
 
 def declare():
@@ -119,8 +120,13 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 
         elif com == 'dump':
             self.msg(u, str(pimpdb))
+            
         elif com == 'load':
-            pimpdb = eval(msg.lower().split('load')[1])
+            req = urllib2.Request(msg.lower().split('load')[1])
+            fd = urllib2.urlopen(req)
+            pimpdb = eval(fd.read())
+            fd.close()
+            
         elif com == 'inflate': #target == value to multiply by
             for k, v in pimpdb[chan].items():
                 if v > 0:
