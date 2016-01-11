@@ -69,7 +69,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                 else:
                     self.msg(channel, "that nigga got %s bitch points" % (pimp))
             except:
-                self.msg(channel, "that nigga ain't got no pimp points")
+                self.msg(channel, "that nigga got 5 pimp points up in this bitch")
 
         else:
             self.msg(channel, "%s: Nigga, you really think you that og, just giving out more points like that?" % (u))
