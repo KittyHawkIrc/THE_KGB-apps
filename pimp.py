@@ -127,7 +127,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                     k *= int(target)
                 else:
                     k /= int(target)
-        elif com == 'addToAll': #target == value to add to each user
+        elif com == 'addtoall': #target == value to add to each user
             for k in pimpdb[chan]
                 k += int(target)
         else:
