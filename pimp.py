@@ -41,7 +41,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 
         if com == '+1':
             
-            if user not in pimpdb[channel]:
+            if u not in pimpdb[channel]:
                 self.msg(channel, "%s: You ain't no pimp, run ^pimp new og if you're pimpin" % (u))
                 return
             elif pimpdb[channel][u] > 0:
@@ -52,7 +52,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             
         elif com == '-1':
             
-            if user not in pimpdb[channel]:
+            if u not in pimpdb[channel]:
                 self.msg(channel, "%s: You ain't no pimp, run ^pimp new og if you're pimpin" % (u))
                 return
             elif pimpdb[channel][u] > 0:
