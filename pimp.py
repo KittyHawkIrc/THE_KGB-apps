@@ -76,8 +76,13 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
     elif isop:
         var = msg.lower().split()
         com = var[1]
-        chan = var[2]
-        target = var[3]
+
+        try:
+            chan = var[2]
+            target = var[3]
+        except:
+            if not (com == 'load' or com == 'dump'):
+                return
 
         try:
             val = var[4]
@@ -110,5 +115,13 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                 self.msg(u, "%s is now added to the channel with %s points" % (target, val))
             else:
                 self.msg(u, "%s is already in the channel with %s points, please remove them before adding them again" % (target, val))
+
+        elif com == 'dump':
+            self.msg(u, str(pimpdb))
+
+        elif com == 'load':
+            #calling eval and setting the vaue causes unrefrenced errors, but dumping is good for now
+            self.msg(u, 'This is a WIP')
+
         else:
             self.msg(u, "unavailable")
