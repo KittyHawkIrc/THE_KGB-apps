@@ -26,7 +26,27 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             return
 
 
+        if target == 'new' and com == 'og':
+            if u not in pimpdb[channel]:
+                pimpdb[channel][u] = 5
+                self.msg(channel, "%s: Your ass is now pimpin, nigga" % (u))
+            
+            else:
+                self.msg(channel, "%s: You're already a pimp, ma nigga" % (u))
+                
+            return
+
         if com == '+1':
+            
+            if user not in pimpdb[channel]:
+                self.msg(channel, "%s: You ain't no pimp, run ^pimp new og if you're pimpin" % (u))
+                return
+            elif pimpdb[channel][u] > 0:
+                pimpdb[channel][u] = pimpdb[channel][u] - 1
+            else:
+                self.msg(channel, "%s: You ain't got no pimp points" % (u))
+                return
+            
             try:
                 pimpdb[channel][target] += 1
             except:
@@ -37,6 +57,16 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                     pimpdb[channel][target] = 1
 
         elif com == '-1':
+            
+            if user not in pimpdb[channel]:
+                self.msg(channel, "%s: You ain't no pimp, run ^pimp new og if you're pimpin" % (u))
+                return
+            elif pimpdb[channel][u] > 0:
+                pimpdb[channel][u] = pimpdb[channel][u] - 1
+            else:
+                self.msg(channel, "%s: You ain't got no pimp points" % (u))
+                return
+            
             try:
                 pimpdb[channel][target] = pimpdb[channel][target] - 1
             except:
