@@ -96,6 +96,6 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                 pimpdb['chan'] = {}
             if target not in pimpdb[chan]:
                 pimpdb[chan][target] = val
-                self.msg(u, "%s is now added to the channel with %s points" % (val))
+                self.msg(u, "%s is now added to the channel with %s points" % (target, val))
         else:
             self.msg(u, "unavailable")
