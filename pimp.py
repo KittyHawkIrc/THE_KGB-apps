@@ -4,7 +4,8 @@ def declare():
     return {"pimp": "privmsg"}
 
 def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
-    u = user.split('!')[0]
+    u = user.lower().split('!')[0]
+    global pimpdb
     if channel.startswith('#'):
 
         chan = channel.lower()
@@ -120,8 +121,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             self.msg(u, str(pimpdb))
 
         elif com == 'load':
-            #calling eval and setting the vaue causes unrefrenced errors, but dumping is good for now
-            self.msg(u, 'This is a WIP')
-
+            pimpdb = eval(msg.lower().split('load')[1])
+            self.msg(u, str(pimpdb))
         else:
             self.msg(u, "unavailable")
