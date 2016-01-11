@@ -26,19 +26,27 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 
         if com == '+1':
             try:
-                pimpdb[target] += 1
+                pimpdb[channel][target] += 1
             except:
-                pimpdb[target] = 1
+                try:
+                    pimpdb[channel][target] = 1
+                except:
+                    pimpdb[channel] = {}
+                    pimpdb[channel][target] = 1
 
         elif com == '-1':
             try:
-                pimpdb[target] = pimpdb[target] - 1
+                pimpdb[channel][target] = pimpdb[channel][target] - 1
             except:
-                pimpdb[target] = -1
+                try:
+                    pimpdb[channel][target] = 1
+                except:
+                    pimpdb[channel] = {}
+                    pimpdb[channel][target] = 1
 
         elif com == 'get':
             try:
-                pimp = pimpdb[target]
+                pimp = pimpdb[channel][target]
                 if pimp > 0:
                     self.msg(channel, "that nigga got %s pimp points up in this bitch" % (pimp))
                 else:
