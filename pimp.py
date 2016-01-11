@@ -21,6 +21,9 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
         except:
             com = 'get'
 
+        if channel not in pimpdb:
+            pimpdb[channel] = {}
+
         if u == target and com != 'get':
             self.msg(channel, "%s: Y'all can't pimp yourself, ma nigga" % (u))
             return
@@ -47,15 +50,6 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                 self.msg(channel, "%s: You ain't got no pimp points" % (u))
                 return
             
-            try:
-                pimpdb[channel][target] += 1
-            except:
-                try:
-                    pimpdb[channel][target] = 1
-                except:
-                    pimpdb[channel] = {}
-                    pimpdb[channel][target] = 1
-
         elif com == '-1':
             
             if user not in pimpdb[channel]:
@@ -66,15 +60,6 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             else:
                 self.msg(channel, "%s: You ain't got no pimp points" % (u))
                 return
-            
-            try:
-                pimpdb[channel][target] = pimpdb[channel][target] - 1
-            except:
-                try:
-                    pimpdb[channel][target] = 1
-                except:
-                    pimpdb[channel] = {}
-                    pimpdb[channel][target] = 1
 
         elif com == 'get':
             try:
