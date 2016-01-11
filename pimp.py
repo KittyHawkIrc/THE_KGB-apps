@@ -32,7 +32,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
         if com == '+1':
 
             if u not in pimpdb[chan]:
-                pimpdb[chan][u] = 1
+                pimpdb[chan][u] = 5
 
             elif pimpdb[chan][u] > 0:
                 pimpdb[chan][u] = int(pimpdb[chan][u]) - 1
@@ -43,12 +43,12 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             try: #modifies users points
                 pimpdb[chan][target] += 1
             except:
-                pimpdb[chan][target] = 2
+                pimpdb[chan][target] = 6
 
         elif com == '-1':
 
             if u not in pimpdb[chan]:
-                pimpdb[chan][u] = 1
+                pimpdb[chan][u] = 5
 
             elif pimpdb[chan][u] > 0:
                 pimpdb[chan][u] = pimpdb[chan][u] - 1
@@ -59,7 +59,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             try: #also modifies users pounts
                 pimpdb[chan][target] = pimpdb[chan][target] - 1
             except:
-                pimpdb[chan][chan][target] = 0
+                pimpdb[chan][target] = 4
 
         elif com == 'get':
             try:
@@ -82,7 +82,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             chan = var[2]
             target = var[3]
         except:
-            if not (com == 'load' or com == 'dump'):
+            if not (com == 'load' or com == 'dump' or com == 'inflate' or com == 'addToAll'):
                 return
 
         try:
@@ -119,9 +119,16 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 
         elif com == 'dump':
             self.msg(u, str(pimpdb))
-
         elif com == 'load':
             pimpdb = eval(msg.lower().split('load')[1])
-            self.msg(u, str(pimpdb))
+        elif com == 'inflate': #target == value to multiply by
+            for k in pimpdb[chan]:
+                if k > 0:
+                    k *= int(target)
+                else:
+                    k /= int(target)
+        elif com == 'addToAll': #target == value to add to each user
+            for k in pimpdb[chan]
+                k += int(target)
         else:
             self.msg(u, "unavailable")
