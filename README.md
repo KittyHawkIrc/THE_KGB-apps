@@ -1,2 +1,1 @@
-# THE_KGB-apps
-KGB modules
+#Modules for THE_KGB
