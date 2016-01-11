@@ -82,7 +82,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
             chan = var[2]
             target = var[3]
         except:
-            if not (com == 'load' or com == 'dump' or com == 'inflate' or com == 'addToAll'):
+            if not (com == 'load' or com == 'dump' or com == 'inflate' or com == 'addtoall'):
                 return
 
         try:
