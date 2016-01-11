@@ -14,6 +14,8 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
         except:
             target = u
 
+        target = target.lower()
+
         try:
             com = var[2]
         except:
