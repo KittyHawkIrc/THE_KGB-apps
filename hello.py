@@ -1,7 +1,7 @@
 def declare():
     return {"hello": "privmsg"}
 
-def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
+de callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
 
     if channel.startswith('#'):
 
