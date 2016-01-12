@@ -1,4 +1,5 @@
 import urllib2
+from time import ctime
 pimpdb = {}
 pimpToChandb = {
 	"#secretpimps" : True
@@ -47,14 +48,14 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 			except:
 				pimp = 5
 				self.msg(channel, "that nigga got 5 pimp points up in this bitch")
-			pimpToChan("%s <%s> %s[%s]'s checked %s[%s]'s points" % (time.time(),chan,u,pimpdb[c][u],target,pimpdb[c][target]))
+			pimpToChan("%s <%s> %s[%s]'s checked %s[%s]'s points" % (ctime(),chan,u,pimpdb[c][u],target,pimpdb[c][target]))
 		else:
 			self.msg(channel, "%s: Nigga, you really think you that og, just giving out more points like that?" % (u))
 	
 	elif isop: #format as pimp [command] [channel] [target] [value]
 		var = msg.lower().split()
 		com = var[1]
-		ts = time.time()
+		ts = ctime()
 		
 		try:
 			chan = var[2]
@@ -148,7 +149,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 #p = points being taken/removed
 def addPoints(c, u, t, p):
 	global pimpdb
-	ts = time.time()
+	ts = ctime()
 	up = 0
 	tp = 0
 	
