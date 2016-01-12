@@ -157,19 +157,19 @@ def addPoints(c, u, t, p):
 	
 	if u not in pimpdb[c]:
 		pimpdb[c][u] = 4
-		pimpToChan(k, "%s <%s> %s added to db with %s points" % (ts,c,t,pimpdb[c][u]))
+		pimpToChan("%s <%s> %s added to db with %s points" % (ts,c,u,pimpdb[c][u]))
 	elif pimpdb[c][u] > 0:
 		pimpdb[c][u] = int(pimpdb[c][u]) - 1
 	else:
 		self.msg(channel, "%s: You ain't got no pimp points" % (u))
-		pimpToChan(k, "%s <%s> %s[%s]'s attempted to change %s[%s]'s points by %s" % (ts,c,u,pimpdb[c][u],t,pimpdb[c][t],p))
+		pimpToChan("%s <%s> %s[%s]'s attempted to change %s[%s]'s points by %s" % (ts,c,u,pimpdb[c][u],t,pimpdb[c][t],p))
 		return
 	
 	try: #modifies users points
 		pimpdb[c][t] += p
 	except:
 		pimpdb[c][t] = 5 + p
-		pimpToChan(k, "%s <%s> %s added to db with %s points" % (ts,c,t,pimpdb[c][t]-p))
+		pimpToChan("%s <%s> %s added to db with %s points" % (ts,c,t,pimpdb[c][t]-p))
 	
 	pimpToChan("%s <%s> %s[%s]'s changes %s[%s]'s points by %s" % (ts,c,u,pimpdb[c][u]-p,t,pimpdb[c][t]-p,p))
 
