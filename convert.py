@@ -81,7 +81,7 @@ units = [
 ["stone",0.157473,"stone"],
 ["pound",2.20462,"pounds"],
 ["kilo",1,"kilograms"],
-["gram",1000,"grams"]
+["gram",1000,"grams"],
 ["ton",0.001,"tonnes"],
 ["ou",35.274,"ounces"],
 
