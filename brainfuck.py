@@ -1,3 +1,5 @@
+# coding=ascii
+
 def declare():
 	return {"brainfuck": "privmsg"}
 
