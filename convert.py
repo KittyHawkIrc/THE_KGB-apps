@@ -190,6 +190,8 @@ if __name__ == "__main__":
 	c = '#test'
 	isop = True
 	
+	print(callback(api, '', isop=isop, msg="^convert 36 mb to MiB", channel=c, user=u))
+	
 	#test full program
 	if	callback(api, '', isop=isop, msg="^convert 36 mb to MiB", channel=c, user=u) != "36 Megabytes is 34.332 in Mebibytes":
 		exit(1)
