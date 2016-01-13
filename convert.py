@@ -184,6 +184,10 @@ class api:
 	def msg(self, channel, text):
 		return "[%s] %s" % (channel, text)
 
+def p(x):
+	print(x)
+	return x
+
 if __name__ == "__main__":
 	api = api()
 	u = "joe!username@hostmask"
@@ -191,7 +195,7 @@ if __name__ == "__main__":
 	isop = True
 	
 	#test matchBoth()
-	if matchBoth("mb","mb") != [['mb', 1e-06, 'Megabytes'], ['mb', 1e-06, 'Megabytes']]:
+	if p(str(matchBoth("mb","mb"))) != "[['mb', 1e-06, 'Megabytes'], ['mb', 1e-06, 'Megabytes']]":
 		exit(1)
 	
 	#test full program
