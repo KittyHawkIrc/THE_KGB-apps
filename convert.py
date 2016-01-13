@@ -190,10 +190,6 @@ if __name__ == "__main__":
 	c = '#test'
 	isop = True
 	
-	#test matchBoth()
-	if str(matchBoth("mb","mb")) != "[['mb', 1e-06, 'Megabytes'], ['mb', 1e-06, 'Megabytes']]":
-		exit(1)
-	
 	#test full program
 	if	callback(api, '', isop=isop, msg="^convert 36 mb to MiB", channel=c, user=u) != "36 Megabytes is 34.332 in Mebibytes":
 		exit(1)
