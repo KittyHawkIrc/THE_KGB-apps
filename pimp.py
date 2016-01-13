@@ -9,7 +9,7 @@ pimpToChandb = {
 #u = user giving/taking points
 #t = target who's points are being modified
 #p = points being taken/removed
-def addPoints(self, c, u, t, p):
+def addPoints(api, c, u, t, p):
 	global pimpdb
 	ts = ctime()
 	up = 0
@@ -19,26 +19,26 @@ def addPoints(self, c, u, t, p):
 
 	if u not in pimpdb[c]:
 		pimpdb[c][u] = 4
-		pimpToChan(self, "%s <%s> %s added to db with %s points" % (ts,c,u,pimpdb[c][u]))
+		pimpToChan(api, "%s <%s> %s added to db with %s points" % (ts,c,u,pimpdb[c][u]))
 	elif pimpdb[c][u] > 0:
 		pimpdb[c][u] = int(pimpdb[c][u]) - 1
 	else:
-		self.msg(channel, "%s: You ain't got no pimp points" % (u))
-		pimpToChan(self, "%s <%s> %s[%s]'s attempted to change %s[%s]'s points by %s" % (ts,c,u,pimpdb[c][u],t,pimpdb[c][t],p))
+		api.msg(channel, "%s: You ain't got no pimp points" % (u))
+		pimpToChan(api, "%s <%s> %s[%s]'s attempted to change %s[%s]'s points by %s" % (ts,c,u,pimpdb[c][u],t,pimpdb[c][t],p))
 		return
 
 	try: #modifies users points
 		pimpdb[c][t] += p
 	except:
 		pimpdb[c][t] = 5 + p
-		pimpToChan(self, "%s <%s> %s added to db with %s points" % (ts,c,t,pimpdb[c][t]-p))
+		pimpToChan(api, "%s <%s> %s added to db with %s points" % (ts,c,t,pimpdb[c][t]-p))
 
-	pimpToChan(self, "%s <%s> %s[%s]'s changes %s[%s]'s points by %s" % (ts,c,u,pimpdb[c][u]-p,t,pimpdb[c][t]-p,p))
+	pimpToChan(api, "%s <%s> %s[%s]'s changes %s[%s]'s points by %s" % (ts,c,u,pimpdb[c][u]-p,t,pimpdb[c][t]-p,p))
 
-def pimpToChan(self, s):
+def pimpToChan(api, s):
 	for k,v in pimpToChandb.items():
 		if v:
-			self.msg(k, s)
+			api.msg(k, s)
 
 def declare():
 	return {"pimp": "privmsg"}
