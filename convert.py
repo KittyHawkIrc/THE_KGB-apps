@@ -97,8 +97,9 @@ units = [
 
 
 def matchBoth(u1, u2):
-	matches = []
+	strength = ""
 	for i in range (len(units)):
+		temp = ""
 		found1 = ""
 		found2 = ""
 
@@ -109,29 +110,14 @@ def matchBoth(u1, u2):
 				found2 = units[i][j]
 
 			if (found1 != "")&(found2 != ""):
-				matches.append([found1,found2])
+				temp = [found1, found2]
 				break
 		
+		if temp != "":
+			if len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) > len(u1[len(strength[0][0]):]) + len(u2[len(strength[1][0]):]):
+				strength = temp
 	
-	if len(matches) < 1:
-		return ""
-	
-	strength = []
-	for k,v in matches.items():
-		strength
-		if len(u1[len(v[0]):]) < len(u2[len(v[0]):]):
-			strength.append(len(u1[len(v[0][0]):]) + len(u2[len(v[1][0]):]))
-		else:
-			strength.append(len(u1[len(v[1][0]):]) + len(u2[len(v[0][0]):]))
-	
-	largestStrength = -1
-	for k,v in strength.items():
-		if v > largestStrength:
-			largestStrength = k
-	
-	assert largestStrength > -1
-	
-	return largestStrength
+	return strength
 
 def convert(condex, v):
 	return (v / condex[0][1]) * condex[1][1]
