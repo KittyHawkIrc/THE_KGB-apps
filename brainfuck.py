@@ -1,4 +1,4 @@
-# coding=ascii
+# coding=latin1
 
 def declare():
 	return {"brainfuck": "privmsg"}
@@ -8,7 +8,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 		DEFAULT_COUNTER = 1000000
 		counter = DEFAULT_COUNTER
 		index = 0
-		array = [0] * 20
+		array = [0] * 30000
 		lastRepeat = []
 		output = ""
 		disabled = -1
