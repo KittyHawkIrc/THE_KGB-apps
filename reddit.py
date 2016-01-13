@@ -1,18 +1,21 @@
 import json, random, urllib2
 
 def declare():
-    return {"reddit": "privmsg"}
+    return {"reddit": "privmsg", "guess": "privmsg"}
 
 def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
 
-    try:
-        u = str(msg.split(' ', 1)[1])
-    except:
-        return self.msg(channel, "Please specify a subreddit!")
+    if command == 'guess':
+        u = 'SwordOrSheath'
+    else:
+        try:
+            u = str(msg.split(' ', 1)[1])
+        except:
+            return self.msg(channel, "Please specify a subreddit!")
 
     try:
 
-        req = urllib2.Request("https://www.reddit.com/r/" + u + "/new.json", headers={ 'User-Agent': 'UNIX:the_kgb:0.157 http://github.com/stqism/THE_KGB' })
+        req = urllib2.Request("https://www.reddit.com/r/" + u + "/new.json", headers={ 'User-Agent': 'UNIX:the_kgb:reddit https://github.com/stqism/THE_KGB-apps' })
         fd = urllib2.urlopen(req)
         reddit_api = json.loads(fd.read())
         fd.close()
@@ -40,11 +43,21 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 
         item = random.choice(cringe)
 
-        if not selfpost:
-            via = "     (via: " + item[2] + ")"
-            return self.msg(channel, str(item[0] + " " + item[1] + via))
+        if command == 'guess':
+
+            try:
+                u = str(msg.split(' ', 1)[1])
+                return self.msg(channel,  u + ": Am I male or female? " + item[1])
+            except:
+                return self.msg(channel,  "Am I male or female? " + item[1])
+
         else:
-            return self.msg(channel, str(item[0] + " " + item[1]))
+
+            if not selfpost:
+                via = "     (via: " + item[2] + ")"
+                return self.msg(channel, str(item[0] + " " + item[1] + via))
+            else:
+                return self.msg(channel, str(item[0] + " " + item[1]))
 
     except Exception, e:
         return self.msg('#the_kgb', str(e))
@@ -59,14 +72,23 @@ if __name__ == "__main__":
     u = "joe!username@hostmask"
     c = '#test'
 
-    if callback(api, '', True, channel=c, user=u, msg='^reddit') != '[%s] Please specify a subreddit!' % (c):
+    if callback(api, '', True, channel=c, user=u, command='reddit', msg='^reddit') != '[%s] Please specify a subreddit!' % (c):
         print '[TESTFAIL] no arguments'
         exit(1)
 
-    if callback(api, '', True, channel=c, user=u, msg='^reddit fatpeoplehate') != '[#the_kgb] HTTP Error 404: Not Found':
+    if callback(api, '', True, channel=c, user=u, command='reddit', msg='^reddit fatpeoplehate') != '[#the_kgb] HTTP Error 404: Not Found':
         print '[TESTFAIL] error catcher'
         exit(1)
 
-    if not callback(api, '', True, channel=c, user=u, msg='^reddit fatlogic').startswith('[%s] ' % (c)):
+    if not callback(api, '', True, channel=c, user=u, command='reddit', msg='^reddit fatlogic').startswith('[%s] ' % (c)):
         print '[TESTFAIL] Subreddit loader'
+        exit(1)
+
+    if not callback(api, '', True, channel=c, user=u, command='guess', msg='^guess').startswith('[%s] Am I male or female?' % (c)):
+        print '[TESTFAIL] guess no user'
+        exit(1)
+
+    n = 'bob'
+    if not callback(api, '', True, channel=c, user=u, command='guess', msg='^guess %s' % (n)).startswith('[%s] %s: Am I male or female?' % (c, n)):
+        print '[TESTFAIL] guess with user'
         exit(1)
