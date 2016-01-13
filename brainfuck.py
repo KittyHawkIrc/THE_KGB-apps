@@ -92,5 +92,8 @@ if __name__ == "__main__":
 		exit(1)
 	if t2 != 'Command exceeded 1000000 ticks.':
 		exit(3)
-	if t3 != 'þýüûúùø÷öõôóòñðïîíìëêéèçæåäãâáàßÞÝÜÛÚÙØ×ÖÕÔÓÒÑÐÏÎÍÌËÊÉÈÇÆÅÄÃÂÁÀ¿¾½¼»º¹¸·¶µ´³²±°¯®\xad¬«ª©¨§¦¥¤£¢¡\xa0\x9f\x9e\x9d\x9c\x9b':
-		exit(4)
+	try:
+		if t3 != 'þýüûúùø÷öõôóòñðïîíìëêéèçæåäãâáàßÞÝÜÛÚÙØ×ÖÕÔÓÒÑÐÏÎÍÌËÊÉÈÇÆÅÄÃÂÁÀ¿¾½¼»º¹¸·¶µ´³²±°¯®\xad¬«ª©¨§¦¥¤£¢¡\xa0\x9f\x9e\x9d\x9c\x9b':
+			exit(4)
+	except:
+		api.msg(channel, 'unicode issues in Python cause a passing test to fail')
