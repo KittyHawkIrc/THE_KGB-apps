@@ -8,8 +8,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
     try:
         u = str(msg.split(' ', 1)[1])
     except:
-        self.msg(channel, "Please specify a subreddit!")
-        return
+        return self.msg(channel, "Please specify a subreddit!")
 
     try:
 
@@ -23,8 +22,6 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
         for i in reddit_api['data']['children']:
             url = i['data']['url']
             title = i['data']['title']
-            selfpost = bool(i['data']['is_self'])
-            post = "https://reddit.com" + i['data']['permalink']
 
             if 'imgur' in url:
 
@@ -37,16 +34,31 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                     else:
                         url = 'https://i.imgur.com/%s.jpg' % (url.split('/')[3])
 
-            cringe.append([title, url, post])
+            cringe.append([title, url])
 
         item = random.choice(cringe)
-
-        if not selfpost:
-            via = "     (via: " + item[2] + ")"
-            self.msg(channel, str(item[0] + " " + item[1] + via))
-        else:
-            self.msg(channel, str(item[0] + " " + item[1]))
+        return self.msg(channel, str(item[0] + " " + item[1]))
 
     except Exception, e:
-        self.msg('#the_kgb', str(e))
+        return self.msg('#the_kgb', str(e))
 
+class api:
+	def msg(self, channel, text):
+		return "[%s] %s" % (channel, text)
+
+if __name__ == "__main__":
+    api = api()
+    u = "joe!username@hostmask"
+    c = '#test'
+
+    if callback(api, '', True, channel=c, user=u, msg='^reddit') != '[%s] Please specify a subreddit!' % (c):
+        print '[TESTFAIL] no arguments'
+        exit(1)
+
+    if callback(api, '', True, channel=c, user=u, msg='^reddit fatpeoplehate') != '[#the_kgb] HTTP Error 404: Not Found':
+        print '[TESTFAIL] error catcher'
+        exit(1)
+
+    if not callback(api, '', True, channel=c, user=u, msg='^reddit fatlogic').startswith('[%s] ' % (c)):
+        print '[TESTFAIL] Subreddit loader'
+        exit(1)
