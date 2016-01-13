@@ -95,7 +95,6 @@ units = [
 
 ]
 
-
 def matchBoth(u1, u2):
 	strength = ""
 	for i in range (len(units)):
@@ -114,9 +113,12 @@ def matchBoth(u1, u2):
 				break
 		
 		if temp != "":
+			print("temp=" + str(temp))
+			print("strength=" + str(strength))
 			if strength == "":
 				strength = temp
-			else len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) > len(u1[len(strength[0][0]):]) + len(u2[len(strength[1][0]):]):
+			elif len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) <\
+				len(u1[len(strength[0][0]):]) + len(u2[len(strength[1][0]):]):
 				strength = temp
 	
 	return strength
