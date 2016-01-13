@@ -33,7 +33,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 			elif disabled >= 0:
 				if len(lastRepeat) > disabled:
 					continue
-				else
+				else:
 					disabled = False
 					c -= 1
 			elif c == '+':
