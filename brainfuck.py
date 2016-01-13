@@ -76,6 +76,6 @@ if __name__ == "__main__":
 	
 	callback(api, type, isop, command=hook, msg=msg, channel=channel, user=user)
 	if t1 != "88888888888888":
-		exit(t1)
+		exit(1)
 	if t2 != "Hello World!":
-		exit(t2)
+		exit(2)
