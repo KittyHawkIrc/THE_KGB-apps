@@ -1,4 +1,4 @@
-# coding=latin1
+# coding=utf-8
 
 def declare():
 	return {"brainfuck": "privmsg"}
