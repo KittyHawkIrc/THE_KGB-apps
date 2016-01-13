@@ -3,7 +3,7 @@ def declare():
 
 def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
 	if channel.startswith('#'):
-		DEFAULT_COUNTER = 1_000_000
+		DEFAULT_COUNTER = 1000000
 		counter = DEFAULT_COUNTER
 		index = 0
 		array = [0] * 30000
