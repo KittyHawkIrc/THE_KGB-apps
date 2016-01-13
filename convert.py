@@ -119,7 +119,7 @@ def matchBoth(u1, u2):
 	strength = []
 	for k,v in matches.items():
 		strength
-		if len(u1[len(v[0]):]) < len(u2[len(v[0]):])
+		if len(u1[len(v[0]):]) < len(u2[len(v[0]):]):
 			strength.append(len(u1[len(v[0][0]):]) + len(u2[len(v[1][0]):])
 		else:
 			strength.append(len(u1[len(v[1][0]):]) + len(u2[len(v[0][0]):])
