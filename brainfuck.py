@@ -63,7 +63,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 				array[index] = 255
 	
 		self.msg(channel, output[:133])
-		return output
+		return output[:133]
 
 
 class api:
