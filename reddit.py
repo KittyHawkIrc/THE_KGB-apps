@@ -22,6 +22,8 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
         for i in reddit_api['data']['children']:
             url = i['data']['url']
             title = i['data']['title']
+            selfpost = bool(i['data']['is_self'])
+            post = "https://reddit.com" + i['data']['permalink']
 
             if 'imgur' in url:
 
@@ -34,13 +36,19 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
                     else:
                         url = 'https://i.imgur.com/%s.jpg' % (url.split('/')[3])
 
-            cringe.append([title, url])
+            cringe.append([title, url, post])
 
         item = random.choice(cringe)
-        return self.msg(channel, str(item[0] + " " + item[1]))
+
+        if not selfpost:
+            via = "     (via: " + item[2] + ")"
+            return self.msg(channel, str(item[0] + " " + item[1] + via))
+        else:
+            return self.msg(channel, str(item[0] + " " + item[1]))
 
     except Exception, e:
         return self.msg('#the_kgb', str(e))
+
 
 class api:
 	def msg(self, channel, text):
