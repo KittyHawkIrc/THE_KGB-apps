@@ -113,8 +113,6 @@ def matchBoth(u1, u2):
 				break
 		
 		if temp != "":
-			print("temp=" + str(temp))
-			print("strength=" + str(strength))
 			if strength == "":
 				strength = temp
 			elif len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) <\
@@ -193,7 +191,7 @@ if __name__ == "__main__":
 	isop = True
 	
 	#test matchBoth()
-	if matchBoth("mb","mb") != [["mb",1e-6,"Megabytes"],["mb",1e-6,"Megabytes"]]:
+	if matchBoth("mb","mb") != [['mb', 1e-06, 'Megabytes'], ['mb', 1e-06, 'Megabytes']]:
 		exit(1)
 	
 	#test full program
