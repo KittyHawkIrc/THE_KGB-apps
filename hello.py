@@ -15,5 +15,5 @@ if __name__ == "__main__":
     u = "joe!username@hostmask"
     c = '#test'
 
-    if callback(api, '', True, channel=c, user=u) != '[%s] And a hello to you too, operator %s' % (c, u) or callback(api, '', False, channel=c, user=u) != '[%c] And a hello to you too, user %s' % (c, u):
+    if callback(api, '', True, channel=c, user=u) != '[%s] And a hello to you too, operator %s!' % (c, u) or callback(api, '', False, channel=c, user=u) != '[%s] And a hello to you too, user %s!' % (c, u):
         exit(1)
