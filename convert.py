@@ -177,8 +177,7 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 			converted = round(converted, 3)
 			return self.msg(channel, "%s %s is %s in %s." % (value, condex[0][2], converted, condex[1][2]))
 		else:
-			self.msg(channel, 'Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values')
-			return
+			return self.msg(channel, 'Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values')
 
 class api:
 	def msg(self, channel, text):
@@ -193,11 +192,11 @@ if __name__ == "__main__":
 	print(callback(api, '', isop=isop, msg="^convert 36 mb to MiB", channel=c, user=u))
 	
 	#test full program
-	if	callback(api, '', isop=isop, msg="^convert 36 mb to MiB", channel=c, user=u) != "36 Megabytes is 34.332 in Mebibytes":
+	if	callback(api, '', isop=isop, msg="^convert 36 mb to MiB", channel=c, user=u) != "[%s] 36 Megabytes is 34.332 in Mebibytes"%(c):
 		exit(1)
-	elif	callback(api, '', isop=isop, msg="^convert 12 MB to m", channel=c, user=u) != "Conversion format must match \"^convert [value] [unit1] in [unit2]\". ^convert help for information on available values":
+	elif	callback(api, '', isop=isop, msg="^convert 12 MB to m", channel=c, user=u) != "[%s] Conversion format must match \"^convert [value] [unit1] in [unit2]\". ^convert help for information on available values"%(c):
 		exit(1)
-	elif	callback(api, '', isop=isop, msg="^convert 12 m to m", channel=c, user=u) != "Conversion format must match \"^convert [value] [unit1] in [unit2]\". ^convert help for information on available values":
+	elif	callback(api, '', isop=isop, msg="^convert 12 m to m", channel=c, user=u) != "[%s] Conversion format must match \"^convert [value] [unit1] in [unit2]\". ^convert help for information on available values" %(c):
 		exit(1)
 	elif	callback(api, '', isop=isop, msg="^convert 4566 km to miles", channel=c, user=u) != "4566.0 kilometers is 2837.181 in miles":
 		exit(1)
