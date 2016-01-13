@@ -12,7 +12,7 @@ units = [
 ["centimeter",100, "centimeters"],
 ["millimeter",1000, "milimeters"],
 ["nanometer",1e+9, "nanometers"],
-["meter",1,"meters"]
+["meter",1,"meters"],
 ["naught",0.000539957, "naughts"],
 ["mi",0.000621371, "miles"],
 ["kilo",0.001, "kilometers"],
