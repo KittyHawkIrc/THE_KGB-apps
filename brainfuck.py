@@ -84,16 +84,13 @@ if __name__ == "__main__":
 	isop = True
 	
 	t1 = callback(api, type, isop, command=hook, msg="^brainfuck ++++++++++++++++++++++++++++++++++++++++++++++++++++++++..............", channel=channel, user=user)
-	t2 = callback(api, type, isop, command=hook, msg="^brainfuck +++++ +++++ initialize counter (cell #0) to 10 [ use loop to set 70/100/30/10 > +++++ ++ add 7 to cell #1 > +++++ +++++ add 10 to cell #2 > +++ add 3 to cell #3 > + add 1 to cell #4 <<<< - decrement counter (cell #0) ] > ++ . print 'H' > + . print 'e' +++++ ++ . print 'l' . print 'l' +++ . print 'o' > ++ . print ' ' << +++++ +++++ +++++ . print 'W' > . print 'o' +++ . print 'r' ----- - . print 'l' ----- --- . print 'd' > + . print '!' >", channel="", user=user)
-	t3 = callback(api, type, isop, command=hook, msg="^brainfuck ++[++++.]", channel=channel, user=user)
-	t4 = callback(api, type, isop, command=hook, msg="-[-.]", channel=channel, user=user)
+	t2 = callback(api, type, isop, command=hook, msg="^brainfuck ++[++++.]", channel=channel, user=user)
+	t3 = callback(api, type, isop, command=hook, msg="-[-.]", channel=channel, user=user)
 	
 	callback(api, type, isop, command=hook, msg=msg, channel=channel, user=user)
 	if t1 != "88888888888888":
 		exit(1)
-	if t2 != 'Hello World!':
-		exit(2)
-	if t3 != 'Command exceeded 1000000 ticks.':
+	if t2 != 'Command exceeded 1000000 ticks.':
 		exit(3)
-	if t4 != 'þýüûúùø÷öõôóòñðïîíìëêéèçæåäãâáàßÞÝÜÛÚÙØ×ÖÕÔÓÒÑÐÏÎÍÌËÊÉÈÇÆÅÄÃÂÁÀ¿¾½¼»º¹¸·¶µ´³²±°¯®\xad¬«ª©¨§¦¥¤£¢¡\xa0\x9f\x9e\x9d\x9c\x9b':
+	if t3 != 'þýüûúùø÷öõôóòñðïîíìëêéèçæåäãâáàßÞÝÜÛÚÙØ×ÖÕÔÓÒÑÐÏÎÍÌËÊÉÈÇÆÅÄÃÂÁÀ¿¾½¼»º¹¸·¶µ´³²±°¯®\xad¬«ª©¨§¦¥¤£¢¡\xa0\x9f\x9e\x9d\x9c\x9b':
 		exit(4)
