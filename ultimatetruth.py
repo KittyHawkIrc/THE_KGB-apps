@@ -1,6 +1,6 @@
 def declare():
         return {"ultimatetruth": "privmsg"}
-        
+
 def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
         if channel.startswith('#'):
                 return self.msg(channel, "RielDtok is a tranny")
@@ -13,6 +13,6 @@ if __name__ == "__main__":
         api = api()
         u = "joe!username@hostmask"
         c = '#test'
-        
-        if callback(api, '', True, command="ultimatetruth", msg="^ultimatetruth", channel=c, user=u) != "RielDtok is a tranny":
+
+        if callback(api, '', True, command="ultimatetruth", msg="^ultimatetruth", channel=c, user=u) != "[%s] RielDtok is a tranny" % (c):
                 exit(1)
