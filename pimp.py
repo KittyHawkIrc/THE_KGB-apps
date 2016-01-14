@@ -1,10 +1,6 @@
 import __builtin__
 import urllib2
 from time import ctime
-__builtin__.pimpdb = {}
-__builtin__.pimpToChandb = {
-	"#secretpimps" : True
-	}
 
 #c = channel
 #u = user giving/taking points
@@ -192,19 +188,27 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 
 
 class api:
-    def msg(self, channel, text):
-        print "[%s] %s" % (channel, text)
+	def msg(self, channel, text):
+		print "[%s] %s" % (channel, text)
+
+#initialize dbs if they don't exist
+if not hasattr(__builtin__, pimpToChandb):
+	__builtin__.pimpToChandb = {
+		"#secretpimps" : True
+	}
+if not hasattr(__builtin__, pimpdb):
+	__builtin__.pimpdb = {}
 
 if __name__ == "__main__":
-    api = api()
-
-    hook = list(declare())[0]
-
-    msg = "^pimp"
-    user = "joe!username@hostmask"
-    channel = "#test"
-    type = "privmsg"
-    isop = True
-
-    callback(api, type, isop, command=hook, msg=msg, channel=channel, user=user)
-    callback(api, type, isop, command=hook, msg="^pimp test +1", channel=channel, user=user)
+	api = api()
+	
+	hook = list(declare())[0]
+	
+	msg = "^pimp"
+	user = "joe!username@hostmask"
+	channel = "#test"
+	type = "privmsg"
+	isop = True
+	
+	callback(api, type, isop, command=hook, msg=msg, channel=channel, user=user)
+	callback(api, type, isop, command=hook, msg="^pimp test +1", channel=channel, user=user)
