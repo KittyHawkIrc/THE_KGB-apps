@@ -192,11 +192,11 @@ class api:
 		print "[%s] %s" % (channel, text)
 
 #initialize dbs if they don't exist
-if not hasattr(__builtin__, pimpToChandb):
+if not hasattr(__builtin__, 'pimpToChandb'):
 	__builtin__.pimpToChandb = {
 		"#secretpimps" : True
 	}
-if not hasattr(__builtin__, pimpdb):
+if not hasattr(__builtin__, 'pimpdb'):
 	__builtin__.pimpdb = {}
 
 if __name__ == "__main__":
