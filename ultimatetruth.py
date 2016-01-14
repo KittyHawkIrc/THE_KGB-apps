@@ -14,5 +14,5 @@ if __name__ == "__main__":
         u = "joe!username@hostmask"
         c = '#test'
         
-        if callback(api, '', command="ultimatetruth", msg="^ultimatetruth", channel=c, user=u) != "RielDtok is a tranny":
+        if callback(api, '', True, command="ultimatetruth", msg="^ultimatetruth", channel=c, user=u) != "RielDtok is a tranny":
                 exit(1)
