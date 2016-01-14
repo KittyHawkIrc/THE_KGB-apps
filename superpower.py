@@ -17,6 +17,7 @@ spdb =	{
 		"billdred":"just flying. That's it.",
                 "madam_psycho_sexy":"yarn bombing things",
                 "fphrefugee":"shooting icicles out of her eyes"
+                "coup_de_shitlord":"being a cyborg with a hot dog cannon arm"
 	}
 
 def declare():

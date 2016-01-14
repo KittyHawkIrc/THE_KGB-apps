@@ -12,12 +12,16 @@ units = [
 ["centimeter",100, "centimeters"],
 ["millimeter",1000, "milimeters"],
 ["nanometer",1e+9, "nanometers"],
-["kilo",0.0001, "kilometers"],
+["meter",1,"meters"],
+["naught",0.000539957, "naughts"],
+["mi",0.000621371, "miles"],
+["kilo",0.001, "kilometers"],
 ["yard",1.09361, "yards"],
 ["foot",3.28084, "feet"],
 ["feet",3.28084, "feet"],
+["inch",39.3701, "inches"],
 
-["km",0.0001, "kilometers"],
+["km",0.001, "kilometers"],
 ["cm",100, "centimeters"],
 ["mm",1000, "milimeters"],
 ["nm",1e+9, "nanometers"],
@@ -33,9 +37,11 @@ units = [
 #data | use byte as base
 [
 #common names
-["byte",1,"bytes"],
+["petabyte",1e-15,"Petabytes"],
 ["kilobyte",0.001,"kilobytes"],
 ["megabyte",1e-6,"Megabytes"],
+["byte",1,"bytes"],
+["bit",8,"bits"],
 ["mb",1e-6,"Megabytes"],
 ["gb",1e-9,"Gigabytes"],
 ["tb",1e-12,"Terabytes"],
@@ -50,6 +56,7 @@ units = [
 ["Pib",7.1054e-15,"Pebibits"],
 ["kiB",0.000976563,"kibibytes"],
 ["MiB",9.5367e-7,"Mebibytes"],
+
 ["GiB",9.3131e-10,"Gibibytes"],
 ["TiB",9.0949e-13,"Tebibytes"],
 ["PiB",8.8818e-16,"Pebibytes"],
@@ -71,8 +78,11 @@ units = [
 [
 #common names
 ["millegram",1e+6,"milligrams"],
-["kilo",1,"kilograms"],
+["stone",0.157473,"stone"],
 ["pound",2.20462,"pounds"],
+["kilo",1,"kilograms"],
+["gram",1000,"grams"],
+["ton",0.001,"tonnes"],
 ["ou",35.274,"ounces"],
 
 ["kg",1,"kilograms"],
@@ -85,6 +95,34 @@ units = [
 
 ]
 
+def matchBoth(u1, u2):
+	strength = ""
+	for i in range (len(units)):
+		temp = ""
+		found1 = ""
+		found2 = ""
+
+		for j in range (len(units[i])):
+			if u1.startswith(units[i][j][0]):
+				found1 = units[i][j]
+			if u2.startswith(units[i][j][0]):
+				found2 = units[i][j]
+
+			if (found1 != "")&(found2 != ""):
+				temp = [found1, found2]
+				break
+		
+		if temp != "":
+			if strength == "":
+				strength = temp
+			elif len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) <\
+				len(u1[len(strength[0][0]):]) + len(u2[len(strength[1][0]):]):
+				strength = temp
+	
+	return strength
+
+def convert(condex, v):
+	return (v / condex[0][1]) * condex[1][1]
 
 def declare():
 	val = {"convert":"privmsg"}
@@ -137,27 +175,28 @@ def callback(self, type, isop, command="", msg="", user="", channel="", mode="")
 			converted = convert(condex,value)
 
 			converted = round(converted, 3)
-			self.msg(channel, "%s %s is %s in %s." % (value, condex[0][2], converted, condex[1][2]))
+			return self.msg(channel, "%s %s is %s in %s." % (value, condex[0][2], converted, condex[1][2]))
 		else:
-			self.msg(channel, 'Conversion format must match "^convert [value] [unit1] in [unit2]. ^convert help for information on available values')
-			return
+			return self.msg(channel, 'Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values')
 
-def matchBoth(u1, u2):
-	for i in range (len(units)):
-		found1 = ""
-		found2 = ""
+class api:
+	def msg(self, channel, text):
+		return "[%s] %s" % (channel, text)
 
-		for j in range (len(units[i])):
-			if u1.startswith(units[i][j][0]):
-				found1 = units[i][j]
-			if u2.startswith(units[i][j][0]):
-				found2 = units[i][j]
-
-			if (found1 != "")&(found2 != ""):
-				return [found1,found2]
-
-	return ""
-
-def convert(condex, v):
-	return (v / condex[0][1]) * condex[1][1]
-
+if __name__ == "__main__":
+	api = api()
+	u = "joe!username@hostmask"
+	c = '#test'
+	isop = True
+	
+	print(callback(api, '', isop=isop, msg="^convert 36 mb to MiB", channel=c, user=u))
+	
+	#test full program
+	if	callback(api, '', isop=isop, msg="^convert 36 mb to MiB", channel=c, user=u) != "[%s] 36 Megabytes is 34.332 in Mebibytes"%(c):
+		exit(1)
+	elif	callback(api, '', isop=isop, msg="^convert 12 MB to m", channel=c, user=u) != "[%s] Conversion format must match \"^convert [value] [unit1] in [unit2]\". ^convert help for information on available values"%(c):
+		exit(1)
+	elif	callback(api, '', isop=isop, msg="^convert 12 m to m", channel=c, user=u) != "[%s] Conversion format must match \"^convert [value] [unit1] in [unit2]\". ^convert help for information on available values" %(c):
+		exit(1)
+	elif	callback(api, '', isop=isop, msg="^convert 4566 km to miles", channel=c, user=u) != "4566.0 kilometers is 2837.181 in miles":
+		exit(1)
