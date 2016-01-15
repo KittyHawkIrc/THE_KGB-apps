@@ -1,0 +1,5 @@
+site_name: KGB Documentation
+pages:
+- Intro: index.md
+- API reference: api.md
+theme: readthedocs
