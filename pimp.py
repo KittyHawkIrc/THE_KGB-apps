@@ -5,7 +5,7 @@ from time import ctime
 #u = user giving/taking points
 #t = target who's points are being modified
 #p = points being taken/removed
-def addPoints(api, c, u, t, p):
+def addPoints(self, c, u, t, p):
 	ts = ctime()
 	up = 0
 	tp = 0
@@ -14,26 +14,26 @@ def addPoints(api, c, u, t, p):
 
 	if u not in self.locker.pimpdb[c]:
 		self.locker.pimpdb[c][u] = 4
-		pimpToChan(api, "%s <%s> %s added to db with %s points" % (ts,c,u,self.locker.pimpdb[c][u]))
+		pimpToChan(self, "%s <%s> %s added to db with %s points" % (ts,c,u,self.locker.pimpdb[c][u]))
 	elif self.locker.pimpdb[c][u] > 0:
 		self.locker.pimpdb[c][u] = int(self.locker.pimpdb[c][u]) - 1
 	else:
-		api.msg(channel, "%s: You ain't got no pimp points" % (u))
-		pimpToChan(api, "%s <%s> %s[%s]'s attempted to change %s[%s]'s points by %s" % (ts,c,u,self.locker.pimpdb[c][u],t,self.locker.pimpdb[c][t],p))
+		self.msg(channel, "%s: You ain't got no pimp points" % (u))
+		pimpToChan(self, "%s <%s> %s[%s]'s attempted to change %s[%s]'s points by %s" % (ts,c,u,self.locker.pimpdb[c][u],t,self.locker.pimpdb[c][t],p))
 		return
 
 	try: #modifies users points
 		self.locker.pimpdb[c][t] += p
 	except:
 		self.locker.pimpdb[c][t] = 5 + p
-		pimpToChan(api, "%s <%s> %s added to db with %s points" % (ts,c,t,self.locker.pimpdb[c][t]-p))
+		pimpToChan(self, "%s <%s> %s added to db with %s points" % (ts,c,t,self.locker.pimpdb[c][t]-p))
 
-	pimpToChan(api, "%s <%s> %s[%s]'s changes %s[%s]'s points by %s" % (ts,c,u,self.locker.pimpdb[c][u]-p,t,self.locker.pimpdb[c][t]-p,p))
+	pimpToChan(self, "%s <%s> %s[%s]'s changes %s[%s]'s points by %s" % (ts,c,u,self.locker.pimpdb[c][u]-p,t,self.locker.pimpdb[c][t]-p,p))
 
-def pimpToChan(api, s):
+def pimpToChan(self, s):
 	for k,v in self.locker.pimpToChandb.items():
 		if v:
-			api.msg(k, s)
+			self.msg(k, s)
 
 def declare():
 	return {"pimp": "privmsg"}
@@ -184,11 +184,6 @@ def callback():
 		else:
 			self.self.msg(u, "unavailable")
 
-
-class api:
-	def msg(self.channel, text):
-		print "[%s] %s" % (channel, text)
-
 #initialize dbs if they don't exist
 if not hasattr(self.locker, 'pimpToChandb'):
 	self.locker.pimpToChandb = {
@@ -197,16 +192,21 @@ if not hasattr(self.locker, 'pimpToChandb'):
 if not hasattr(self.locker, 'pimpdb'):
 	self.locker.pimpdb = {}
 
+class api:
+	def msg(self, channel, text):
+		print "[%s] %s" % (channel, text)
+
 if __name__ == "__main__":
 	api = api()
+	setattr(api, 'isop', True)
+	setattr(api, 'type', 'privmsg')
+	setattr(api, 'command', 'pimp')
+	setattr(api, 'message', '^pimp')
+	setattr(api, 'user', 'joe!username@hostmask')
+	setattr(api, 'channel', '#test')
 	
-	hook = list(declare())[0]
+	callback(api)
 	
-	msg = "^pimp"
-	user = "joe!username@hostmask"
-	channel = "#test"
-	type = "privmsg"
-	isop = True
+	api.message = "^pimp jonnycarter +1"
 	
-	callback(api, type, isop, command=hook, msg=msg, channel=channel, user=user)
-	callback(api, type, isop, command=hook, msg="^pimp test +1", channel=channel, user=user)
+	callback(api)
