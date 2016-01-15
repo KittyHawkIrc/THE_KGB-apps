@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API Reference - KGB Documentation</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "API Reference";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> KGB Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Intro</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">API Reference</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#api-reference">API Reference</a></li>
+                
+                    <li><a class="toctree-l4" href="#variables">Variables</a></li>
+                
+                    <li><a class="toctree-l4" href="#functions">Functions</a></li>
+                
+                    <li><a class="toctree-l4" href="#persistent-storage">persistent storage</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">KGB Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>API Reference</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="api-reference">API Reference</h1>
+<p>The Arsenic superclass provides a fairly large number of functions and variables to make designing modules easy. Note that all things mentioned here must start with <code>self.</code></p>
+<h2 id="variables">Variables</h2>
+<p>These are traditional variables passed by Arsenic, many of them started out as arguments in the early API.</p>
+<h3 id="isop">isop</h3>
+<p>This is a boolian indicating if the user of the command is an operator or not.</p>
+<pre><code>if self.isop:
+    do something
+</code></pre>
+
+<hr />
+<h3 id="isowner">isowner</h3>
+<p>This is a boolian indicating if the user of the command is an owner or not, when this is true isop is always true.</p>
+<pre><code>if self.isowner:
+    do something
+</code></pre>
+
+<hr />
+<h3 id="type">type</h3>
+<p>This is a string declaring the type of hook used to activate the callback, this is one of the following:</p>
+<ul>
+<li>privmsg</li>
+<li>userjoin</li>
+</ul>
+<pre><code>if self.type == 'privmsg':
+    do something
+</code></pre>
+
+<hr />
+<h3 id="command">command</h3>
+<p>This is a string which contains the name of the actual <code>^command</code> passed to activate it. Note that it will never include the key character. (defaults to ^)</p>
+<pre><code>if self.command == 'hello':
+    do something
+</code></pre>
+
+<hr />
+<h3 id="message">message</h3>
+<p>This is a string containing the full message including the hook.</p>
+<pre><code>print self.message
+&gt;&gt;&gt; ^echo I am a bot
+print self.command
+&gt;&gt;&gt; echo
+print self.message.split(self.command, 1)[1]
+&gt;&gt;&gt; I am a bot
+</code></pre>
+
+<hr />
+<h3 id="user">user</h3>
+<p>This is the full hostmask of the user calling the command, it goes in <code>nickname!username@hostname</code> order.</p>
+<pre><code>print self.user
+&gt;&gt;&gt; joe!rocks@isp.com
+name = self.user.split('!',1)[0]
+print 'Hello, !' % (name)
+&gt;&gt;&gt; Hello, Joe!
+</code></pre>
+
+<hr />
+<h3 id="channel">channel</h3>
+<p>This the a string of the channel the modules being called from, please be aware that when the bot is messaged the channel is <code>self.nickname</code> and not <code>self.user</code>. <strong>Failure to follow this can cause infinite loops!</strong></p>
+<pre><code>if self.channel.startswith('#'):
+    self.msg(self.channel, 'we are in a channel!')
+else:
+    name = self.user.split('!',1)[0]
+    self.msg(name, 'We are messaging!')
+
+</code></pre>
+
+<hr />
+<h3 id="ver">ver</h3>
+<p>Typically only used for supporting specific API versions, returns a string.</p>
+<pre><code>print self.ver
+&gt;&gt;&gt; '1.0.0'
+</code></pre>
+
+<hr />
+<h3 id="nickname">nickname</h3>
+<p>This is the bots own nickname, useful for ignoring itself.</p>
+<pre><code>print self.nickname
+&gt;&gt;&gt; 'supercoolbot107'
+</code></pre>
+
+<hr />
+<h2 id="functions">Functions</h2>
+<h3 id="msgchannel-message">msg(channel, message)</h3>
+<p>This function sends the message to the specified channel, silently failing if the channel isn't joined.</p>
+<pre><code>self.msg(self.channel, 'Hi guys!')
+</code></pre>
+
+<hr />
+<h3 id="mechannel-message">me(channel, message)</h3>
+<p>This function is just like msg but performs an action like /me would.</p>
+<pre><code>self.me(self.channel, 'dances')
+</code></pre>
+
+<hr />
+<h3 id="noticechannel-message">notice(channel, message)</h3>
+<p>This function sends a notice, sorta like using /notice.</p>
+<pre><code>self.notice(self.channel, 'I want to piss people off with alerts.')
+</code></pre>
+
+<hr />
+<h3 id="awayoptionalmessage">away(optional=message)</h3>
+<p>This sets the bot as away.</p>
+<pre><code>self.away('brb!')
+</code></pre>
+
+<hr />
+<h3 id="back">back()</h3>
+<p>This sets marks the bot as returned.</p>
+<pre><code>self.back()
+</code></pre>
+
+<hr />
+<h3 id="joinchannel-optionalkey">join(channel, optional=key)</h3>
+<p>Joins a channel, providing a key if needed.</p>
+<pre><code>self.join('#secret-test-channel')
+self.msg('#secret-test-channel', 'Hey friends!')
+</code></pre>
+
+<hr />
+<h3 id="leavechannel-optionalreason">leave(channel, optional=reason)</h3>
+<p>Normally parts from a channel optionally stating why in the message.</p>
+<pre><code>self.leave('secret-test-channel', 'Too secret for me tbh')
+</code></pre>
+
+<hr />
+<h3 id="kickchannel-user-optionalreason">kick(channel, user, optional=reason)</h3>
+<p>Attempts to kick a user from a channel with an optional reason, fails silently if this does not work.</p>
+<pre><code>self.kick('#top-secret-channel', annoying_troll, 'Trolling')
+</code></pre>
+
+<hr />
+<h3 id="topicchannel-optionaltopic">topic(channel, optional=topic)</h3>
+<p>Sets the topic of the channel, when no topic is passed it blanks it out. Note that this also silently fails.</p>
+<pre><code>self.topic('#secret-room', 'Welcome to the secret!')
+</code></pre>
+
+<hr />
+<h3 id="modechannel-set-modes-optionaluser-optionallimit">mode(channel, set, modes, optional=user, optional=limit)</h3>
+<p>This sets the mode of a channel to the letters passed to modes. <code>set</code> is a boolian that controls if the mode should be enabled on or off. Limit is used for flags like +l that limit the number of users. User is who to apply the flag to.</p>
+<pre><code>self.msg(self.channel, True, 'o', user='alan')
+&gt;&gt;&gt; the_kgb sets mode +o on alan
+</code></pre>
+
+<hr />
+<h3 id="setnicknickname">setNick(nickname)</h3>
+<p>Attempts to set the bots nickname to this, note that it will silently fail without feedback if taken so please check self.nickname.</p>
+<pre><code>while self.nickname != 'admin':
+    self.setNick('admin')
+
+</code></pre>
+
+<hr />
+<h2 id="persistent-storage">persistent storage</h2>
+<h3 id="store">store</h3>
+<p>Store is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules. </p>
+<p>To store and read data simply add a new attribute and set a value, it can then be accessed anywhere else during the life of the program.</p>
+<p><em>Module a</em>:</p>
+<pre><code>self.store.counter = 0
+self.store.oldvalue = 3
+</code></pre>
+
+<p><em>Module b</em>:</p>
+<pre><code>value = self.store.oldvalue
+print value
+&gt;&gt;&gt; 3
+self.store.counter += 1
+self.store.newvalue = value + 1
+</code></pre>
+
+<p><em>Module a</em>:</p>
+<pre><code>print self.store.counter
+&gt;&gt;&gt; 1
+print self.store.newvalue
+&gt;&gt;&gt; 4
+print value
+&gt;&gt;&gt; NameError: name 'value' is not defined
+</code></pre>
+
+<hr />
+<h3 id="locker">locker</h3>
+<p>Lockers expand on the concept of store while removing the shared aspect, letting us use scope to create per-module stores, much like lockers. This is handy when you're worried about modules naming persisting variables the same thing or want to protect data from other modules.</p>
+<p><em>Module a</em>:</p>
+<pre><code>self.store.value = 1
+self.locker.value = 2
+</code></pre>
+
+<p><em>Module b</em>:</p>
+<pre><code>print self.store.value
+&gt;&gt;&gt; 1
+print self.locker.value
+&gt;&gt;&gt; persist instance has no attribute 'value'
+self.store.value = 5
+self.locker.value = 6
+</code></pre>
+
+<p><em>Module a</em>:</p>
+<pre><code>print self.store.value
+&gt;&gt;&gt; 5
+print self.locker.value
+&gt;&gt;&gt; 2
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href=".." class="btn btn-neutral" title="Intro"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+
+</body>
+</html>
