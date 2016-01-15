@@ -1,3 +1,5 @@
 #Modules for THE_KGB
 
-A guide to working on/with modules is in [tutorial.md](tutorial.md)
+Please ensure all contributed work includes unit tests otherwise it can't be merged in to the main branch.
+
+Documentation on making a module is located [here](http://stqism.github.io/THE_KGB-apps/).
