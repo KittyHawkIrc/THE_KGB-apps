@@ -67,7 +67,7 @@ def callback():
 		if com == '+1':
 			addPoints(self, chan, u, target, 1)
 		elif com == '-1':
-			addPoints(self, chan, u, target, 1)
+			addPoints(self, chan, u, target, -1)
 		elif com == 'get':
 			try:
 				pimp = self.locker.pimpdb[chan][target]
