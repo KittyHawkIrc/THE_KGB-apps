@@ -96,105 +96,105 @@ units = [
 ]
 
 def matchBoth(u1, u2):
-	strength = ""
-	for i in range (len(units)):
-		temp = ""
-		found1 = ""
-		found2 = ""
+    strength = ""
+    for i in range (len(units)):
+        temp = ""
+        found1 = ""
+        found2 = ""
 
-		for j in range (len(units[i])):
-			if u1.startswith(units[i][j][0]):
-				found1 = units[i][j]
-			if u2.startswith(units[i][j][0]):
-				found2 = units[i][j]
+        for j in range (len(units[i])):
+            if u1.startswith(units[i][j][0]):
+                found1 = units[i][j]
+            if u2.startswith(units[i][j][0]):
+                found2 = units[i][j]
 
-			if (found1 != "")&(found2 != ""):
-				temp = [found1, found2]
-				break
-		
-		if temp != "":
-			if strength == "":
-				strength = temp
-			elif len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) <\
-				len(u1[len(strength[0][0]):]) + len(u2[len(strength[1][0]):]):
-				strength = temp
-	
-	return strength
+            if (found1 != "")&(found2 != ""):
+                temp = [found1, found2]
+                break
+        
+        if temp != "":
+            if strength == "":
+                strength = temp
+            elif len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) <\
+                len(u1[len(strength[0][0]):]) + len(u2[len(strength[1][0]):]):
+                strength = temp
+    
+    return strength
 
 def convert(condex, v):
-	return (v / condex[0][1]) * condex[1][1]
+    return (v / condex[0][1]) * condex[1][1]
 
 def declare():
-	val = {"convert":"privmsg"}
-	for i in range (len(units)):
-		for j in range (len(units[i])):
-			val[ units[i][j][0] ] = "privmsg"
-	return val
+    val = {"convert":"privmsg"}
+    for i in range (len(units)):
+        for j in range (len(units[i])):
+            val[ units[i][j][0] ] = "privmsg"
+    return val
 
 def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
-	#	^convert 5 in to cm
-	#	^kg 5 to lb
-	#msg is  value to unit
-	values = msg.split(' ')
+    #   ^convert 5 in to cm
+    #   ^kg 5 to lb
+    #msg is  value to unit
+    values = msg.split(' ')
 
-	if channel.startswith('#'):
-		if values[1] == "help":
+    if channel.startswith('#'):
+        if values[1] == "help":
 
-			self.msg(channel, "^convert [value] [unit1] to [unit2]'. Use ^convert units to be messaged the units accepted.")
-			return
+            self.msg(channel, "^convert [value] [unit1] to [unit2]'. Use ^convert units to be messaged the units accepted.")
+            return
 
-		elif values[1] == "units":
-			s = ""
-			for i in range (len(units)):
-				for j in range (len(units[i])):
-					s = s + " " + units[i][j][2] + " (" + units[i][j][0] + "),"
-			self.msg(user.split('!')[0], 'You can use the following: ' + s.strip(','))
-			return
+        elif values[1] == "units":
+            s = ""
+            for i in range (len(units)):
+                for j in range (len(units[i])):
+                    s = s + " " + units[i][j][2] + " (" + units[i][j][0] + "),"
+            self.msg(user.split('!')[0], 'You can use the following: ' + s.strip(','))
+            return
 
-		#deal with getting the value
-		try:
-			value = float(values[1])
-		except ValueError:
-			self.msg(channel, 'First parameter must be a number')
-			return;
+        #deal with getting the value
+        try:
+            value = float(values[1])
+        except ValueError:
+            self.msg(channel, 'First parameter must be a number')
+            return;
 
-		#deal with unit1
-		unit1 = command.strip('^')
+        #deal with unit1
+        unit1 = command.strip('^')
 
-		if unit1 == "convert":	#must be using ^convert
-			unit1 = values[2]
+        if unit1 == "convert":  #must be using ^convert
+            unit1 = values[2]
 
-		#deal with unit2
-		unit2 = values[len(values)-1]	#last index must be the second unit
+        #deal with unit2
+        unit2 = values[len(values)-1]   #last index must be the second unit
 
-		condex = matchBoth(unit1, unit2)
-		if condex != "":	#must be supported units
-			value = float(value)
+        condex = matchBoth(unit1, unit2)
+        if condex != "":    #must be supported units
+            value = float(value)
 
-			converted = convert(condex,value)
+            converted = convert(condex,value)
 
-			converted = round(converted, 3)
-			return self.msg(channel, "%s %s is %s in %s." % (value, condex[0][2], converted, condex[1][2]))
-		else:
-			return self.msg(channel, 'Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values')
+            converted = round(converted, 3)
+            return self.msg(channel, "%s %s is %s in %s." % (value, condex[0][2], converted, condex[1][2]))
+        else:
+            return self.msg(channel, 'Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values')
 
 class api:
-	def msg(self, channel, text):
-		return "[%s] %s" % (channel, text)
+    def msg(self, channel, text):
+        return "[%s] %s" % (channel, text)
 
 if __name__ == "__main__":
-	api = api()
-	u = "joe!username@hostmask"
-	c = '#test'
-	cm = "^convert"
-	isop = True
-	
-	#test full program
-	#if	callback(api, '', isop=isop, command=cm, msg="^convert 36 mb to MiB", channel=c, user=u) != "[%s] 36.0 Megabytes is 34.332 in Mebibytes"%(c):
-	#	exit(1)
-	#elif	callback(api, '', isop=isop, command=cm, msg="^convert 12 MB to m", channel=c, user=u) != '[%s] Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values'%(c):
-	#	exit(1)
-	#elif	callback(api, '', isop=isop, command=cm, msg="^convert 12 m to m", channel=c, user=u) != '[%s] Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values' %(c):
-	#	exit(1)
-	#elif	callback(api, '', isop=isop, command=cm, msg="^convert 4566 km to miles", channel=c, user=u) != "[%s] 4566.0 kilometers is 2837.181 in miles"%(c):
-	#	exit(1)
+    api = api()
+    u = "joe!username@hostmask"
+    c = '#test'
+    cm = "^convert"
+    isop = True
+    
+    #test full program
+    #if callback(api, '', isop=isop, command=cm, msg="^convert 36 mb to MiB", channel=c, user=u) != "[%s] 36.0 Megabytes is 34.332 in Mebibytes"%(c):
+    #   exit(1)
+    #elif   callback(api, '', isop=isop, command=cm, msg="^convert 12 MB to m", channel=c, user=u) != '[%s] Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values'%(c):
+    #   exit(1)
+    #elif   callback(api, '', isop=isop, command=cm, msg="^convert 12 m to m", channel=c, user=u) != '[%s] Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values' %(c):
+    #   exit(1)
+    #elif   callback(api, '', isop=isop, command=cm, msg="^convert 4566 km to miles", channel=c, user=u) != "[%s] 4566.0 kilometers is 2837.181 in miles"%(c):
+    #   exit(1)
