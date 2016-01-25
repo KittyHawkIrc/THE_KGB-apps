@@ -5,5 +5,6 @@ def declare():
     return {"autovoice": "userjoin"}
 
 def callback(self):
-    if self.channel in channels and not in ignore:
+    u = self.user.split('!')[0]
+    if self.channel in channels and u not in ignore:
         self.mode(channel ,True, 'v', mask=user)
