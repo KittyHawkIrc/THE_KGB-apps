@@ -3,7 +3,13 @@ import json, random, urllib2
 def declare():
     return {"reddit": "privmsg", "guess": "privmsg"}
 
-def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
+def callback(self):
+    channel = self.channel
+    command = self.command
+    user = self.user
+    msg = self.message
+    type = self.type
+    isop = self.isop
 
     if command == 'guess':
         u = 'SwordOrSheath'

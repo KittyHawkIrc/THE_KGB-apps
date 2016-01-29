@@ -111,14 +111,14 @@ def matchBoth(u1, u2):
             if (found1 != "")&(found2 != ""):
                 temp = [found1, found2]
                 break
-        
+
         if temp != "":
             if strength == "":
                 strength = temp
             elif len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) <\
                 len(u1[len(strength[0][0]):]) + len(u2[len(strength[1][0]):]):
                 strength = temp
-    
+
     return strength
 
 def convert(condex, v):
@@ -131,7 +131,13 @@ def declare():
             val[ units[i][j][0] ] = "privmsg"
     return val
 
-def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
+def callback(self):
+    channel = self.channel
+    command = self.command
+    user = self.user
+    msg = self.message
+    type = self.type
+    isop = self.isop
     #   ^convert 5 in to cm
     #   ^kg 5 to lb
     #msg is  value to unit
@@ -188,7 +194,7 @@ if __name__ == "__main__":
     c = '#test'
     cm = "^convert"
     isop = True
-    
+
     #test full program
     #if callback(api, '', isop=isop, command=cm, msg="^convert 36 mb to MiB", channel=c, user=u) != "[%s] 36.0 Megabytes is 34.332 in Mebibytes"%(c):
     #   exit(1)

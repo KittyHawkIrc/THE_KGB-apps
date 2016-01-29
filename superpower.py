@@ -23,7 +23,14 @@ spdb =  {
 def declare():
     return {"superpower": "privmsg"}
 
-def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
+def callback(self):
+    channel = self.channel
+    command = self.command
+    user = self.user
+    msg = self.message
+    type = self.type
+    isop = self.isop
+    
     if channel.startswith('#'):
         var = msg.split()
 

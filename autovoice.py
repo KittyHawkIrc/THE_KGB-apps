@@ -3,8 +3,9 @@ ignore = {'invisiblecalories', 'justnotfair', '}o{', 'LimitServ', 'TY-info', 'VA
 def declare():
     return {"overkill": "userjoin"}
 
-def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
-    if channel == '#fatpeoplesuck':
-        u = user.split('!',1)[0]
+def callback(self):
+
+    if self.channel == '#fatpeoplesuck':
+        u = self.user.split('!',1)[0]
         if not u in ignore:
-            self.msg('ChanServ', 'voice %s %s' % (channel, u))
+            self.msg('ChanServ', 'voice %s %s' % (self.channel, u))

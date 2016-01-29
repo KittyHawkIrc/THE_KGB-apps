@@ -38,7 +38,15 @@ def pimpToChan(self, s):
 def declare():
     return {"pimp": "privmsg"}
 
-def callback():
+def callback(self):
+    #initialize dbs if they don't exist
+    if not hasattr(self.locker, 'pimpToChandb'):
+        self.locker.pimpToChandb = {
+            "#secretpimps" : True
+        }
+    if not hasattr(self.locker, 'pimpdb'):
+        self.locker.pimpdb = {}
+
     u = self.user.lower().split('!')[0]
     c = self.channel
     if self.channel.startswith('#'):
@@ -61,7 +69,7 @@ def callback():
             self.locker.pimpdb[chan] = {}
 
         if u == target and com != 'get':
-            self.self.msg(chan, "%s: Y'all can't pimp yourself, ma nigga" % (u))
+            self.msg(chan, "%s: Y'all can't pimp yourself, ma nigga" % (u))
             return
 
         if com == '+1':
@@ -72,12 +80,12 @@ def callback():
             try:
                 pimp = self.locker.pimpdb[chan][target]
                 if pimp > 0:
-                    self.self.msg(self.channel, "that nigga got %s pimp points up in this bitch" % (pimp))
+                    self.msg(self.channel, "that nigga got %s pimp points up in this bitch" % (pimp))
                 else:
-                    self.self.msg(self.channel, "that nigga got %s bitch points" % (pimp))
+                    self.msg(self.channel, "that nigga got %s bitch points" % (pimp))
             except:
                 pimp = 5
-                self.self.msg(self.channel, "that nigga got 5 pimp points up in this bitch")
+                self.msg(self.channel, "that nigga got 5 pimp points up in this bitch")
 
                 if u in self.locker.pimpdb[c]:
                     u_p = self.locker.pimpdb[c][u]
@@ -91,7 +99,7 @@ def callback():
 
                 pimpToChan(self, "%s <%s> %s[%s]'s checked %s[%s]'s points" % (ctime(), chan, u, u_p, target, target_p))
         else:
-            self.self.msg(self.channel, "%s: Nigga, you really think you that og, just giving out more points like that?" % (u))
+            self.msg(self.channel, "%s: Nigga, you really think you that og, just giving out more points like that?" % (u))
 
     elif self.isop: #format as pimp [self.command] [self.channel] [target] [value]
         var = self.message.lower().split()
@@ -114,28 +122,28 @@ def callback():
             try:
                 pval = self.locker.pimpdb[chan][target]
                 self.locker.pimpdb[chan][target] = int(val)
-                self.self.msg(u, "%s's score in %s is now set to %s" % (target, chan, val))
+                self.msg(u, "%s's score in %s is now set to %s" % (target, chan, val))
                 pimpToChan(self, "%s <%s> %s[%s]'s points set to %s by op %s" % (ts, chan, target, pval, val, u))
             except:
-                self.self.msg(u, "%s doesn't exist in %s" % (target, chan))
+                self.msg(u, "%s doesn't exist in %s" % (target, chan))
 
         elif com == 'add':
             try:
                 self.locker.pimpdb[chan][target] += val
-                self.self.msg(u, "%s's score in %s is now set to %s" % (target, chan, val))
+                self.msg(u, "%s's score in %s is now set to %s" % (target, chan, val))
                 pimpToChan(self, "%s <%s> %s[%s]'s points increased by %s, by op %s" % (ts, chan, target, self.locker.pimpdb[chan][target]-val, val, u))
             except:
-                self.self.msg("Doesn't %s exist in %s" % (target, chan))
+                self.msg("Doesn't %s exist in %s" % (target, chan))
 
         elif com == 'remove':
             if target in self.locker.pimpdb[chan]:
                 val = self.locker.pimpdb[chan][target]
                 self.locker.pimpdb[chan].pop(target)
-                self.self.msg(u, "%s is now removed from that self.channel's list" % (target))
+                self.msg(u, "%s is now removed from that self.channel's list" % (target))
                 pimpToChan(self, "%s <%s> %s removed from db with %s points by op %s" % (ts, chan, target, val, u))
 
             else:
-                self.self.msg(u, "%s is not in that self.channel's list")
+                self.msg(u, "%s is not in that self.channel's list")
 
         elif com == 'new':
             if chan not in self.locker.pimpdb:
@@ -143,14 +151,14 @@ def callback():
 
             if target not in self.locker.pimpdb[chan]:
                 self.locker.pimpdb[chan][target] = int(val)
-                self.self.msg(u, "%s is now added to the self.channel with %s points" % (target, val))
+                self.msg(u, "%s is now added to the self.channel with %s points" % (target, val))
                 pimpToChan(self, "%s <%s> %s added to db with %s points by op %s" % (ts, chan, target, val, u))
 
             else:
-                self.self.msg(u, "%s is already in the self.channel with %s points, please remove them before adding them again" % (target, val))
+                self.msg(u, "%s is already in the self.channel with %s points, please remove them before adding them again" % (target, val))
 
         elif com == 'dump':
-            self.self.msg(u, str(self.locker.pimpdb))
+            self.msg(u, str(self.locker.pimpdb))
             pimpToChan(self, "%s <>  All self.channel values dumped by op %s" % (ts, u))
 
         elif com == 'load':
@@ -178,19 +186,11 @@ def callback():
                 self.locker.pimpToChandb[chan] = True
             else:
                 self.locker.pimpToChandb[chan] = False
-            self.self.msg(u, "Added to database")
+            self.msg(u, "Added to database")
             pimpToChan(self, "%s <> %s added to self.locker.pimpToChandb by %s with state op %s" % (ts, chan, u, target))
 
         else:
-            self.self.msg(u, "unavailable")
-
-#initialize dbs if they don't exist
-if not hasattr(self.locker, 'pimpToChandb'):
-    self.locker.pimpToChandb = {
-        "#secretpimps" : True
-    }
-if not hasattr(self.locker, 'pimpdb'):
-    self.locker.pimpdb = {}
+            self.msg(u, "unavailable")
 
 class api:
     def msg(self, channel, text):
@@ -204,9 +204,9 @@ if __name__ == "__main__":
     setattr(api, 'message', '^pimp')
     setattr(api, 'user', 'joe!username@hostmask')
     setattr(api, 'channel', '#test')
-    
+
     callback(api)
-    
+
     api.message = "^pimp jonnycarter +1"
-    
+
     callback(api)

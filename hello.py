@@ -4,7 +4,6 @@ def declare():
 def callback(self):
 
     if self.channel.startswith('#'):
-        self.msg(self.channel, 'test')
         return self.msg(self.channel, "And a hello to you too, " + ("operator" if self.isop else "user") + " %s!" % (self.user))
 
 class api:
