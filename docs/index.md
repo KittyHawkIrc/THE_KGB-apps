@@ -1,4 +1,4 @@
-# the_kgb (arsenic) module documentation
+# KittyHawk module documentation
 
 ## Why write modules?
 
@@ -22,7 +22,7 @@ Now that the modules installed it has to be loaded to be processed. to do this r
 * Do not include the brackets.
 * The URL **must** be a direct link to the file, and not a file host or pastebin.
 
-## What's an owner or operator? 
+## What's an owner or operator?
 **Operators**: Operators are the traditional bot controller, they have access to most basic commands like adding or removing traditional commands and changing topics.
 
 **Owners**: Written in the config file, owners can't be modified during runtime and have permissions in the event of a loss of the database. This special user has permissions over features that could break or alter the bot itself. Things like loading modules, runtime patching, and loading modules requires permission from an owner.
