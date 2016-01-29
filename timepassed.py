@@ -1,6 +1,6 @@
 import datetime
 
-channels = {'#the_kgb'}
+channels = {'#soopersekrit'}
 
 def declare():
     return {"timepassed": "syncmsg"}
