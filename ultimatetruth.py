@@ -15,5 +15,11 @@ if __name__ == "__main__":
         u = "joe!username@hostmask"
         c = '#test'
 
-        if callback(api, '', True, command="ultimatetruth", msg="^ultimatetruth", channel=c, user=u) != "[%s] RielDtok is a tranny" % (c):
+        setattr(api, 'isop', True)
+        setattr(api, 'type', 'privmsg')
+        setattr(api, 'command', 'ultimatetruth')
+        setattr(api, 'user', 'joe!username@hostmask')
+        setattr(api, 'channel', '#test')
+
+        if callback(api) != "[%s] RielDtok is a tranny" % (c):
                 exit(1)
