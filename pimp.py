@@ -196,6 +196,9 @@ class api:
     def msg(self, channel, text):
         print "[%s] %s" % (channel, text)
 
+class persist:
+    pass
+
 if __name__ == "__main__":
     api = api()
     setattr(api, 'isop', True)
@@ -204,6 +207,7 @@ if __name__ == "__main__":
     setattr(api, 'message', '^pimp')
     setattr(api, 'user', 'joe!username@hostmask')
     setattr(api, 'channel', '#test')
+    setattr(api, 'locker', persist())
 
     callback(api)
 
