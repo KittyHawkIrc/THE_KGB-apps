@@ -96,6 +96,8 @@ if __name__ == "__main__":
     t2 = callback(api)
     setattr(api, 'message', "^brainfuck -[-.]")
     t3 = callback(api)
+    setattr(api, 'message', '^brainfuck ++++++++[>++++>++++>++++>++++<<<<-]++++++++++[>++++>+++++++>++++++++<<<-]>.>+++.>>.<<------.++>++.<.----.>++.<++++++++.>++.<----.>>+.')
+    t4 = callback(api)
 
     if t1 != "88888888888888":
         exit(1)
@@ -106,3 +108,5 @@ if __name__ == "__main__":
             exit(4)
     except:
         api.msg(api.channel, 'unicode issues in Python cause a passing test to fail')
+    if t4 != 'Hi creative!':
+        exit(5)
