@@ -1,10 +1,10 @@
-channels = {'#fatpeoplesuck' '#fathateelite'}
-ignore = {self.nickname,'}o{','FatStats','justnotfair'}
+ignore = {'invisiblecalories', 'justnotfair', '}o{', 'LimitServ', 'TY-info', 'VALIS', 'FatStats'}
 
 def declare():
-    return {"autovoice": "userjoin"}
+    return {"overkill": "userjoin"}
 
-def callback(self):
-    u = self.user.split('!')[0]
-    if self.channel in channels and u not in ignore:
-        self.mode(channel ,True, 'v', mask=user)
+def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
+    if channel == '#fatpeoplesuck':
+        u = user.split('!',1)[0]
+        if not u in ignore:
+            self.msg('ChanServ', 'voice %s %s' % (channel, u))
