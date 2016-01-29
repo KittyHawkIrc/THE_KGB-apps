@@ -40,6 +40,7 @@ class api:
 if __name__ == "__main__":
     api = api()
     setattr(api, 'isop', True)
+    setattr(api, 'isowner', True)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'command', 'exec')
     setattr(api, 'message', '^exec print "test"')
