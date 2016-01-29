@@ -3,8 +3,14 @@ import json, random, urllib2
 def declare():
     return {"reddit": "privmsg", "guess": "privmsg"}
 
-def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
-
+def callback(self):
+    channel = self.channel
+    command = self.command
+    user = self.user
+    msg = self.message
+    type = self.type
+    isop = self.isop
+    
     if command == 'guess':
         u = 'SwordOrSheath'
     else:
@@ -69,26 +75,36 @@ class api:
 
 if __name__ == "__main__":
     api = api()
-    u = "joe!username@hostmask"
-    c = '#test'
+    
+    setattr(api, 'isop', True)
+    setattr(api, 'type', 'privmsg')
+    setattr(api, 'command', 'reddit')
+    setattr(api, 'user', 'joe!username@hostmask')
+    setattr(api, 'channel', '#test')
 
-    if callback(api, '', True, channel=c, user=u, command='reddit', msg='^reddit') != '[%s] Please specify a subreddit!' % (c):
+    setattr(api, 'message', '^reddit')
+    if callback(api) != '[%s] Please specify a subreddit!' % (c):
         print '[TESTFAIL] no arguments'
         exit(1)
 
-    if callback(api, '', True, channel=c, user=u, command='reddit', msg='^reddit fatpeoplehate') != '[#the_kgb] HTTP Error 404: Not Found':
+    setattr(api, 'message', '^reddit fatpeoplehate')
+    if callback(api) != '[#the_kgb] HTTP Error 404: Not Found':
         print '[TESTFAIL] error catcher'
         exit(1)
 
-    if not callback(api, '', True, channel=c, user=u, command='reddit', msg='^reddit fatlogic').startswith('[%s] ' % (c)):
+    setattr(api, 'message', '^reddit fatlogic')
+    if not callback(api).startswith('[%s] ' % (c)):
         print '[TESTFAIL] Subreddit loader'
         exit(1)
 
-    if not callback(api, '', True, channel=c, user=u, command='guess', msg='^guess').startswith('[%s] Am I male or female?' % (c)):
+    setattr(api, 'message', '^guess')
+    setattr(api, 'command', 'guess')
+    if not callback(api).startswith('[%s] Am I male or female?' % (c)):
         print '[TESTFAIL] guess no user'
         exit(1)
 
     n = 'bob'
-    if not callback(api, '', True, channel=c, user=u, command='guess', msg='^guess %s' % (n)).startswith('[%s] %s: Am I male or female?' % (c, n)):
+    setattr(api, 'message', '^guess %s' % (n))
+    if not callback(api).startswith('[%s] %s: Am I male or female?' % (c, n)):
         print '[TESTFAIL] guess with user'
         exit(1)
