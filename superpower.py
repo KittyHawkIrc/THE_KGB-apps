@@ -15,9 +15,10 @@ spdb =  {
         "dr_durex":"controlling paper",
         "nwo-chan":"boiling liquid instantly",
         "billdred":"just flying. That's it.",
-                "madam_psycho_sexy":"yarn bombing things",
-                "fphrefugee":"shooting icicles out of her eyes",
-                "coup_de_shitlord":"being a cyborg with a hot dog cannon arm"
+        "madam_psycho_sexy":"yarn bombing things",
+        "fphrefugee":"shooting icicles out of her eyes",
+        "coup_de_shitlord":"being a cyborg with a hot dog cannon arm"
+        "skruff":"instantly predicting the outcome of sports games!"
     }
 
 def declare():
