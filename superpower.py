@@ -25,23 +25,35 @@ def declare():
     return {"superpower": "privmsg"}
 
 def callback(self):
-    channel = self.channel
-    command = self.command
-    user = self.user
-    msg = self.message
-    type = self.type
-    isop = self.isop
-    
-    if channel.startswith('#'):
-        var = msg.split()
+    if self.channel.startswith('#'):
+        var = message.split()
 
         if var[1] == "help":
-            self.msg(channel,"^superpower username")
+            self.msg(self.channel,"^superpower username")
             return
 
         try:
-            self.msg(channel,"%s's superpower is %s" % (var[1], spdb[var[1].lower()]))
+            self.msg(self.channel,"%s's superpower is %s" % (var[1], spdb[var[1].lower()]))
             return
         except:
-            self.msg(channel,"%s's not on the list" % (var[1]))
+            self.msg(self.channel,"%s's not on the list" % (var[1]))
             return
+
+class api:
+        def msg(self, channel, text):
+            return "[%s] %s" % (channel, text)
+
+if __name__ == "__main__":
+        api = api()
+        u = "joe!username@hostmask"
+        c = '#test'
+
+        setattr(api, 'isop', True)
+        setattr(api, 'type', 'privmsg')
+        setattr(api, 'command', 'superpower')
+        setattr(api, 'message', '^superpower Moudi')
+        setattr(api, 'user', 'joe!username@hostmask')
+        setattr(api, 'channel', '#test')
+
+        if callback(api) != "[%s] Moudi's superpower is turning into rocks" % (c):
+                exit(1)
