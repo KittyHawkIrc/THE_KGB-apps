@@ -1,11 +1,15 @@
 import datetime
 
 channels = {'#soopersekrit'}
+ignore = {'fatstats'}
 
 def declare():
     return {"timepassed": "syncmsg"}
 
 def callback(self):
+  for self.nick.split('!')[0] in ignore:
+    return
+  
   if self.outgoing_channel.lower() in channels:
     #check if time's been set
     try:
