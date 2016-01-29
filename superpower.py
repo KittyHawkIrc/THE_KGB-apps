@@ -56,4 +56,4 @@ if __name__ == "__main__":
         setattr(api, 'channel', '#test')
 
         #if callback(api) != "[%s] Moudi's superpower is turning into rocks" % (c):
-                #exit(1)
+        #       exit(1)
