@@ -20,8 +20,8 @@ def callback(self):
     diff = datetime.datetime.now() - time
 
     if diff.total_seconds() < 600:
-      self.locker.time[self.outgoing_channel] = datetime.datetime.now()
-      return
+        self.locker.time[self.outgoing_channel] = datetime.datetime.now()
+        return
 
     hours = diff.total_seconds() / 3600
     minutes = hours % 1 * 60

@@ -8,9 +8,9 @@ spdb =  {
         "rieldtok":"instantly giving anyone an orgasm",
         "gyst":"making any liquid into bubbles",
         "uvulectomy":"having superpowered sneezes",
-        "marvin":"having the power of conversation",
+        "justnotfair":"having the power of conversation",
         "[deleted]":"turning into gas powered vehicles",
-        "justnotfair":"turning plants into weapons, and is also not black",
+        "bym":"turning plants into weapons, and is also not black",
         "moudi":"turning into rocks",
         "dr_durex":"controlling paper",
         "nwo-chan":"boiling liquid instantly",
@@ -18,7 +18,8 @@ spdb =  {
         "madam_psycho_sexy":"yarn bombing things",
         "fphrefugee":"shooting icicles out of her eyes",
         "coup_de_shitlord":"being a cyborg with a hot dog cannon arm",
-        "skruff":"instantly predicting the outcome of sports games!"
+        "skruff":"instantly predicting the outcome of sports games!",
+        "purpleisafruit":"throwing fruit at anyone and it would explode like a grenade!"
     }
 
 def declare():
