@@ -3,7 +3,13 @@ import sys, os
 def declare():
     return {"restart": "privmsg", "join": "privmsg", "leave": "privmsg", "nick": "privmsg", "kick": "privmsg", "ban": "privmsg", "unban": "privmsg", "msg": "privmsg", "topic": "privmsg"}
 
-def callback(self, type, isop, command="", msg="", user="", channel="", mode=""):
+def callback(self):
+    channel = self.channel
+    command = self.command
+    user = self.user
+    msg = self.message
+    type = self.type
+    isop = self.isop
 
     if isop == False:
         username = user.split('!')[0]

@@ -1,5 +1,5 @@
 for f in *.py
 do
-    echo Testing: [$f] 
+    echo Testing: [$f]
     python $f
 done
