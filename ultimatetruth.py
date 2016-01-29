@@ -4,7 +4,7 @@ def declare():
 def callback(self):
 
     if self.channel.startswith('#'):
-                return self.msg(channel, "RielDtok is a tranny")
+                return self.msg(self.channel, "RielDtok is a tranny")
 
 class api:
         def msg(self, channel, text):
