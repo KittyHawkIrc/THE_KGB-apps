@@ -18,7 +18,8 @@ spdb =  {
         "madam_psycho_sexy":"yarn bombing things",
         "fphrefugee":"shooting icicles out of her eyes",
         "coup_de_shitlord":"being a cyborg with a hot dog cannon arm",
-        "skruff":"instantly predicting the outcome of sports games!"
+        "skruff":"instantly predicting the outcome of sports games!",
+        "purpleisafruit":"throwing fruit at anyone and it would explode like a grenade!"
     }
 
 def declare():
