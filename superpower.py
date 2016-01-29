@@ -26,7 +26,7 @@ def declare():
 
 def callback(self):
     if self.channel.startswith('#'):
-        var = message.split()
+        var = self.message.split()
 
         if var[1] == "help":
             self.msg(self.channel,"^superpower username")
