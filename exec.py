@@ -11,7 +11,7 @@ def declare():
 def callback(self):
     backup = sys.stdout
 
-    if self.channel.startswith('#') and self.isop:
+    if self.channel.startswith('#') and self.isowner:
         if self.command == 'exec':
             text = self.message.split('^exec ')[1]
         else:
