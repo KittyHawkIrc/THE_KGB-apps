@@ -29,15 +29,15 @@ def callback(self):
         var = self.message.split()
 
         if var[1] == "help":
-            self.msg(self.channel,"^superpower username")
-            return
+            return self.msg(self.channel,"^superpower username")
+            
 
         try:
-            self.msg(self.channel,"%s's superpower is %s" % (var[1], spdb[var[1].lower()]))
-            return
+            return self.msg(self.channel,"%s's superpower is %s" % (var[1], spdb[var[1].lower()]))
+            
         except:
-            self.msg(self.channel,"%s's not on the list" % (var[1]))
-            return
+            return self.msg(self.channel,"%s's not on the list" % (var[1]))
+           
 
 class api:
         def msg(self, channel, text):
@@ -56,4 +56,4 @@ if __name__ == "__main__":
         setattr(api, 'channel', '#test')
 
         if callback(api) != "[%s] Moudi's superpower is turning into rocks" % (c):
-                #exit(1) TODO: Make this not fail when the module works
+                exit(1)
