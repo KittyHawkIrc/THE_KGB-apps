@@ -7,8 +7,8 @@ def declare():
     return {"timepassed": "syncmsg"}
 
 def callback(self):
-	for self.user.lower().split('!')[0] in ignore:
-    	return 'IGNORED'
+	if self.user.lower().split('!')[0] in ignore:
+    		return 'IGNORED'
   
 	if self.outgoing_channel.lower() in channels:
 		#check if time's been set
