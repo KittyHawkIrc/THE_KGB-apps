@@ -40,7 +40,7 @@ def callback(self):
 		except:
 			self.store.timepassed = {self.outgoing_channel: [datetime.datetime.now(),diff.total_seconds()]}
 		
-		self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
+		return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
 		
 	else:
 		return 'WRONGCHANEL'
@@ -63,6 +63,7 @@ if __name__ == "__main__":
 	setattr(api, 'incoming_channel', '#test')
 	setattr(api, 'outgoing_channel', '#soopersekrit')
 	setattr(api, 'locker', empty)
+	setattr(api, 'store', empty)
 	
 	if callback(api) != 'IGNORED':
 		exit(1)
@@ -80,3 +81,4 @@ if __name__ == "__main__":
 	setattr(api, 'outgoing_channel', '#notchan')
 	if callback(api) != 'WRONGCHANNEL':
 		exit(6)
+	print(api.store.timepassed[api.outgoing_channel])
