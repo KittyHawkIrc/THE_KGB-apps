@@ -43,7 +43,7 @@ def callback(self):
 		return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
 		
 	else:
-		return 'WRONGCHANEL'
+		return 'WRONGCHANNEL'
 
 class api:
 	
