@@ -74,7 +74,7 @@ if __name__ == "__main__":
 	api.locker.time[api.outgoing_channel] = timedelta(seconds=api.locker.time[api.outgoing_channel].total_seconds() - 610)
 	if '0 hours and 10 minutes' not in callback(api):
 		exit(4)
-api.locker.time[api.outgoing_channel] = timedelta(seconds=api.locker.time[api.outgoing_channel].total_seconds() - 6310)
+	api.locker.time[api.outgoing_channel] = timedelta(seconds=api.locker.time[api.outgoing_channel].total_seconds() - 6310)
 	if '1 hours and 45 minutes' not in callback(api):
 		exit(5)
 	setattr(api, 'outgoing_channel', '#notchan')
