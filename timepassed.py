@@ -81,4 +81,4 @@ if __name__ == "__main__":
 	setattr(api, 'outgoing_channel', '#notchan')
 	if callback(api) != 'WRONGCHANNEL':
 		exit(6)
-	print(api.store.timepassed[api.outgoing_channel])
+	print(api.store.timepassed['#soopersekrit'])
