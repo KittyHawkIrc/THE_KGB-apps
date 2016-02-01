@@ -36,9 +36,13 @@ def callback(self):
 		
 		#add total seconds into the store
 		try:
-			self.store.timepassed[self.outgoing_channel] = [datetime.datetime.now(),diff.total_seconds()]
+			self.store.timepassed[self.outgoing_channel][datetime.datetime.now()] = diff.total_seconds()
 		except:
-			self.store.timepassed = {self.outgoing_channel: [datetime.datetime.now(),diff.total_seconds()]}
+			self.store.timepassed = {
+				self.outgoing_channel: {
+					datetime.datetime.now() : diff.total_seconds()
+				}
+			}
 		
 		return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
 		
