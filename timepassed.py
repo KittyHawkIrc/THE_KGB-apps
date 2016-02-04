@@ -80,22 +80,22 @@ if __name__ == "__main__":
 	if callback(api) != "[%s] It's been less than 10 minutes" % (api.outgoing_channel):
 		exit(3)
 	setattr(api, 'command', 'time')
-	setattr(api, 'msg', '^time')
+	setattr(api, 'message', '^time')
 	if callback(api) != "[%s] It's been less than 10 minutes" % (api.outgoing_channel):
-		exit(6)
+		exit(4)
 	setattr(api, 'command', 'timepassed')
 	setattr(api, 'msg', '^timepassed')
 	api.locker.time[api.outgoing_channel] = api.locker.time[api.outgoing_channel] - datetime.timedelta(seconds=610)
 	if '0 hours and 10 minutes' not in callback(api):
-		exit(4)
+		exit(5)
 	api.locker.time[api.outgoing_channel] = api.locker.time[api.outgoing_channel] - datetime.timedelta(seconds=6310)
 	if '1 hours and 45 minutes' not in callback(api):
-		exit(5)
+		exit(6)
 	setattr(api, 'command', 'time')
 	setattr(api, 'msg', '^time')
 	if "[%s] It's been 1 hours and 45 minutes since the last message was sent in %s" % (api.outgoing_channel,api.incoming_channel) not in callback(api):
-		exit(6)
+		exit(7)
 	setattr(api, 'outgoing_channel', '#notchan')
 	if callback(api) != 'WRONGCHANNEL':
-		exit(7)
+		exit(8)
 	print(api.store.timepassed['#soopersekrit'])
