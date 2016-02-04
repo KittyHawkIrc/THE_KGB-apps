@@ -13,18 +13,30 @@ def callback(self):
 	if self.outgoing_channel.lower() in channels:
 		#check if time's been set
 		try:
-			time = self.locker.time[self.outgoing_channel]
+			if self.ver == '1.1.7':
+				time = self.lockerbox['timepassed'].time[self.outgoing_channel]
+			else:
+				time = self.locker.time[self.outgoing_channel]
 		except:
 			try:
-				self.locker.time[self.outgoing_channel] = datetime.datetime.now()
+				if self.ver = '1.1.7':
+					self.lockerbox['timepassed'].time[self.outgoing_channel] = datetime.datetime.now()
+				else:
+					self.locker.time[self.outgoing_channel] = datetime.datetime.now()
 			except:
-				self.locker.time = {self.outgoing_channel: datetime.datetime.now()}
+				if self.ver = '1.1.7':
+					self.lockerbox['timepassed'].time = {self.outgoing_channel: datetime.datetime.now()}
+				else:
+					self.locker.time = {self.outgoing_channel: datetime.datetime.now()}
 			return 'NOTIME'
 		
 		diff = datetime.datetime.now() - time
 
 		if diff.total_seconds() < 600:
-			self.locker.time[self.outgoing_channel] = datetime.datetime.now()
+			if self.ver = '1.1.7':
+				self.lockerbox['timepassed'].time[self.outgoing_channel] = datetime.datetime.now()
+			else:
+				self.locker.time[self.outgoing_channel] = datetime.datetime.now()
 			return self.msg(self.outgoing_channel, "It's been less than 10 minutes")
 		
 		hours = diff.total_seconds() / 3600
@@ -35,7 +47,10 @@ def callback(self):
 			return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
 		
 		#set this time in the locker
-		self.locker.time[self.outgoing_channel] = datetime.datetime.now()
+		if self.ver = '1.1.7':
+			self.lockerbox['timepassed'].time[self.outgoing_channel] = datetime.datetime.now()
+		else:
+			self.locker.time[self.outgoing_channel] = datetime.datetime.now()
 		
 		#add total seconds into the store
 		try:
@@ -70,6 +85,8 @@ if __name__ == "__main__":
 	setattr(api, 'incoming_channel', '#test')
 	setattr(api, 'outgoing_channel', '#soopersekrit')
 	setattr(api, 'locker', empty)
+	setattr(api, 'lockerbox', empty)
+	setattr(api, 'ver', '1.1.7')
 	setattr(api, 'store', empty)
 	
 	if callback(api) != 'IGNORED':
@@ -85,15 +102,15 @@ if __name__ == "__main__":
 		exit(4)
 	setattr(api, 'command', 'timepassed')
 	setattr(api, 'message', '^timepassed')
-	api.locker.time[api.outgoing_channel] = api.locker.time[api.outgoing_channel] - datetime.timedelta(seconds=610)
+	api.lockerbox['timepassed'].time[api.outgoing_channel] = api.lockerbox['timepassed'].time[api.outgoing_channel] - datetime.timedelta(seconds=610)
 	if '0 hours and 10 minutes' not in callback(api):
 		exit(5)
-	api.locker.time[api.outgoing_channel] = api.locker.time[api.outgoing_channel] - datetime.timedelta(seconds=6310)
+	api.lockerbox['timepassed'].time[api.outgoing_channel] = api.lockerbox['timepassed'].time[api.outgoing_channel] - datetime.timedelta(seconds=6310)
 	if '1 hours and 45 minutes' not in callback(api):
 		exit(6)
 	setattr(api, 'command', 'time')
 	setattr(api, 'message', '^time')
-	api.locker.time[api.outgoing_channel] = api.locker.time[api.outgoing_channel] - datetime.timedelta(seconds=6310)
+	api.lockerbox['timepassed'].time[api.outgoing_channel] = api.lockerbox['timepassed'].time[api.outgoing_channel] - datetime.timedelta(seconds=6310)
 	if "1 hours and 45 minute" not in callback(api):
 		print callback(api)
 		exit(7)
