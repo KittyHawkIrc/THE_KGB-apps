@@ -31,7 +31,7 @@ def callback(self):
 		minutes = int(hours % 1 * 60)
 		hours = int(hours)
 		
-		if command == "time":
+		if self.command == "time":
 			return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
 		
 		#set this time in the locker
