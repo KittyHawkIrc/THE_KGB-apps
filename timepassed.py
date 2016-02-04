@@ -93,7 +93,7 @@ if __name__ == "__main__":
 		exit(6)
 	setattr(api, 'command', 'time')
 	setattr(api, 'message', '^time')
-	if "[%s] It's been 1 hours and 45 minutes since the last message was sent in %s" % (api.outgoing_channel,api.incoming_channel) not in callback(api):
+	if "1 hours and 45 minute" not in callback(api):
 		exit(7)
 	setattr(api, 'outgoing_channel', '#notchan')
 	if callback(api) != 'WRONGCHANNEL':
