@@ -85,7 +85,7 @@ if __name__ == "__main__":
 	setattr(api, 'incoming_channel', '#test')
 	setattr(api, 'outgoing_channel', '#soopersekrit')
 	setattr(api, 'locker', empty)
-	setattr(api, 'lockerbox', {})
+	setattr(api, 'lockerbox', {api.locker})
 	setattr(api, 'ver', '1.1.7')
 	setattr(api, 'store', empty)
 	
