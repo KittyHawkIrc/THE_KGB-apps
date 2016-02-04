@@ -37,7 +37,10 @@ def callback(self):
 				self.lockerbox['timepassed'].time[self.outgoing_channel] = datetime.datetime.now()
 			else:
 				self.locker.time[self.outgoing_channel] = datetime.datetime.now()
-			return self.msg(self.outgoing_channel, "It's been less than 10 minutes")
+			if self.command == 'time':
+				return self.msg(self.outgoing_channel, "It's been less than 10 minutes")
+			else:
+				return "It's been less than 10 minutes"
 		
 		hours = diff.total_seconds() / 3600
 		minutes = int(hours % 1 * 60)
@@ -94,7 +97,7 @@ if __name__ == "__main__":
 	setattr(api, 'user', 'cooooop!username@hostmask')
 	if callback(api) != 'NOTIME':
 		exit(2)
-	if callback(api) != "[%s] It's been less than 10 minutes" % (api.outgoing_channel):
+	if callback(api) != "It's been less than 10 minutes":
 		exit(3)
 	setattr(api, 'command', 'time')
 	setattr(api, 'message', '^time')
