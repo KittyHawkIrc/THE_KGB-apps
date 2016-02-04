@@ -19,12 +19,12 @@ def callback(self):
 				time = self.locker.time[self.outgoing_channel]
 		except:
 			try:
-				if self.ver = '1.1.7':
+				if self.ver == '1.1.7':
 					self.lockerbox['timepassed'].time[self.outgoing_channel] = datetime.datetime.now()
 				else:
 					self.locker.time[self.outgoing_channel] = datetime.datetime.now()
 			except:
-				if self.ver = '1.1.7':
+				if self.ver == '1.1.7':
 					self.lockerbox['timepassed'].time = {self.outgoing_channel: datetime.datetime.now()}
 				else:
 					self.locker.time = {self.outgoing_channel: datetime.datetime.now()}
@@ -33,7 +33,7 @@ def callback(self):
 		diff = datetime.datetime.now() - time
 
 		if diff.total_seconds() < 600:
-			if self.ver = '1.1.7':
+			if self.ver == '1.1.7':
 				self.lockerbox['timepassed'].time[self.outgoing_channel] = datetime.datetime.now()
 			else:
 				self.locker.time[self.outgoing_channel] = datetime.datetime.now()
@@ -47,7 +47,7 @@ def callback(self):
 			return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
 		
 		#set this time in the locker
-		if self.ver = '1.1.7':
+		if self.ver == '1.1.7':
 			self.lockerbox['timepassed'].time[self.outgoing_channel] = datetime.datetime.now()
 		else:
 			self.locker.time[self.outgoing_channel] = datetime.datetime.now()
