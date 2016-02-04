@@ -93,6 +93,7 @@ if __name__ == "__main__":
 		exit(6)
 	setattr(api, 'command', 'time')
 	setattr(api, 'message', '^time')
+	api.locker.time[api.outgoing_channel] = api.locker.time[api.outgoing_channel] - datetime.timedelta(seconds=6310)
 	if "1 hours and 45 minute" not in callback(api):
 		print callback(api)
 		exit(7)
