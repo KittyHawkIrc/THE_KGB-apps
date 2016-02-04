@@ -84,7 +84,7 @@ if __name__ == "__main__":
 	if callback(api) != "[%s] It's been less than 10 minutes" % (api.outgoing_channel):
 		exit(4)
 	setattr(api, 'command', 'timepassed')
-	setattr(api, 'msg', '^timepassed')
+	setattr(api, 'message', '^timepassed')
 	api.locker.time[api.outgoing_channel] = api.locker.time[api.outgoing_channel] - datetime.timedelta(seconds=610)
 	if '0 hours and 10 minutes' not in callback(api):
 		exit(5)
