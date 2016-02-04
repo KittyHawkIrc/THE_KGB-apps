@@ -1,6 +1,6 @@
 import datetime
 
-diff = self.lockerbox['#fatpeoplehate#soopersekrit'].time['#soopersekrit']
+diff = datetime.datetime.now() - self.lockerbox['#fatpeoplehate#soopersekrit'].time['#soopersekrit']
 
 hours = diff.total_seconds() / 3600
 minutes = hours % 1 * 60
