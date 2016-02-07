@@ -24,10 +24,10 @@ def callback(self):
 		diff = datetime.datetime.now() - time
 
 		if diff.total_seconds() < 600:
-			self.locker.time[self.outgoing_channel] = datetime.datetime.now()
 			if self.command == 'time':
 				return self.msg(self.outgoing_channel, "It's been less than 10 minutes")
 			else:
+				self.locker.time[self.outgoing_channel] = datetime.datetime.now()
 				return "It's been less than 10 minutes"
 		
 		hours = diff.total_seconds() / 3600
