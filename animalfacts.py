@@ -1,3 +1,5 @@
+import random
+
 factimg = {
   "https://i.sli.mg/3WbUYA.jpg",
   "https://i.sli.mg/3WbUYA.jpg",
