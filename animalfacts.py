@@ -121,7 +121,7 @@ def declare():
   return {"animalfacts": "privmsg", "sadanimalfacts": "privmsg"}
 
 def callback(self):
-  self.msg(self.channel, "Here's a sad animal fact for you! %s" % (random.choice(factimg))
+  self.msg(self.channel, "Here's a sad animal fact for you! %s" % (random.choice(factimg)))
 
 class api:
   def msg(self, channel, text):
