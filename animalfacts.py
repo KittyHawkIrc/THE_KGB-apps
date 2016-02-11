@@ -1,6 +1,6 @@
 import random
 
-factimg = {
+factimg = [
   "https://i.sli.mg/3WbUYA.jpg",
   "https://i.sli.mg/3WbUYA.jpg",
   "https://i.sli.mg/er1srJ.png",
@@ -117,7 +117,7 @@ factimg = {
   "https://i.sli.mg/BFOwOJ.jpg",
   "https://i.sli.mg/uI8HbM.jpg",
   "https://i.sli.mg/29AaSf.jpg"
-}
+]
 
 def declare():
   return {"animalfacts": "privmsg", "sadanimalfacts": "privmsg"}
