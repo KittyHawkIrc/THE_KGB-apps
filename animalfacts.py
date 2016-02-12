@@ -1,6 +1,7 @@
 import random
 
 factimg = [
+  "https://i.sli.mg/UT4Jtw.png",
   "https://i.sli.mg/3WbUYA.jpg",
   "https://i.sli.mg/3WbUYA.jpg",
   "https://i.sli.mg/er1srJ.png",
