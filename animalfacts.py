@@ -1,6 +1,13 @@
 import random
 
 factimg = [
+  "https://i.sli.mg/69q0D6.png",
+  "https://i.sli.mg/O6FoBq.png",
+  "https://i.sli.mg/4BwmmO.png",
+  "https://i.sli.mg/yiF1Dx.png",
+  "https://i.sli.mg/uXfU31.jpg",
+  "https://i.sli.mg/UdVNJw.png",
+  "https://i.sli.mg/UT4Jtw.png",
   "https://i.sli.mg/3WbUYA.jpg",
   "https://i.sli.mg/3WbUYA.jpg",
   "https://i.sli.mg/er1srJ.png",

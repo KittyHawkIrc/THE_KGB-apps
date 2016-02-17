@@ -1,4 +1,4 @@
-ignore = {'invisiblecalories', 'justnotfair', '}o{', 'LimitServ', 'TY-info', 'VALIS', 'FatStats'}
+ignore = {'invisiblecalories', 'justnotfair', '}o{', 'LimitServ', 'YT-info', 'VALIS', 'FatStats'}
 
 def declare():
     return {"overkill": "userjoin"}
