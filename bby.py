@@ -5,7 +5,7 @@ def callback(self):
 
     if self.channel.startswith('#'):
         try:
-            u = self.message.split(' ')[1]
+            u = self.message.split()[1]
         except:
             u = self.user.split('!',1)[0]
         return self.msg(self.channel, "Wow %s, you look absolutely gorgeous today" % (u))
