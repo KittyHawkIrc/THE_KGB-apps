@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorial - KittyHawk Documentation</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Tutorial";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> KittyHawk Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Intro</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../api/">API reference</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Tutorial</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#kittyhawk-module-tutorial">KittyHawk module tutorial</a></li>
+                
+                    <li><a class="toctree-l4" href="#declaring-hooks">Declaring hooks</a></li>
+                
+                    <li><a class="toctree-l4" href="#the-callback">The callback</a></li>
+                
+                    <li><a class="toctree-l4" href="#executing-code-on-load">Executing code on load</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">KittyHawk Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Tutorial</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="kittyhawk-module-tutorial">KittyHawk module tutorial</h1>
+<h2 id="declaring-hooks">Declaring hooks</h2>
+<p>All modules must declare hooks. A hook is a set of option(s) and cases that are added in to the runtime to expand the scope and functionality of KittyHawk.</p>
+<p>First, start by creating the initial declare callback function. It returns a dict of hooks.</p>
+<pre><code>def declare():
+    return {&quot;hello&quot;: &quot;privmsg&quot;}
+</code></pre>
+
+<p>In this example the hook type <strong>privmsg</strong> is specified with the hook name <strong>hello</strong>. If we assume the command key (typically ^) is its default this means that KittyHawk will run the module only if <code>key + hook name</code> is called. In this case that would be <code>^hello</code>.</p>
+<p>Not all hooks are commands, actions like <code>userjoin</code> and messages from syncs can also be used, where the hook name is usually the modules name.</p>
+<h3 id="other-hook-types">Other hook types</h3>
+<p>In a module where we wanted to auto-voice users when they join a channel we'd specify something like the following:</p>
+<pre><code>def declare():
+    return {&quot;autovoice&quot;: &quot;userjoin&quot;}
+</code></pre>
+
+<p>If we wanted to specify <code>userjoin</code> and a couple hooks, we can do this too.</p>
+<pre><code>def declare():
+    return {&quot;hello&quot;: &quot;privmsg&quot;, &quot;autojoin&quot;: &quot;userjoin&quot;, &quot;greet&quot;: &quot;privmsg&quot;}
+</code></pre>
+
+<h2 id="the-callback">The callback</h2>
+<p>The real bread of the module is the callback function, this is executed every time the hook declared prior is called. These all start exactly the same:</p>
+<pre><code>def callback(self):
+</code></pre>
+
+<p>The self object is documented in the <a href="../api/">API documentation</a>.</p>
+<p>Now that we've got our <code>hello</code> hook added, let's first check the users permissions before moving forward so we know what to say next.</p>
+<pre><code>if self.isowner:
+    user_type = 'owner'
+
+elif self.isop:
+    user_type = 'operator'
+
+else:
+    user_type = 'user'
+</code></pre>
+
+<p>Here we're setting the value of the <code>user_type</code> string based on permissions, noting that while <code>self.isop</code> is true for owners, <code>self.isowner</code> being first causes the if statement to finish.</p>
+<h3 id="showing-the-user">Showing the user</h3>
+<p>Next we just need to print our finished string to the channel, so just toss in an extra line:</p>
+<pre><code>self.msg(self.channel, &quot;And a hello to you too, %s %s!&quot; % (user_type, self.user))
+</code></pre>
+
+<p>If you have the <a href="../api/">API documentation</a> open this line should be pretty self-explanatory.</p>
+<h3 id="the-finished-code">The finished code</h3>
+<p>By now you should have a fully working and completed <code>^hello</code> hook and module all ready to add. This should look like the following:</p>
+<p>```
+def declare():
+    return {"hello": "privmsg"}</p>
+<p>def callback(self):
+    if self.isowner:
+        user_type = 'owner'</p>
+<pre><code>elif self.isop:
+    user_type = 'operator'
+
+else:
+    user_type = 'user'
+
+self.msg(self.channel, "And a hello to you too, %s %s!" % (user_type, self.user))
+</code></pre>
+<p>```</p>
+<h2 id="executing-code-on-load">Executing code on load</h2>
+<p>Code written out of functions is executed only once on the first <code>mod_load</code>, but can be accessed by functions later. Note that <code>mod_load</code> or restarting would totally reset anything stored.</p>
+<p>```
+ api_key = getapikey()</p>
+<p>def declare():
+    return {"translate": "privmsg"}</p>
+<p>def callback(self):
+    text = self.message.split(' ', 1)[1]
+    self.msg(self.channel, translate(api_key, text))<br />
+ ```</p>
+<p>Note that while the <code>translate</code> and <code>getapikey()</code> functions are made up. Also note that text is the data after the ^translate part in <code>^translate wie heisst du</code>.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../api/" class="btn btn-neutral" title="API reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../api/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+
+</body>
+</html>
