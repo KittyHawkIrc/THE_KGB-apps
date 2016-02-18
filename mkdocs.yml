@@ -2,4 +2,5 @@ site_name: KittyHawk Documentation
 pages:
 - Intro: index.md
 - API reference: api.md
+- Tutorial: tutorial.md
 theme: readthedocs
