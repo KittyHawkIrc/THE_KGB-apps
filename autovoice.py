@@ -14,6 +14,6 @@ def callback(self):
         isverified = eval(fd.read())
         fd.close()
         
-        u = self.user.split('!',1)[0]
+        u = self.user.split('!',1)[0].lower()
         if u in isverified:
             self.msg('ChanServ', 'voice %s %s' % (self.channel, u))
