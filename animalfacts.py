@@ -155,4 +155,4 @@ if __name__ == "__main__":
     system.exit(1)
   setattr(api, 'message', '^animalfacts new')
   if factimg[0] not in callback(api):
-    sys.exit(2)
+    exit(2)
