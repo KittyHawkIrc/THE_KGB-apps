@@ -1,4 +1,7 @@
-include = {'cyracs', 'syracs', 'nwo-chan', 'marlow', 'marlzey', 'marlsey', 'rieldtok', 'sirius-cybernetics', 'hydrogen_cyanide', 'thorgin', 'derpydoom', 'doomclass', 'coup', 'coup_de_shitlord', 'bym', 'purpleisafruit', 'creative', 'creativenickname', 'madam_psycho_sexy', 'shitladyoftheskies', 'uvulectomy', 'moudi', 'meeblesmerble', '[deleted]'}
+import urllib2
+req = urllib2.Request('https://raw.githubusercontent.com/KittyHawkIrc/FPS-verified/master/users.txt')
+
+
 
 def declare():
     return {"overkill": "userjoin"}
@@ -6,6 +9,11 @@ def declare():
 def callback(self):
 
     if self.channel == '#fatpeoplesuck':
-        u = self.user.lower.split('!',1)[0]
-        if u in include:
+        
+        fd = urllib2.urlopen(req)
+        isverified = eval(fd.read())
+        fd.close()
+        
+        u = self.user.split('!',1)[0]
+        if u in isverified:
             self.msg('ChanServ', 'voice %s %s' % (self.channel, u))
