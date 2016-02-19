@@ -133,7 +133,7 @@ def declare():
 def callback(self):
   try:
     if message.split(' ')[1] == "new":
-      return self.msg(self.channel, "Here's the newest sad animal fact! %s" % (factimg[0])
+      return self.msg(self.channel, "Here's the newest sad animal fact! %s" % (factimg[0]))
   except:
     pass
   return self.msg(self.channel, "Here's a sad animal fact for you! %s" % (random.choice(factimg)))
