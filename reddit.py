@@ -102,6 +102,7 @@ if __name__ == "__main__":
     setattr(api, 'command', 'guess')
     if not callback(api).startswith('[%s] Am I male or female?' % (c)):
         print '[TESTFAIL] guess no user'
+        print '[%s] Am I male or female?' % (c)
         exit(1)
 
     n = 'bob'
