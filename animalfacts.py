@@ -1,6 +1,7 @@
 import random
 
 factimg = [
+  "https://i.sli.mg/ELRYvY.png",
   "https://i.sli.mg/69q0D6.png",
   "https://i.sli.mg/O6FoBq.png",
   "https://i.sli.mg/4BwmmO.png",
@@ -130,6 +131,11 @@ def declare():
   return {"animalfacts": "privmsg", "sadanimalfacts": "privmsg"}
 
 def callback(self):
+  try:
+    if self.message.split(' ')[1] == "new":
+      return self.msg(self.channel, "Here's the newest sad animal fact! %s" % (factimg[0]))
+  except:
+    pass
   return self.msg(self.channel, "Here's a sad animal fact for you! %s" % (random.choice(factimg)))
 
 class api:
@@ -140,9 +146,13 @@ if __name__ == "__main__":
   api = api()
   setattr(api, 'isop', True)
   setattr(api, 'type', 'privmsg')
-  setattr(api, 'command', 'animalfact')
+  setattr(api, 'command', 'animalfacts')
   setattr(api, 'user', 'joe!username@hostmask')
   setattr(api, 'channel', "#test")
+  setattr(api, 'message', '^animalfacts')
   
   if "https://i.sli.mg/" not in callback(api):
     system.exit(1)
+  setattr(api, 'message', '^animalfacts new')
+  if factimg[0] not in callback(api):
+    exit(2)
