@@ -21,6 +21,7 @@ def callback(self):
 
 class api:
     def msg(self, channel, text):
+        print "[%s] %s" % (channel, text)
         return "[%s] %s" % (channel, text)
 
 if __name__ == "__main__":
