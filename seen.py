@@ -34,7 +34,7 @@ if __name__ == "__main__":
     setattr(api, 'type', 'privmsg')
     setattr(api, 'message', '^seen joe')
     
-    if 'Just whois yourself, you fool' not in callback(api):
+    if 'whois yourself' not in callback(api):
         exit(1)
     setattr(api, 'user', 'john!username@hostmask')
     if 'joe was last seen joining #test at' not in callback(api):
