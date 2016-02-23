@@ -2,17 +2,17 @@ import datetime
 users = {"none" : [datetime.datetime.now(),"#none"]}
 
 def declare():
-    return {"seen": "userjoin", "seen": "privmsg"}
+    return {"seenjoin": "userjoin", "seen": "privmsg"}
 
 def callback(self):
   u = self.user.lower().split('!')[0]
   
-  self.msg('#THE_KGB', "user joined")
-  self.msg('#THE_KGB', self.__dict__['type'])
+  #self.msg('#THE_KGB', "user joined")
+  #self.msg('#THE_KGB', self.__dict__['type'])
   
   if self.__dict__['type'] == 'userjoin':
     users[u] = [datetime.datetime.now(),self.channel]
-    self.msg('#THE_KGB', '%s has joined' % (u))
+    #self.msg('#THE_KGB', '%s has joined' % (u))
   else:
     u2 = self.message.split(' ')[1].lower()
     try:
