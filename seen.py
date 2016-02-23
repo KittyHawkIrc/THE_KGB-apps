@@ -7,7 +7,7 @@ def declare():
 def callback(self):
   u = self.user.lower().split('!')[0]
   
-  if self.type == 'userjoin':
+  if self.type != 'privmsg':
     users[u] = [datetime.datetime.now(),self.channel]
     self.msg('#THE_KGB', '%s : %s, %s' % (u,datetime.datetime.now(),self.channel))
   else:
