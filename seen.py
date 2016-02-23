@@ -13,11 +13,11 @@ def callback(self):
     u2 = self.message.split(' ')[1]
     try:
       if u2 == u:
-        self.msg('Just whois yourself, you fool')
+        return self.msg(self.channel, 'Just whois yourself, you fool')
       else:
-        self.msg('%s was last seen joining %s at %s. Also fuck proper formatting. Who do you think you are, a stripper? You don\'t tell me what to do.' % (u2, users[u2][0], users[u2][1]))
+        return self.msg(self.channel, '%s was last seen joining %s at %s. Also fuck proper formatting. Who do you think you are, a stripper? You don\'t tell me what to do.' % (u2, users[u2][0], users[u2][1]))
     except:
-        return self.msg('I have not seen this person yet. Please try later. Thank you.')
+        return self.msg(self.channel, 'I have not seen this person yet. Please try later. Thank you.')
 
 class api:
     def msg(self, channel, text):
