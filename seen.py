@@ -40,5 +40,5 @@ if __name__ == "__main__":
     if 'joe was last seen joining #test at' not in callback(api):
         exit(2)
     setattr(api, 'message', '^seen jack')
-    if 'I have not seen this erson yet. Please try later. Thank you' not in callback(api):
+    if 'I have not seen this person yet. Please try later. Thank you.' not in callback(api):
         exit(3)
