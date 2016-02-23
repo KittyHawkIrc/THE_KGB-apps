@@ -7,9 +7,8 @@ def declare():
 def callback(self):
   u = self.user.lower().split('!')[0]
   
-  if self.type != 'privmsg':
+  if self.__dict__['type'] != 'privmsg':
     users[u] = [datetime.datetime.now(),self.channel]
-    self.msg('#THE_KGB', '%s : %s, %s' % (u,datetime.datetime.now(),self.channel))
   else:
     u2 = self.message.split(' ')[1].lower()
     try:
