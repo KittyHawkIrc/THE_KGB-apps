@@ -15,7 +15,7 @@ def callback(self):
       if u2 == u:
         return self.msg(self.channel, 'Just whois yourself, you fool')
       else:
-        return self.msg(self.channel, '%s was last seen joining %s at %s. Also fuck proper formatting. Who do you think you are, my stripper? You don\'t tell me what to do. It is currently %s' % (u2, users[u2][1], users[u2][0] datetime.datetime.now()))
+        return self.msg(self.channel, '%s was last seen joining %s at %s. Also fuck proper formatting. Who do you think you are, my stripper? You don\'t tell me what to do. It is currently %s' % (u2, users[u2][1], users[u2][0], datetime.datetime.now()))
     except:
         return self.msg(self.channel, 'I have not seen this person yet. Please try later. Thank you.')
 
