@@ -10,10 +10,10 @@ def callback(self):
   if self.type == 'userjoin':
     users[u] = [datetime.datetime.now(),self.channel]
   else:
-    u2 = self.lower().message.split(' ')[1]
+    u2 = self.message.split(' ')[1].lower()
     try:
       if u2 == u:
-        return self.msg(self.channel, 'Just whois yourself, you fool.')
+        return self.msg(self.channel, 'Just whois yourself. Also, this is not intended to be witty. I fucking work on user joins for christ sake. Leave me alone.')
       else:
         return self.msg(self.channel, '%s was last seen joining %s at %s. Also fuck proper formatting. Who do you think you are, my stripper? You don\'t tell me what to do. It is currently %s' % (u2, users[u2][1], users[u2][0], datetime.datetime.now()))
     except:
