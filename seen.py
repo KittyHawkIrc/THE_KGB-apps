@@ -1,23 +1,23 @@
 import datetime
-users = {}
+users = {"none" : [datetime.datetime.now(),"#none"]}
 
 def declare():
-    return {"seen": "userjoin", "seen": "privmsg"}
+    return {"seenjoin": "userjoin", "seen": "privmsg"}
 
 def callback(self):
-  u = self.user.split('!')[0]
+  u = self.user.lower().split('!')[0]
   
-  if self.type == 'userjoin':
+  if self.__dict__['type'] == 'userjoin':
     users[u] = [datetime.datetime.now(),self.channel]
   else:
-    u2 = self.message.split(' ')[1]
+    u2 = self.message.split(' ')[1].lower()
     try:
       if u2 == u:
-        return self.msg(self.channel, 'Just whois yourself, you fool')
+        return self.msg(self.channel, '/whois %s' % (u))
       else:
-        return self.msg(self.channel, '%s was last seen joining %s at %s. Also fuck proper formatting. Who do you think you are, my stripper? You don\'t tell me what to do. It is currently %s' % (u2, users[u2][1], users[u2][0], datetime.datetime.now()))
+        return self.msg(self.channel, '%s was last seen joining %s at %s. It is currently %s' % (u2, users[u2][1], users[u2][0], datetime.datetime.now()))
     except:
-        return self.msg(self.channel, 'I have not seen this person yet. Please try later. Thank you.')
+        return self.msg(self.channel, 'I have not seen %s yet. Please try later. Thank you.' % (u2))
 
 class api:
     def msg(self, channel, text):
@@ -34,11 +34,11 @@ if __name__ == "__main__":
     setattr(api, 'type', 'privmsg')
     setattr(api, 'message', '^seen joe')
     
-    if 'Just whois yourself, you fool' not in callback(api):
+    if '/whois ' not in callback(api):
         exit(1)
     setattr(api, 'user', 'john!username@hostmask')
     if 'joe was last seen joining #test at' not in callback(api):
         exit(2)
     setattr(api, 'message', '^seen jack')
-    if 'I have not seen this person yet. Please try later. Thank you.' not in callback(api):
+    if 'I have not seen %s yet. Please try later. Thank you.' % ('jack') not in callback(api):
         exit(3)
