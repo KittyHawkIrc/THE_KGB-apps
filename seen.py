@@ -15,7 +15,7 @@ def callback(self):
       if u2 == u:
         self.msg('Just whois yourself, you fool')
       else:
-        self.msg('%s was last seen joining %s at %s. Also fuck proper formatting. Who do you think you are, a stripper? You don't tell me what to do.' % (u2, users[u2][0], users[u2][1]))
+        self.msg('%s was last seen joining %s at %s. Also fuck proper formatting. Who do you think you are, a stripper? You don\'t tell me what to do.' % (u2, users[u2][0], users[u2][1]))
     except:
         return self.msg('I have not seen this person yet. Please try later. Thank you.')
 
