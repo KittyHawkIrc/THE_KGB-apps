@@ -40,7 +40,7 @@ def callback(self):
                 if parameter[1] in unit[:-1]:
                     mass += parameter[0] * unit[-1]
 
-    if m > 0 and kg >= 0:
+    if height > 0 and mass >= 0:
         bmi = mass / (height ** 2)
 
         output = 'Your BMI is %s, you are \002\003' % format(bmi, '.2f')
@@ -75,11 +75,11 @@ def parseMessage(message):
         stringSearch = reString.search(item)
 
         if floatSearch and stringSearch:
-            parameters.append([float(reNum.search(item).group()), reStr.search(item).group().lower()])
+            parameters.append([float(reFloat.search(item).group()), reString.search(item).group().lower()])
         elif floatSearch:
-            parameters.append([float(reNum.search(item).group())])
+            parameters.append([float(reFloat.search(item).group())])
         elif stringSearch and len(parameters) > 0:
-            parameters[-1].append(reStr.search(item).group().lower().rstrip('s'))
+            parameters[-1].append(reString.search(item).group().lower().rstrip('s'))
 
     for i, item in enumerate(parameters):
         if i > 0 and parameters[i - 1][1] == '\'' and len(item) < 2:
