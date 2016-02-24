@@ -1,7 +1,7 @@
 import datetime
 
 channels = {'#soopersekrit'}
-ignore = {'fatstats', 'homersimpson', 'shiznitlord', 'shiznitleader', 'tj', 'BESTERBESTERBESTERBESTERBESTER', 'AssGoblinOfAuschwitz'}
+ignore = {'fatstats', 'homersimpson', 'shiznitlord', 'shiznitleader', 'tj', 'besterbesterbesterbesterbester', 'assgoblinofauschwitz'}
 
 def declare():
     return {"timepassed": "syncmsg", "time": "privmsg"}
