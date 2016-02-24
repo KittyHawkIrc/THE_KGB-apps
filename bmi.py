@@ -82,7 +82,23 @@ def parseMessage(message):
             parameters[-1].append(reStr.search(item).group().lower().rstrip('s'))
 
     for i, item in enumerate(parameters):
-        if i > 0, parameters[i - 1][1] == '\'' and len(item) < 2:
+        if i > 0 and parameters[i - 1][1] == '\'' and len(item) < 2:
             item.append('\"')
 
     return parameters
+
+class api:
+  def msg(self, channel, text):
+    return "[%s] %s" % (channel, text)
+
+if __name__ == "__main__":
+  api = api()
+  setattr(api, 'isop', True)
+  setattr(api, 'type', 'privmsg')
+  setattr(api, 'command', 'bmi')
+  setattr(api, 'user', 'joe!username@hostmask')
+  setattr(api, 'channel', "#test")
+  setattr(api, 'message', '^bmi 5\'6\" 130lbs')
+
+  if "Your BMI is" not in callback(api):
+    system.exit(1)
