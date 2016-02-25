@@ -1,3 +1,5 @@
+import random
+
 def declare():
     return {"bby": "privmsg"}
 
