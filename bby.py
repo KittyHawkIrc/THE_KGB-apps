@@ -8,8 +8,10 @@ def callback(self):
             u = self.message.split()[1]
         except:
             u = self.user.split('!',1)[0]
-        return self.msg(self.channel, "Wow %s, you look absolutely gorgeous today" % (u))
-
+        if u != 'bym':
+            return self.msg(self.channel, "Wow %s, you look absolutely gorgeous today" % (u))
+        else
+            return self.msg(self.channel, "Wow %s, you look like absolute shit today. Maybe you should go kill yourself you emo faggot." % (u))
 class api:
 
     def msg(self, channel, text):
