@@ -28,7 +28,7 @@ def callback(self):
 	
 	try:
 		if p1 in self.locker.bmi:
-			bmi = self.locker.bmi[u]
+			bmi = self.locker.bmi[p1]
 			if bmi < 18.5:
 				o = '\002\00308underweight'
 			elif bmi > 24:
@@ -156,6 +156,7 @@ if __name__ == "__main__":
 	setattr(api, 'message', '^bmi set 5\'6\" 130lbs')
 	if "Your BMI is set to be 20.98" not in callback(api):
 		exit(2)
+	setattr(api, 'user', 'john')
 	setattr(api, 'message', '^bmi joe')
 	if "Joe's BMI is 20.98" not in callback(api):
 		exit(3)
