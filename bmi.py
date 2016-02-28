@@ -47,7 +47,7 @@ def callback(self):
 		
 		return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'\.2f'), o)
 	
-	c = calc(self)
+	c = calc()
 	bmi = c[0]
 	mass = c[1]
 	height = c[2]
