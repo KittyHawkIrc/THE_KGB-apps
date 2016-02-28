@@ -18,7 +18,6 @@ masses = [['mg','milligram', 0.000001],
 
 heightUnits = [i for s in heights for i in s if type(i) == str]
 massUnits = [i for s in masses for i in s if type(i) == str]
-bmiUnit = ['bmi']
 
 def declare():
     return {'bmi': 'privmsg'}
@@ -81,7 +80,7 @@ def parseMessage(message):
     reFloat = re.compile('(\d+[.])?\d+')
     reString = re.compile('[^\.\d]+')
 
-    messageSplit = split(message, heightUnits + massUnits + bmiUnit)
+    messageSplit = split(message, heightUnits + massUnits + ['bmi'])
 
     for item in messageSplit:
         floatSearch = reFloat.search(item)
