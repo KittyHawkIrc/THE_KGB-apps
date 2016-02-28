@@ -1,3 +1,5 @@
+import random
+
 def declare():
     return {"bby": "privmsg"}
 
@@ -8,8 +10,10 @@ def callback(self):
             u = self.message.split()[1]
         except:
             u = self.user.split('!',1)[0]
-        return self.msg(self.channel, "Wow %s, you look absolutely gorgeous today" % (u))
-
+        if random.randint(0,200) != 100:
+            return self.msg(self.channel, "Wow %s, you look absolutely gorgeous today" % (u))
+        else:
+            return self.msg(self.channel, "Wow %s, you look like absolute shit today. Maybe that pathetic useless life of yours should be put to the ultimate end. You should feel ashamed for having ever existed." % (u))
 class api:
 
     def msg(self, channel, text):

@@ -101,4 +101,4 @@ if __name__ == "__main__":
   setattr(api, 'message', '^bmi 5\'6\" 130lbs')
 
   if "Your BMI is" not in callback(api):
-    system.exit(1)
+    exit(1)
