@@ -28,7 +28,10 @@ def callback(self):
 	
 	try:
 		if p1 in self.locker.bmi:
-			bmi = self.locker.bmi[p1]
+			bmi = self.locker.bmi[p1][0]
+			mass = self.locker.bmi[p1][1]
+			weight = self.locker.bmi[p1][2]
+			privacy = self.locker.bmi[p1][3]
 			if bmi < 18.5:
 				o = '\002\00308underweight'
 			elif bmi > 25:
@@ -38,7 +41,10 @@ def callback(self):
 			else:
 				o = '\002\00309in a normal healthy range'
 			
-			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'.2f'), o))
+			if privacy == True:
+				return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'.2f'), o))
+			else
+				return self.msg(self.channel, '%s\'s BMI is %s with a height and weight of %s meters and %s kg. This BMI is %s.' % (p1.capitalize(), format(bmi,'.2f'), height, mass, o))
 	except:
 		self.locker.bmi = dict()
 	
@@ -48,12 +54,13 @@ def callback(self):
 	height = ca[2]
 	
 	if p1 == 'set':
-		try:
-			self.locker.bmi[u] = mass / (height ** 2)
-		except:
-			self.locker.bmi = {u : mass / (height ** 2)}
-		
-		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'.2f')))
+		if height > 0 and mass >= 0 and bmi == 0:
+			bmi = mass / (height ** 2)
+		elif height > 0 and bmi > 0:
+			mass = bmi * (height ** 2)
+		elif bmi > 0:
+			height = math.sqrt(mass / bmi)
+		return setLocker(bmi, mass, height, "true" in self.message.lower())
 	
 	if height > 0 and mass >= 0 and bmi == 0:
 		bmi = mass / (height ** 2)
@@ -80,6 +87,16 @@ def callback(self):
 		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
 	
 	return self.msg(self.channel, "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it.")
+
+def setLocker(self, bmi, mass, height, privacy):
+	u = self.user.split('!')[0].lower()
+	
+	try:
+		self.locker.bmi[u] = [bmi, mass, height, privacy]
+	except:
+		self.locker.bmi = {u : [bmi, mass, height, privacy]}
+	
+	return self.msg(self.channel,"Your BMI is set to be %s, with a weight and height of %s kg and %s meters with privacy set to %s." % (format(self.locker.bmi[u][0],'.2f'),self.locker.bmi[u][1],self.locker.bmi[u][2],self.locker.bmi[u][2]))
 
 def calc(self):
 	mass = 0.0
@@ -158,8 +175,14 @@ if __name__ == "__main__":
 		exit(2)
 	setattr(api, 'user', 'john')
 	setattr(api, 'message', '^bmi joe')
-	if "Joe's BMI is 20.98" not in callback(api):
+	if "Joe's BMI is 20.98 with a height and weight of" not in callback(api):
 		exit(3)
 	setattr(api, 'message', '^bmi john')
 	if "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it." not in callback(api):
 		exit(4)
+	setattr(api, 'message', '^bmi set 5\'6\" 130lbs true')
+	if "with privacy set to True." not in callback(api):
+		exit(5)
+	setattr(api, 'message', '^bmi john')
+	if "height and weight of" in callback(api):
+		exit(6)
