@@ -45,7 +45,7 @@ def callback(self):
 		else:
 			o = '\002\00309in a normal healthy range'
 		
-		return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'\.2f'), o)
+		return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'\.2f'), o))
 	
 	ca = calc(self)
 	bmi = ca[0]
