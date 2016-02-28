@@ -23,7 +23,7 @@ def declare():
 	return {'bmi': 'privmsg'}
 
 def callback(self):
-	u = self.message.split('!')[0].lower()
+	u = self.muser.split('!')[0].lower()
 	p1 = self.message.split(' ')[1].lower()
 	
 	try:
