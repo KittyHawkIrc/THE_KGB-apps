@@ -80,6 +80,8 @@ def callback(self):
 		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
 	
 	print "noaction"
+	print self.locker.bmi
+	print p1
 	return "noaction"
 
 def calc(self):
