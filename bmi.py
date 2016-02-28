@@ -79,7 +79,7 @@ def callback(self):
 
 		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
 	
-	return self.msg(self.channel, "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it."
+	return self.msg(self.channel, "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it.")
 
 def calc(self):
 	mass = 0.0
