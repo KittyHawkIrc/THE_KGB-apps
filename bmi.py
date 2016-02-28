@@ -83,7 +83,7 @@ def callback(self):
 
 		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
 
-def calc(message):
+def calc(self):
 	mass = 0.0
 	height = 0.0
 	bmi = 0.0
