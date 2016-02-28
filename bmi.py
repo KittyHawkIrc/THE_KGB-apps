@@ -47,10 +47,10 @@ def callback(self):
 		
 		return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'\.2f'), o)
 	
-	c = calc()
-	bmi = c[0]
-	mass = c[1]
-	height = c[2]
+	ca = calc()
+	bmi = ca[0]
+	mass = ca[1]
+	height = ca[2]
 	
 	if p1 == 'set':
 		try:
