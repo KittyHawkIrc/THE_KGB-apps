@@ -26,26 +26,21 @@ def callback(self):
 	u = self.message.split('!')[0].lower()
 	p1 = self.message.split(' ')[1].lower()
 	
-	if p1 in self.locker.bmi:
-		try:
+	try:
+		if p1 in self.locker.bmi:
 			bmi = self.locker.bmi[u]
-		except:
-			try:
-				_ = self.locker.bmi
-			except:
-				self.locker.bmi = dict()
-			return self.msg(channel, "%s has yet to set their BMI" % (p1.capitalize))
-		
-		if bmi < 18.5:
-			o = '\002\00308underweight'
-		elif bmi > 24:
-			o = '\002\00307close to overweight'
-		elif bmi > 25:
-			o = '\002\00304overweight'
-		else:
-			o = '\002\00309in a normal healthy range'
-		
-		return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'\.2f'), o))
+			if bmi < 18.5:
+				o = '\002\00308underweight'
+			elif bmi > 24:
+				o = '\002\00307close to overweight'
+			elif bmi > 25:
+				o = '\002\00304overweight'
+			else:
+				o = '\002\00309in a normal healthy range'
+			
+			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'\.2f'), o))
+	except:
+		self.locker.bmi = dict()
 	
 	ca = calc(self)
 	bmi = ca[0]
