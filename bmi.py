@@ -38,7 +38,7 @@ def callback(self):
 			else:
 				o = '\002\00309in a normal healthy range'
 			
-			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'\.2f'), o))
+			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'.2f'), o))
 	except:
 		self.locker.bmi = dict()
 	
@@ -53,7 +53,7 @@ def callback(self):
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
 		
-		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'\.2f')))
+		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'.2f')))
 	elif height > 0 and mass >= 0 and bmi == 0:
 		bmi = mass / (height ** 2)
 
