@@ -54,7 +54,8 @@ def callback(self):
 			self.locker.bmi = {u : mass / (height ** 2)}
 		
 		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'.2f')))
-	elif height > 0 and mass >= 0 and bmi == 0:
+	
+	if height > 0 and mass >= 0 and bmi == 0:
 		bmi = mass / (height ** 2)
 
 		output = 'Your BMI is %s, you are \002\003' % format(bmi, '.2f')
@@ -77,6 +78,9 @@ def callback(self):
 		height = math.sqrt(mass / bmi)
 
 		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
+	
+	print "noaction"
+	return "noaction"
 
 def calc(self):
 	mass = 0.0
