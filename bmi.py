@@ -1,4 +1,4 @@
-import re
+import math, re
 
 heights = [['mm','millimetre','millimeter', 0.001],
            ['cm','centimetre','centimeter', 0.01],
@@ -25,6 +25,7 @@ def declare():
 def callback(self):
     mass = 0.0
     height = 0.0
+    bmi = 0.0
 
     message = self.message.split(self.command, 1)[1]
 
@@ -39,8 +40,10 @@ def callback(self):
             for unit in masses:
                 if parameter[1] in unit[:-1]:
                     mass += parameter[0] * unit[-1]
+        elif parameter[1].lower() == 'bmi':
+            bmi = parameter[0]
 
-    if height > 0 and mass >= 0:
+    if height > 0 and mass >= 0 and bmi == 0:
         bmi = mass / (height ** 2)
 
         output = 'Your BMI is %s, you are \002\003' % format(bmi, '.2f')
@@ -55,6 +58,15 @@ def callback(self):
             output += '04FAT AS FUCK'
 
         return self.msg(self.channel, output + '\017.')
+    elif height > 0 and bmi > 0:
+        mass = bmi * (height ** 2)
+
+        return self.msg(self.channel, 'Your mass is %skg.' % format(mass, '.2f'))
+    elif bmi > 0:
+        height = math.sqrt(mass / bmi)
+
+        return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
+
 
 def split(text, separators):
     for separator in separators:
@@ -68,7 +80,7 @@ def parseMessage(message):
     reFloat = re.compile('(\d+[.])?\d+')
     reString = re.compile('[^\.\d]+')
 
-    messageSplit = split(message, heightUnits + massUnits)
+    messageSplit = split(message, (heightUnits + massUnits).append('bmi'))
 
     for item in messageSplit:
         floatSearch = reFloat.search(item)
