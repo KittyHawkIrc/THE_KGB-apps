@@ -177,24 +177,24 @@ if __name__ == "__main__":
 	setattr(api, 'message', '^bmi joe')
 	if "Joe's BMI is 20.98 with a height and weight of" not in callback(api):
 		print(callback(api))
-		print(locker.bmi)
+		print(self.locker.bmi)
 		print(api.message)
 		exit(3)
 	setattr(api, 'message', '^bmi john')
 	if "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it." not in callback(api):
 		print(callback(api))
-		print(locker.bmi)
+		print(self.locker.bmi)
 		print(api.message)
 		exit(4)
 	setattr(api, 'message', '^bmi set 5\'6\" 130lbs true')
 	if "with privacy set to True." not in callback(api):
 		print(callback(api))
-		print(locker.bmi)
+		print(self.locker.bmi)
 		print(api.message)
 		exit(5)
 	setattr(api, 'message', '^bmi john')
 	if "height and weight of" in callback(api):
 		print(callback(api))
-		print(locker.bmi)
+		print(self.locker.bmi)
 		print(api.message)
 		exit(6)
