@@ -79,10 +79,7 @@ def callback(self):
 
 		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
 	
-	print "noaction"
-	print self.locker.bmi
-	print p1
-	return "noaction"
+	return self.msg(self.channel, "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it."
 
 def calc(self):
 	mass = 0.0
@@ -163,5 +160,5 @@ if __name__ == "__main__":
 	if "Joe's BMI is 20.98" not in callback(api):
 		exit(3)
 	setattr(api, 'message', '^bmi john')
-	if "John has yet to set their BMI" not in callback(api):
+	if "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it." not in callback(api):
 		exit(4)
