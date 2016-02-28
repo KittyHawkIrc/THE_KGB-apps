@@ -60,7 +60,7 @@ def callback(self):
 			mass = bmi * (height ** 2)
 		elif bmi > 0:
 			height = math.sqrt(mass / bmi)
-		return setLocker(bmi, mass, height, "true" in self.message.lower())
+		return setLocker(self, bmi, mass, height, "true" in self.message.lower())
 	
 	if height > 0 and mass >= 0 and bmi == 0:
 		bmi = mass / (height ** 2)
