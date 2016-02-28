@@ -43,7 +43,7 @@ def callback(self):
 			
 			if privacy == True:
 				return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'.2f'), o))
-			else
+			else:
 				return self.msg(self.channel, '%s\'s BMI is %s with a height and weight of %s meters and %s kg. This BMI is %s.' % (p1.capitalize(), format(bmi,'.2f'), height, mass, o))
 	except:
 		self.locker.bmi = dict()
