@@ -138,8 +138,10 @@ def parseMessage(message):
 	return parameters
 
 class api:
-  def msg(self, channel, text):
-	return "[%s] %s" % (channel, text)
+	def msg(self, channel, text):
+		return "[%s] %s" % (channel, text)
+class empty:
+	pass
 
 if __name__ == "__main__":
 	api = api()
