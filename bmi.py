@@ -1,5 +1,6 @@
 import math, re
 
+
 heights = [['mm','millimetre','millimeter', 0.001],
 			['cm','centimetre','centimeter', 0.01],
 			['dm','decimetre','decimeter', 0.1],
@@ -29,11 +30,11 @@ def callback(self):
 	try:
 		if p1 in self.locker.bmi:
 			bmi = self.locker.bmi[p1]
-			if bmi < 18.5:
+			if bmi <= 18.5:
 				o = '\002\00308underweight'
-			elif bmi > 25:
-				o = '\002\00304overweight'
-			elif bmi > 24:
+			elif bmi >= 30:
+				o = '\002\00304obese'
+			elif bmi >= 25:
 				o = '\002\00307close to overweight'
 			else:
 				o = '\002\00309in a normal healthy range'
@@ -53,6 +54,9 @@ def callback(self):
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
 		
+		
+		if self.locker.bmi[u] >= 30 or self.locker.bmi[u] <= 15:
+			return self.msg(self.channel,"Ask a bot operator to manually input your BMI for you")
 		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'.2f')))
 	
 	if height > 0 and mass >= 0 and bmi == 0:
@@ -68,7 +72,7 @@ def callback(self):
 			output += '07FAT'
 		else:
 			output += '04FAT AS FUCK'
-
+		
 		return self.msg(self.channel, output + '\017.')
 	elif height > 0 and bmi > 0:
 		mass = bmi * (height ** 2)
@@ -137,6 +141,7 @@ def parseMessage(message):
 
 class api:
 	def msg(self, channel, text):
+		print "[%s] %s" % (channel, text)
 		return "[%s] %s" % (channel, text)
 class empty:
 	pass
@@ -163,3 +168,6 @@ if __name__ == "__main__":
 	setattr(api, 'message', '^bmi john')
 	if "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it." not in callback(api):
 		exit(4)
+	setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
+	if "a bot operator to" not in callback(api):
+		exit(5)
