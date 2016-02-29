@@ -49,14 +49,14 @@ def callback(self):
 	height = ca[2]
 	
 	if p1 == 'set':
+		if mass / (height ** 2) >= 30 or mass / (height ** 2) <= 15:
+			return self.msg(self.channel,"Ask a bot operator to manually input your BMI for you")
+			
 		try:
 			self.locker.bmi[u] = mass / (height ** 2)
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
 		
-		
-		if self.locker.bmi[u] >= 30 or self.locker.bmi[u] <= 15:
-			return self.msg(self.channel,"Ask a bot operator to manually input your BMI for you")
 		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'.2f')))
 	
 	if height > 0 and mass >= 0 and bmi == 0:
