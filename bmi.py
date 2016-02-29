@@ -31,10 +31,10 @@ def callback(self):
 			bmi = self.locker.bmi[p1]
 			if bmi < 18.5:
 				o = '\002\00308underweight'
-			elif bmi > 24:
-				o = '\002\00307close to overweight'
 			elif bmi > 25:
 				o = '\002\00304overweight'
+			elif bmi > 24:
+				o = '\002\00307close to overweight'
 			else:
 				o = '\002\00309in a normal healthy range'
 			
