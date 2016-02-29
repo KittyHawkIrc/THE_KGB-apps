@@ -54,7 +54,7 @@ def callback(self):
 			self.locker.bmi = {u : mass / (height ** 2)}
 		
 		
-		if bmi > 30 or bmi < 15:
+		if self.locker.bmi[u] => 30 or self.locker.bmi[u] <= 15:
 			return self.msg(self.channel,"Ask a bot operator to manually input your BMI for you")
 		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'.2f')))
 	
@@ -71,7 +71,7 @@ def callback(self):
 			output += '07FAT'
 		else:
 			output += '04FAT AS FUCK'
-
+		
 		return self.msg(self.channel, output + '\017.')
 	elif height > 0 and bmi > 0:
 		mass = bmi * (height ** 2)
