@@ -1,7 +1,7 @@
 import datetime
 
 channels = {'#soopersekrit'}
-ignore = {'fatstats', 'homersimpson', 'shiznitlord', 'shiznitleader', 'tj', 'besterbesterbesterbesterbester', 'assgoblinofauschwitz', 'assgoblinofauswitzch'}
+ignore = {'fatstats', 'homersimpson', 'nwo-chan', 'shiznitlord', 'shiznitleader', 'tj', 'besterbesterbesterbesterbester', 'assgoblinofauschwitz', 'assgoblinofauswitzch'}
 
 def declare():
     return {"timepassed": "syncmsg", "time": "privmsg"}
@@ -35,7 +35,7 @@ def callback(self):
 		hours = int(hours)
 		
 		if self.command == "time":
-			return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
+			return self.msg(self.outgoing_channel, "This has been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
 		
 		#set this time in the locker
 		self.locker.time[self.outgoing_channel] = datetime.datetime.now()
@@ -50,7 +50,7 @@ def callback(self):
 				}
 			}
 		
-		return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
+		return self.msg(self.outgoing_channel, "It has been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
 		
 	else:
 		return 'WRONGCHANNEL'
