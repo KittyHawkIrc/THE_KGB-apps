@@ -26,39 +26,39 @@ def declare():
 def callback(self):
 	u = self.user.split('!')[0].lower()
 	p1 = self.message.split(' ')[1].lower()
-	
+
 	try:
 		if p1 in self.locker.bmi:
 			bmi = self.locker.bmi[p1]
-			if bmi <= 18.5:
-				o = '\002\00308underweight'
-			elif bmi >= 30:
-				o = '\002\00304obese'
-			elif bmi >= 25:
-				o = '\002\00307close to overweight'
+			if bmi < 18.5:
+				o = '08underweight'
+			elif bmi < 25.0:
+				o = '09normal'
+			elif bmi < 30.0:
+				o = '07FAT'
 			else:
-				o = '\002\00309in a normal healthy range'
-			
-			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'.2f'), o))
+				o = '04FAT AS FUCK'
+
+			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is \002\003%s.' % (p1.capitalize(), format(bmi,'.2f'), o))
 	except:
 		self.locker.bmi = dict()
-	
+
 	ca = calc(self)
 	bmi = ca[0]
 	mass = ca[1]
 	height = ca[2]
-	
+
 	if p1 == 'set':
 		if mass / (height ** 2) >= 30 or mass / (height ** 2) <= 15:
 			return self.msg(self.channel,"Ask a bot operator to manually input your BMI for you")
-			
+
 		try:
 			self.locker.bmi[u] = mass / (height ** 2)
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
-		
-		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'.2f')))
-	
+
+		return self.msg(self.channel,"Your BMI is set to %s" % (format(self.locker.bmi[u],'.2f')))
+
 	if height > 0 and mass >= 0 and bmi == 0:
 		bmi = mass / (height ** 2)
 
@@ -72,7 +72,7 @@ def callback(self):
 			output += '07FAT'
 		else:
 			output += '04FAT AS FUCK'
-		
+
 		return self.msg(self.channel, output + '\017.')
 	elif height > 0 and bmi > 0:
 		mass = bmi * (height ** 2)
@@ -82,16 +82,16 @@ def callback(self):
 		height = math.sqrt(mass / bmi)
 
 		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
-	
+
 	return self.msg(self.channel, "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it.")
 
 def calc(self):
 	mass = 0.0
 	height = 0.0
 	bmi = 0.0
-	
+
 	message = self.message.split(self.command, 1)[1]
-	
+
 	parameters = parseMessage(message)
 
 	for parameter in parameters:
@@ -105,7 +105,7 @@ def calc(self):
 					mass += parameter[0] * unit[-1]
 		elif parameter[1].lower() == 'bmi':
 			bmi = parameter[0]
-	
+
 	return [bmi,mass,height]
 
 def split(text, separators):
@@ -118,7 +118,7 @@ def parseMessage(message):
 	parameters = []
 
 	reFloat = re.compile('(\d+[.])?\d+')
-	reString = re.compile('[^\.\d]+')
+	reString = re.compile('[^\.\d]+s?')
 
 	messageSplit = split(message, heightUnits + massUnits + ['bmi'])
 
@@ -127,7 +127,7 @@ def parseMessage(message):
 		stringSearch = reString.search(item)
 
 		if floatSearch and stringSearch:
-			parameters.append([float(reFloat.search(item).group()), reString.search(item).group().lower()])
+			parameters.append([float(reFloat.search(item).group()), reString.search(item).group().lower().rstrip('s')])
 		elif floatSearch:
 			parameters.append([float(reFloat.search(item).group())])
 		elif stringSearch and len(parameters) > 0:
