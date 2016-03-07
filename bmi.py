@@ -159,7 +159,7 @@ if __name__ == "__main__":
 	if "Your BMI is 20.98" not in callback(api):
 		exit(1)
 	setattr(api, 'message', '^bmi set 5\'6\" 130lbs')
-	if "Your BMI is set to be 20.98" not in callback(api):
+	if "Your BMI is set to 20.98" not in callback(api):
 		exit(2)
 	setattr(api, 'user', 'john')
 	setattr(api, 'message', '^bmi joe')
