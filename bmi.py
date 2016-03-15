@@ -13,7 +13,7 @@ masses = [['mg','milligram', 0.000001],
 			['dg','decigram', 0.0001],
 			['g','gram', 0.001],
 			['kg','kilogram', 1],
-			['oz','ou','ounce', 0.0283495],
+			['oz','ounce', 0.0283495],
 			['lb','pound', 0.453592],
 			['st','stone', 6.35029]]
 
@@ -26,72 +26,69 @@ def declare():
 def callback(self):
 	u = self.user.split('!')[0].lower()
 	p1 = self.message.split(' ')[1].lower()
-	
+
 	try:
 		if p1 in self.locker.bmi:
 			bmi = self.locker.bmi[p1]
-			if bmi <= 18.5:
-				o = '\002\00308underweight'
-			elif bmi >= 30:
-				o = '\002\00304obese'
-			elif bmi >= 25:
-				o = '\002\00307close to overweight'
+			if bmi < 18.5:
+				o = '08underweight'
+			elif bmi < 25.0:
+				o = '09normal'
+			elif bmi < 30.0:
+				o = '07FAT'
 			else:
-				o = '\002\00309in a normal healthy range'
-			
-			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is %s.' % (p1.capitalize(), format(bmi,'.2f'), o))
+				o = '04FAT AS FUCK'
+
+			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is \002\003%s.' % (p1.capitalize(), format(bmi,'.2f'), o))
 	except:
 		self.locker.bmi = dict()
-	
+
 	ca = calc(self)
 	bmi = ca[0]
 	mass = ca[1]
 	height = ca[2]
-	
+
 	if p1 == 'set':
 		try:
 			self.locker.bmi[u] = mass / (height ** 2)
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
-		
-		
+
 		if self.locker.bmi[u] >= 30 or self.locker.bmi[u] <= 15:
-			return self.msg(self.channel,"Ask a bot operator to manually input your BMI for you")
-		return self.msg(self.channel,"Your BMI is set to be %s" % (format(self.locker.bmi[u],'.2f')))
-	
+			return self.msg(self.channel, "Ask a bot operator to manually input your BMI for you")
+		return self.msg(self.channel, "Your BMI is set to %s" % (format(self.locker.bmi[u],'.2f')))
+
 	if height > 0 and mass >= 0 and bmi == 0:
 		bmi = mass / (height ** 2)
 
 		output = 'Your BMI is %s, you are \002\003' % format(bmi, '.2f')
 
 		if bmi < 18.5:
-			output += '08underweight'
+			o = '08underweight'
 		elif bmi < 25.0:
-			output += '09normal'
+			o = '09normal'
 		elif bmi < 30.0:
-			output += '07FAT'
+			o = '07FAT'
 		else:
-			output += '04FAT AS FUCK'
-		
-		return self.msg(self.channel, output + '\017.')
+			o = '04FAT AS FUCK'
+
+		return self.msg(self.channel, 'Your BMI is %s, you are \002\003%s\017.' % (format(bmi, '.2f'), o))
 	elif height > 0 and bmi > 0:
 		mass = bmi * (height ** 2)
 
 		return self.msg(self.channel, 'Your mass is %skg.' % format(mass, '.2f'))
-	elif bmi > 0:
+	elif bmi > 0 and mass > 0:
 		height = math.sqrt(mass / bmi)
 
-		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
-	
-	return self.msg(self.channel, "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it.")
+		return self.msg(self.channel, 'Your height is %sm.' % format(height, '.2f'))
 
 def calc(self):
 	mass = 0.0
 	height = 0.0
 	bmi = 0.0
-	
+
 	message = self.message.split(self.command, 1)[1]
-	
+
 	parameters = parseMessage(message)
 
 	for parameter in parameters:
@@ -99,13 +96,15 @@ def calc(self):
 			for unit in heights:
 				if parameter[1] in unit[:-1]:
 					height += parameter[0] * unit[-1]
+					break
 		elif parameter[1] in massUnits:
 			for unit in masses:
 				if parameter[1] in unit[:-1]:
 					mass += parameter[0] * unit[-1]
+					break
 		elif parameter[1].lower() == 'bmi':
 			bmi = parameter[0]
-	
+
 	return [bmi,mass,height]
 
 def split(text, separators):
@@ -127,7 +126,7 @@ def parseMessage(message):
 		stringSearch = reString.search(item)
 
 		if floatSearch and stringSearch:
-			parameters.append([float(reFloat.search(item).group()), reString.search(item).group().lower()])
+			parameters.append([float(reFloat.search(item).group()), reString.search(item).group().lower().rstrip('s')])
 		elif floatSearch:
 			parameters.append([float(reFloat.search(item).group())])
 		elif stringSearch and len(parameters) > 0:
@@ -151,23 +150,20 @@ if __name__ == "__main__":
 	setattr(api, 'isop', True)
 	setattr(api, 'type', 'privmsg')
 	setattr(api, 'command', 'bmi')
-	setattr(api, 'user', 'joe!username@hostmask')
 	setattr(api, 'channel', "#test")
-	setattr(api, 'message', '^bmi 5\'6\" 130lbs')
 	setattr(api, 'locker', empty)
 
+	setattr(api, 'user', 'joe!username@hostmask')
+	setattr(api, 'message', '^bmi 5\'6\" 130pounds')
 	if "Your BMI is 20.98" not in callback(api):
 		exit(1)
 	setattr(api, 'message', '^bmi set 5\'6\" 130lbs')
-	if "Your BMI is set to be 20.98" not in callback(api):
+	if "Your BMI is set to 20.98" not in callback(api):
 		exit(2)
-	setattr(api, 'user', 'john')
 	setattr(api, 'message', '^bmi joe')
 	if "Joe's BMI is 20.98" not in callback(api):
 		exit(3)
-	setattr(api, 'message', '^bmi john')
-	if "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it." not in callback(api):
-		exit(4)
+
 	setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
 	if "a bot operator to" not in callback(api):
 		exit(5)
