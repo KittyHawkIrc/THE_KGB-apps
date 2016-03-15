@@ -54,14 +54,14 @@ def callback(self):
 
 	if p1 == 'set':
 		if mass / (height ** 2) >= 30 or mass / (height ** 2) <= 15:
-			return self.msg(self.channel,"Ask a bot operator to manually input your BMI for you")
+			return self.msg(self.channel, "Ask a bot operator to manually input your BMI for you")
 
 		try:
 			self.locker.bmi[u] = mass / (height ** 2)
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
 
-		return self.msg(self.channel,"Your BMI is set to %s" % (format(self.locker.bmi[u],'.2f')))
+		return self.msg(self.channel, "Your BMI is set to %s" % (format(self.locker.bmi[u],'.2f')))
 
 	if height > 0 and mass >= 0 and bmi == 0:
 		bmi = mass / (height ** 2)
@@ -69,13 +69,13 @@ def callback(self):
 		output = 'Your BMI is %s, you are \002\003' % format(bmi, '.2f')
 
 		if bmi < underWeightBMI:
-			output = '08underweight'
+			output += '08underweight'
 		elif bmi < normalBMI:
-			output = '09normal'
+			output += '09normal'
 		elif bmi < overWeightBMI:
-			output = '07FAT'
+			output += '07FAT'
 		else:
-			output = '04FAT AS FUCK'
+			output += '04FAT AS FUCK'
 
 		return self.msg(self.channel, output + '\017.')
 	elif height > 0 and bmi > 0:
