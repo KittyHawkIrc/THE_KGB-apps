@@ -20,6 +20,10 @@ masses = [['mg','milligram', 0.000001],
 heightUnits = [i for s in heights for i in s if type(i) == str]
 massUnits = [i for s in masses for i in s if type(i) == str]
 
+underWeightBMI = 18.5
+normalBMI = 25.0
+overWeightBMI = 30.0
+
 def declare():
 	return {'bmi': 'privmsg'}
 
@@ -30,11 +34,11 @@ def callback(self):
 	try:
 		if p1 in self.locker.bmi:
 			bmi = self.locker.bmi[p1]
-			if bmi < 18.5:
+			if bmi < underWeightBMI:
 				o = '08underweight'
-			elif bmi < 25.0:
+			elif bmi < normalBMI:
 				o = '09normal'
-			elif bmi < 30.0:
+			elif bmi < overWeightBMI:
 				o = '07FAT'
 			else:
 				o = '04FAT AS FUCK'
@@ -64,14 +68,14 @@ def callback(self):
 
 		output = 'Your BMI is %s, you are \002\003' % format(bmi, '.2f')
 
-		if bmi < 18.5:
-			output += '08underweight'
-		elif bmi < 25.0:
-			output += '09normal'
-		elif bmi < 30.0:
-			output += '07FAT'
+		if bmi < underWeightBMI:
+			output = '08underweight'
+		elif bmi < normalBMI:
+			output = '09normal'
+		elif bmi < overWeightBMI:
+			output = '07FAT'
 		else:
-			output += '04FAT AS FUCK'
+			output = '04FAT AS FUCK'
 
 		return self.msg(self.channel, output + '\017.')
 	elif height > 0 and bmi > 0:
@@ -97,11 +101,11 @@ def calc(self):
 	for parameter in parameters:
 		if parameter[1] in heightUnits:
 			for unit in heights:
-				if parameter[1] in unit[:-1]:
+				if parameter[1] == unit[:-1]:
 					height += parameter[0] * unit[-1]
 		elif parameter[1] in massUnits:
 			for unit in masses:
-				if parameter[1] in unit[:-1]:
+				if parameter[1] == unit[:-1]:
 					mass += parameter[0] * unit[-1]
 		elif parameter[1].lower() == 'bmi':
 			bmi = parameter[0]
@@ -118,7 +122,7 @@ def parseMessage(message):
 	parameters = []
 
 	reFloat = re.compile('(\d+[.])?\d+')
-	reString = re.compile('[^\.\d]+s?')
+	reString = re.compile('[^\.\d]+')
 
 	messageSplit = split(message, heightUnits + massUnits + ['bmi'])
 
