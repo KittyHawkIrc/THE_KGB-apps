@@ -13,7 +13,7 @@ masses = [['mg','milligram', 0.000001],
 			['dg','decigram', 0.0001],
 			['g','gram', 0.001],
 			['kg','kilogram', 1],
-			['oz','ou','ounce', 0.0283495],
+			['oz','ounce', 0.0283495],
 			['lb','pound', 0.453592],
 			['st','stone', 6.35029]]
 
@@ -77,12 +77,10 @@ def callback(self):
 		mass = bmi * (height ** 2)
 
 		return self.msg(self.channel, 'Your mass is %skg.' % format(mass, '.2f'))
-	elif bmi > 0:
+	elif bmi > 0 and mass > 0:
 		height = math.sqrt(mass / bmi)
 
 		return self.msg(self.channel, 'Your height is %sm.' % format(height, '.2f'))
-	else:
-		return self.msg(self.channel, 'Your message received no output. If you\'re inquiring about another user\'s BMI, that user has yet to set it.')
 
 def calc(self):
 	mass = 0.0
@@ -96,12 +94,12 @@ def calc(self):
 	for parameter in parameters:
 		if parameter[1] in heightUnits:
 			for unit in heights:
-				if parameter[1] == unit[:-1]:
+				if parameter[1] in unit[:-1]:
 					height += parameter[0] * unit[-1]
 					break
 		elif parameter[1] in massUnits:
 			for unit in masses:
-				if parameter[1] == unit[:-1]:
+				if parameter[1] in unit[:-1]:
 					mass += parameter[0] * unit[-1]
 					break
 		elif parameter[1].lower() == 'bmi':
@@ -156,7 +154,7 @@ if __name__ == "__main__":
 	setattr(api, 'locker', empty)
 
 	setattr(api, 'user', 'joe!username@hostmask')
-	setattr(api, 'message', '^bmi 5\'6\" 130lbs')
+	setattr(api, 'message', '^bmi 5\'6\" 130pounds')
 	if "Your BMI is 20.98" not in callback(api):
 		exit(1)
 	setattr(api, 'message', '^bmi set 5\'6\" 130lbs')
