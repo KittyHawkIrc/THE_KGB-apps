@@ -20,10 +20,6 @@ masses = [['mg','milligram', 0.000001],
 heightUnits = [i for s in heights for i in s if type(i) == str]
 massUnits = [i for s in masses for i in s if type(i) == str]
 
-underWeightBMI = 18.5
-normalBMI = 25.0
-overWeightBMI = 30.0
-
 def declare():
 	return {'bmi': 'privmsg'}
 
@@ -34,11 +30,11 @@ def callback(self):
 	try:
 		if p1 in self.locker.bmi:
 			bmi = self.locker.bmi[p1]
-			if bmi < underWeightBMI:
+			if bmi < 18.5:
 				o = '08underweight'
-			elif bmi < normalBMI:
+			elif bmi < 25.0:
 				o = '09normal'
-			elif bmi < overWeightBMI:
+			elif bmi < 30.0:
 				o = '07FAT'
 			else:
 				o = '04FAT AS FUCK'
@@ -53,14 +49,13 @@ def callback(self):
 	height = ca[2]
 
 	if p1 == 'set':
-		if mass / (height ** 2) >= 30 or mass / (height ** 2) <= 15:
-			return self.msg(self.channel, "Ask a bot operator to manually input your BMI for you")
-
 		try:
 			self.locker.bmi[u] = mass / (height ** 2)
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
 
+		if self.locker.bmi[u] >= 30 or self.locker.bmi[u] <= 15:
+			return self.msg(self.channel, "Ask a bot operator to manually input your BMI for you")
 		return self.msg(self.channel, "Your BMI is set to %s" % (format(self.locker.bmi[u],'.2f')))
 
 	if height > 0 and mass >= 0 and bmi == 0:
@@ -68,16 +63,16 @@ def callback(self):
 
 		output = 'Your BMI is %s, you are \002\003' % format(bmi, '.2f')
 
-		if bmi < underWeightBMI:
-			output += '08underweight'
-		elif bmi < normalBMI:
-			output += '09normal'
-		elif bmi < overWeightBMI:
-			output += '07FAT'
+		if bmi < 18.5:
+			o = '08underweight'
+		elif bmi < 25.0:
+			o = '09normal'
+		elif bmi < 30.0:
+			o = '07FAT'
 		else:
-			output += '04FAT AS FUCK'
+			o = '04FAT AS FUCK'
 
-		return self.msg(self.channel, output + '\017.')
+		return self.msg(self.channel, 'Your BMI is %s, you are \002\003%s\017.' % (format(bmi, '.2f'), o))
 	elif height > 0 and bmi > 0:
 		mass = bmi * (height ** 2)
 
@@ -85,9 +80,9 @@ def callback(self):
 	elif bmi > 0:
 		height = math.sqrt(mass / bmi)
 
-		return self.msg(self.channel, 'Your height is %sm' % format(height, '.2f'))
-
-	return self.msg(self.channel, "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it.")
+		return self.msg(self.channel, 'Your height is %sm.' % format(height, '.2f'))
+	else:
+		return self.msg(self.channel, 'Your message received no output. If you\'re inquiring about another user\'s BMI, that user has yet to set it.')
 
 def calc(self):
 	mass = 0.0
@@ -103,10 +98,12 @@ def calc(self):
 			for unit in heights:
 				if parameter[1] == unit[:-1]:
 					height += parameter[0] * unit[-1]
+					break
 		elif parameter[1] in massUnits:
 			for unit in masses:
 				if parameter[1] == unit[:-1]:
 					mass += parameter[0] * unit[-1]
+					break
 		elif parameter[1].lower() == 'bmi':
 			bmi = parameter[0]
 
@@ -145,7 +142,7 @@ def parseMessage(message):
 
 class api:
 	def msg(self, channel, text):
-		print "[%s] %s" % (channel, text)
+		print ("[%s] %s" % (channel, text))
 		return "[%s] %s" % (channel, text)
 class empty:
 	pass
@@ -155,23 +152,20 @@ if __name__ == "__main__":
 	setattr(api, 'isop', True)
 	setattr(api, 'type', 'privmsg')
 	setattr(api, 'command', 'bmi')
-	setattr(api, 'user', 'joe!username@hostmask')
 	setattr(api, 'channel', "#test")
-	setattr(api, 'message', '^bmi 5\'6\" 130lbs')
 	setattr(api, 'locker', empty)
 
+	setattr(api, 'user', 'joe!username@hostmask')
+	setattr(api, 'message', '^bmi 5\'6\" 130lbs')
 	if "Your BMI is 20.98" not in callback(api):
 		exit(1)
 	setattr(api, 'message', '^bmi set 5\'6\" 130lbs')
 	if "Your BMI is set to 20.98" not in callback(api):
 		exit(2)
-	setattr(api, 'user', 'john')
 	setattr(api, 'message', '^bmi joe')
 	if "Joe's BMI is 20.98" not in callback(api):
 		exit(3)
-	setattr(api, 'message', '^bmi john')
-	if "Your message recieved no output. If you're inquiring about another user's BMI, that user has yet to set it." not in callback(api):
-		exit(4)
+
 	setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
 	if "a bot operator to" not in callback(api):
 		exit(5)
