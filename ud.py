@@ -14,8 +14,7 @@ def callback(self):
             for line in defLines:
                 if line[-1] not in ',.?!':
                     line = line + ','
-            #definition = '%s: %s %s' % (self.message, data['list'][0]['permalink'], ' '.join(defLines))
-            definition = '%s: %s %s' % (msg, data['list'][0]['permalink'], ' '.join(defLines))
+            definition = '%s: %s %s' % (self.message, data['list'][0]['permalink'], ' '.join(defLines))
 
             if len(definition) > maxChars:
                 definition = definition[:maxChars-4] + '...'
