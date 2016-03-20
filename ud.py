@@ -17,8 +17,7 @@ def callback(self):
             definition = '%s: %s %s' % (self.message, data['list'][0]['permalink'], ' '.join(defLines))
 
             if len(definition) > maxChars:
-                lastChar = maxChars-4
-                definition = definition[:lastChar] + '...'
+                definition = definition[:maxChars-4] + '...'
             return self.msg(self.channel, definition)
         else:
             return self.msg(self.channel, 'No definition for %s.' % self.message)
@@ -28,18 +27,15 @@ def callback(self):
 class api:
 	def msg(self, channel, text):
 		return "[%s] %s" % (channel, text)
-class empty:
-	pass
 
 if __name__ == "__main__":
-	api = api()
-	setattr(api, 'isop', True)
-	setattr(api, 'type', 'privmsg')
-	setattr(api, 'command', 'bmi')
-	setattr(api, 'channel', "#test")
-	setattr(api, 'locker', empty)
+    api = api()
+    setattr(api, 'isop', True)
+    setattr(api, 'type', 'privmsg')
+    setattr(api, 'command', 'ud')
+    setattr(api, 'user', 'joe!username@hostmask')
+    setattr(api, 'channel', "#test")
+    setattr(api, 'message', '^ud Hitler')
 
-	setattr(api, 'user', 'joe!username@hostmask')
-	setattr(api, 'message', '^ud test')
-	if "http" not in callback(api):
-		exit(1)
+    if "urbanup" not in callback(api):
+        exit(1)
