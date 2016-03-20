@@ -17,7 +17,8 @@ def callback(self):
             definition = '%s: %s %s' % (self.message, data['list'][0]['permalink'], ' '.join(defLines))
 
             if len(definition) > maxChars:
-                definition = definition[:maxChars-4] + '...'
+                lastChar = maxChars-4
+                definition = definition[:lastChar] + '...'
             return self.msg(self.channel, definition)
         else:
             return self.msg(self.channel, 'No definition for %s.' % self.message)
@@ -40,5 +41,5 @@ if __name__ == "__main__":
 
 	setattr(api, 'user', 'joe!username@hostmask')
 	setattr(api, 'message', '^ud test')
-	if "http" not in callback(api) or "definition" not in callback(api):
+	if "http" not in callback(api):
 		exit(1)
