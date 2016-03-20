@@ -1,0 +1,44 @@
+import requests
+
+maxChars = 360
+
+def declare():
+  return {"ud": "privmsg"}
+
+def callback(self):
+    try:
+        r = requests.get('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
+        data = r.json()
+        if data['result_type'] != 'no_results':
+            defLines = data['list'][0]['definition'].splitlines()
+            for line in defLines:
+                if line[-1] not in ',.?!':
+                    line = line + '.'
+            definition = '%s: %s %s' % (self.message, data['list'][0]['permalink'], ' '.join(defLines))
+
+            if len(definition) > maxChars:
+                definition = definition[:maxChars-4] + '...'
+            return self.msg(self.channel, definition)
+        else:
+            return self.msg(self.channel, 'No definition for %s.' % self.message)
+    except:
+        return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
+
+class api:
+	def msg(self, channel, text):
+		return "[%s] %s" % (channel, text)
+class empty:
+	pass
+
+if __name__ == "__main__":
+	api = api()
+	setattr(api, 'isop', True)
+	setattr(api, 'type', 'privmsg')
+	setattr(api, 'command', 'bmi')
+	setattr(api, 'channel', "#test")
+	setattr(api, 'locker', empty)
+
+	setattr(api, 'user', 'joe!username@hostmask')
+	setattr(api, 'message', '^ud test')
+	if "http" not in callback(api) or "definition" not in callback(api):
+		exit(1)
