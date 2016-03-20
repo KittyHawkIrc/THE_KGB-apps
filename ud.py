@@ -1,4 +1,4 @@
-import requests
+import json, urllib2
 
 maxChars = 360
 
@@ -7,13 +7,13 @@ def declare():
 
 def callback(self):
     try:
-        r = requests.get('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
-        data = r.json()
+        r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
+        data = json.load(r)
         if data['result_type'] != 'no_results':
             defLines = data['list'][0]['definition'].splitlines()
             for line in defLines:
                 if line[-1] not in ',.?!':
-                    line = line + '.'
+                    line = line + ','
             definition = '%s: %s %s' % (self.message, data['list'][0]['permalink'], ' '.join(defLines))
 
             if len(definition) > maxChars:
