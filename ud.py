@@ -22,7 +22,7 @@ def callback(self):
         else:
             return self.msg(self.channel, 'No definition for %s.' % self.message)
     except:
-        return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
+		return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
 
 class api:
 	def msg(self, channel, text):
