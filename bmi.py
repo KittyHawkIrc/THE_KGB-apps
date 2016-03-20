@@ -140,7 +140,6 @@ def parseMessage(message):
 
 class api:
 	def msg(self, channel, text):
-		print "[%s] %s" % (channel, text)
 		return "[%s] %s" % (channel, text)
 class empty:
 	pass
@@ -166,4 +165,4 @@ if __name__ == "__main__":
 
 	setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
 	if "a bot operator to" not in callback(api):
-		exit(5)
+		exit(4)
