@@ -41,7 +41,6 @@ def callback(self):
 				o = '07FAT'
 			else:
 				o = '04FAT AS FUCK'
-
 			return self.msg(self.channel, '%s\'s BMI is %s. This BMI is \002\003%s\017.' % (p1.capitalize(), format(bmi,'.2f'), o))
 	except:
 		self.locker.bmi = dict()
@@ -57,7 +56,7 @@ def callback(self):
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
 
-		if self.locker.bmi[u] >= 30 or self.locker.bmi[u] <= 15:
+		if self.locker.bmi[u] >= 25 or self.locker.bmi[u] <= 15:
 			return self.msg(self.channel, 'Please ask a bot operator to set your BMI for you.')
 		return self.msg(self.channel, 'Your BMI has been set to %s.' % (format(self.locker.bmi[u],'.2f')))
 
