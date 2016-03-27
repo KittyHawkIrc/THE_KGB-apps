@@ -6,7 +6,7 @@ heights = [['mm','millimetre','millimeter', 0.001],
 			['dm','decimetre','decimeter', 0.1],
 			['m','metre','meter', 1],
 			['\'','ft','feet','foot', 0.3048],
-			['\"','in', 0.0254],
+			['\"','in','inch', 0.0254],
 			['yr','yard', 0.9144]]
 
 # uses kg as base, each list[-1] is the number to multiply to get equivalent kg
@@ -56,7 +56,7 @@ def callback(self):
 		except:
 			self.locker.bmi = {u : mass / (height ** 2)}
 
-		if self.locker.bmi[u] >= 25 or self.locker.bmi[u] <= 15:
+		if self.locker.bmi[u] >= 30 or self.locker.bmi[u] <= 15:
 			return self.msg(self.channel, 'Please ask a bot operator to set your BMI for you.')
 		return self.msg(self.channel, 'Your BMI has been set to %s.' % (format(self.locker.bmi[u],'.2f')))
 
@@ -89,18 +89,19 @@ def calc(self):
 	parameters = parseMessage(message)
 
 	for parameter in parameters:
+		p1 = ''.join(parameter[1:]).rstrip('es')
 		# check if unit is a height/mass unit or is 'bmi'
-		if ''.join(parameter[1:]) in heightUnits:
+		if p1 in heightUnits:
 			for unit in heights:
-				if ''.join(parameter[1:]) in unit[:-1]:
+				if p1 in [u.rstrip('es') for u in unit[:-1]]:
 					height += parameter[0] * unit[-1]
 					break
-		elif ''.join(parameter[1:]) in massUnits:
+		elif p1 in massUnits:
 			for unit in masses:
-				if ''.join(parameter[1:]) in unit[:-1]:
+				if p1 in [u.rstrip('es') for u in unit[:-1]]:
 					mass += parameter[0] * unit[-1]
 					break
-		elif ''.join(parameter[1:]) == 'bmi':
+		elif p1 == 'bmi':
 			bmi += parameter[0]
 
 	return [bmi, mass, height]
@@ -124,13 +125,13 @@ def parseMessage(message):
 			floatSearch = reFloat.search(item)
 			stringSearch = reString.search(item)
 
-			# handles cases where no spac
+			# handles cases where no space between value and unit
 			if floatSearch and stringSearch:
-				parameters.append([float(reFloat.search(item).group()), reString.search(item).group().rstrip('s')])
+				parameters.append([float(reFloat.search(item).group()), reString.search(item).group()])
 			elif floatSearch:
 				parameters.append([float(reFloat.search(item).group())])
 			elif stringSearch and len(parameters) > 0:
-				parameters[-1].append(reString.search(item).group().rstrip('s'))
+				parameters[-1].append(reString.search(item).group())
 
 	# handles cases where inches is not included (ie: 5'6 for 5'6")
 	for i, item in enumerate(parameters):
@@ -157,7 +158,7 @@ setattr(api, 'user', 'joe!username@hostmask')
 setattr(api, 'message', '^bmi 5\'6\" 130pounds')
 if 'Your BMI is 20.98' not in callback(api):
 	exit(1)
-setattr(api, 'message', '^bmi set 5\'6\" 130lbs')
+setattr(api, 'message', '^bmi set 5\' 6\" 130lbs')
 if 'Your BMI has been set to' not in callback(api):
 	exit(2)
 setattr(api, 'message', '^bmi joe')
@@ -166,9 +167,9 @@ if 'Joe\'s BMI is 20.98' not in callback(api):
 setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
 if 'Please ask a bot operator to set your BMI for you.' not in callback(api):
 	exit(4)
-setattr(api, 'message', '^bmi 5\'6\" 20bmi')
+setattr(api, 'message', '^bmi 5\'6\" 20.98bmi')
 if 'Your mass is' not in callback(api):
 	exit(5)
-setattr(api, 'message', '^bmi 130lbs 20bmi')
+setattr(api, 'message', '^bmi 130lbs 20.98bmi')
 if 'Your height is' not in callback(api):
 	exit(6)
