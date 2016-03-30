@@ -53,14 +53,14 @@ def callback(self):
 
 			return self.msg(self.channel, 'Your BMI has been set to %s, that BMI is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
 
-		elif height and mass:
+		if height and mass:
 			bmi = mass / (height ** 2)
 			return self.msg(self.channel, 'Your BMI is %s, you are \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
 
-		elif height and bmi:
+		if height and bmi:
 			return self.msg(self.channel, 'Your mass is %skg.' % format(bmi * (height ** 2), '.2f'))
 
-		elif mass and bmi:
+		if mass and bmi:
 			return self.msg(self.channel, 'Your height is %sm.' % format(math.sqrt(mass / bmi), '.2f'))
 	else:
 		query = user
@@ -76,9 +76,9 @@ def callback(self):
 def classifyBmi(bmi):
 	if bmi < 18.5:
 		return '08underweight'
-	elif bmi < 25.0:
+	if bmi < 25.0:
 		return '09normal'
-	elif bmi < 30.0:
+	if bmi < 30.0:
 		return '07FAT'
 	else:
 		return '04FAT AS FUCK'
