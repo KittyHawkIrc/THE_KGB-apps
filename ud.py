@@ -9,7 +9,7 @@ def callback(self):
     try:
         r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
         data = json.load(r)
-
+        r.close()
         if data['result_type'] != 'no_results':
             defLines = data['list'][0]['definition'].splitlines()
             for line in defLines:
