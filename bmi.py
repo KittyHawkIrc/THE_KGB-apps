@@ -42,11 +42,12 @@ def callback(self):
 
 	if len(message) > 0:
 		query = message.split()[0].lower()
-		if message.split()[0].lower() == 'set':
+		if query == 'set':
 			bmi = mass / (height ** 2)
-			if bmi > 30 or bmi < 15:
+			if (bmi > 30 or bmi < 15) and not self.isop:
 				return self.msg(self.channel, 'Please ask a bot operator to set your BMI for you.')
-			elif message.split()[0].lower() in self.locker.bmi:
+
+			if query in self.locker.bmi:
 				self.locker.bmi[user] = bmi
 			else:
 				self.locker.bmi = {user : bmi}
