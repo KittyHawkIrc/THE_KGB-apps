@@ -42,11 +42,12 @@ def callback(self):
 
 	if len(message) > 0:
 		query = message.split()[0].lower()
-		if message.split()[0].lower() == 'set':
+		if query == 'set':
 			bmi = mass / (height ** 2)
-			if bmi > 30 or bmi < 15:
+			if (bmi > 30 or bmi < 15) and not self.isop:
 				return self.msg(self.channel, 'Please ask a bot operator to set your BMI for you.')
-			elif message.split()[0].lower() in self.locker.bmi:
+
+			if query in self.locker.bmi:
 				self.locker.bmi[user] = bmi
 			else:
 				self.locker.bmi = {user : bmi}
@@ -163,29 +164,34 @@ if 'Your BMI is 20.98, you are' not in callback(api):
 
 setattr(api, 'message', '^bmi set 5\' 6\" 130lbs')
 if 'Your BMI has been set to 20.98, that BMI is' not in callback(api):
-	exit(2)
+	exit(1)
 
 setattr(api, 'message', '^bmi')
 if 'Your BMI is 20.98, this BMI is' not in callback(api):
-	exit(3)
+	exit(1)
 
 setattr(api, 'message', '^bmi joe')
 if 'Your BMI is 20.98, this BMI is' not in callback(api):
-	exit(4)
+	exit(1)
 
 setattr(api, 'user', 'blow!username@hostmask')
 setattr(api, 'message', '^bmi joe')
 if 'joe\'s BMI is 20.98, this BMI is' not in callback(api):
-	exit(5)
+	exit(1)
 
 setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
+if 'Your BMI has been set to ' not in callback(api):
+	exit(1)
+
+setattr(api, 'isop', False)
+setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
 if 'Please ask a bot operator to set your BMI for you.' not in callback(api):
-	exit(6)
+	exit(1)
 
 setattr(api, 'message', '^bmi 5\'6\" 20.98bmi')
 if 'Your mass is 58.96kg.' not in callback(api):
-	exit(7)
+	exit(1)
 
 setattr(api, 'message', '^bmi 130lbs 20.98bmi')
 if 'Your height is 1.68m.' not in callback(api):
-	exit(7)
+	exit(1)
