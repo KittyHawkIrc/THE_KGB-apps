@@ -30,15 +30,10 @@ def callback(self):
 	user = self.user.split('!')[0].lower()
 	message = self.message.split(self.command, 1)[1]
 
-	try:
-		self.locker.bmi
-	except:
-		self.locker.bmi = dict()
-
-	i = calc(message)
-	bmi = i[0]
-	mass = i[1]
-	height = i[2]
+	ca = calc(message)
+	bmi = ca[0]
+	mass = ca[1]
+	height = ca[2]
 
 	if len(message) > 0:
 		query = message.split()[0].lower()
@@ -47,10 +42,10 @@ def callback(self):
 			if (bmi > 30 or bmi < 15) and not self.isop:
 				return self.msg(self.channel, 'Please ask a bot operator to set your BMI for you.')
 
-			if query in self.locker.bmi:
+			try:
 				self.locker.bmi[user] = bmi
-			else:
-				self.locker.bmi = {user : bmi}
+			except:
+				self.locker.bmi = {user: bmi}
 
 			return self.msg(self.channel, 'Your BMI has been set to %s, that BMI is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
 
@@ -66,13 +61,14 @@ def callback(self):
 	else:
 		query = user
 
-	if query in self.locker.bmi:
+	try:
 		bmi = self.locker.bmi[query]
 		if query == user:
 			return self.msg(self.channel, 'Your BMI is %s, this BMI is \002\003%s\017.' % (format(bmi,'.2f'), classifyBmi(bmi)))
 		else:
 			return self.msg(self.channel, '%s\'s BMI is %s, this BMI is \002\003%s\017.' % (message.split()[0].lower(), format(bmi,'.2f'), classifyBmi(bmi)))
-	return self.msg(self.channel, 'This user has not set a BMI yet.')
+	except:
+		return self.msg(self.channel, 'This user has not set a BMI yet.')
 
 def classifyBmi(bmi):
 	if bmi < 18.5:
