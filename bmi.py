@@ -62,13 +62,16 @@ def callback(self):
 		query = user
 
 	try:
-		bmi = self.locker.bmi[query]
-		if query == user:
-			return self.msg(self.channel, 'Your BMI is %s, this BMI is \002\003%s\017.' % (format(bmi,'.2f'), classifyBmi(bmi)))
+		if query in self.locker.bmi:
+			bmi = self.locker.bmi[query]
+			if query == user:
+				return self.msg(self.channel, 'Your BMI is %s, this BMI is \002\003%s\017.' % (format(bmi,'.2f'), classifyBmi(bmi)))
+			else:
+				return self.msg(self.channel, '%s\'s BMI is %s, this BMI is \002\003%s\017.' % (message.split()[0].lower(), format(bmi,'.2f'), classifyBmi(bmi)))
 		else:
-			return self.msg(self.channel, '%s\'s BMI is %s, this BMI is \002\003%s\017.' % (message.split()[0].lower(), format(bmi,'.2f'), classifyBmi(bmi)))
+			return self.msg(self.channel, 'This user has not set a BMI yet.')
 	except:
-		return self.msg(self.channel, 'This user has not set a BMI yet.')
+		self.locker.bmi = dict()
 
 def classifyBmi(bmi):
 	if bmi < 18.5:
