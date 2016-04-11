@@ -75,7 +75,7 @@ def callback(self):
 			height = math.sqrt(mass / bmi)
 			if 'imperial' in message or (imp > met and 'metric' not in message):
 				iHeight = mToFtIn(height)
-				return self.msg(self.channel, 'Your height is %d\'%d"' % (iHeight[0], iHeight[1]))
+				return self.msg(self.channel, 'Your height is %d\'%d".' % (iHeight[0], iHeight[1]))
 			return self.msg(self.channel, 'Your height is %sm.' % format(height, '.2f'))
 	else:
 		query = user
