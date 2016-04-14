@@ -1,4 +1,9 @@
 import datetime
+
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 users = {"none" : [datetime.datetime.now(),"#none"]}
 
 def declare():
@@ -6,7 +11,7 @@ def declare():
 
 def callback(self):
   u = self.user.lower().split('!')[0]
-  
+
   if self.__dict__['type'] == 'userjoin':
     users[u] = [datetime.datetime.now(),self.channel]
   else:
@@ -33,7 +38,7 @@ if __name__ == "__main__":
     callback(api)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'message', '^seen joe')
-    
+
     if '/whois ' not in callback(api):
         exit(1)
     setattr(api, 'user', 'john!username@hostmask')
