@@ -1,3 +1,7 @@
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 def declare():
     return {"hello": "privmsg"}
 

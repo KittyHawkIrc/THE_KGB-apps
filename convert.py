@@ -1,3 +1,7 @@
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 #the number is the value of %base% converted to %unit%
 #naturally the base itself will always equal 1, larger values will be less than 0
 

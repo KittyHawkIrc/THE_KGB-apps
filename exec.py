@@ -1,4 +1,9 @@
 import sys, urllib2
+
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 try:
     from cStringIO import StringIO
 except:

@@ -1,5 +1,9 @@
 import math, re
 
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 # uses m as base, each list[-1] is the number to multiply to convert to meters
 # metric heights
 mHeights = [['mm','millimetre','millimeter', 0.001],
