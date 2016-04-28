@@ -1,3 +1,8 @@
+try:
+    import encoder
+except:
+    print ''
+
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
@@ -8,7 +13,11 @@ def declare():
 def callback(self):
 
     if self.channel.startswith('#'):
+        if 'b64' in self.message:
+            self.user = encoder.encode('b64:' + self.user)
+
         return self.msg(self.channel, "And a hello to you too, " + ("operator" if self.isop else "user") + " %s!" % (self.user))
+
 
 class api:
 
