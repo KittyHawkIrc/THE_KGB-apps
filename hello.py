@@ -15,7 +15,7 @@ def callback(self):
     if self.channel.startswith('#'):
         if 'b64' in self.message:
             self.user = encoder.encode('b64:' + self.user)
-            
+
         return self.msg(self.channel, "And a hello to you too, " + ("operator" if self.isop else "user") + " %s!" % (self.user))
 
 
