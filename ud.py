@@ -7,6 +7,7 @@ def declare():
 
 def callback(self):
     try:
+<<<<<<< HEAD
         req = urllib2.Request('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
         fd = urllib2.urlopen(req)
         ud_api = json.loads(fd.read())
@@ -14,6 +15,13 @@ def callback(self):
 
         if ud_api['result_type'] != 'no_results':
             defLines = ud_api['list'][0]['definition'].splitlines()
+=======
+        r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
+        data = json.load(r)
+        r.close()
+        if data['result_type'] != 'no_results':
+            defLines = data['list'][0]['definition'].splitlines()
+>>>>>>> origin/dev
             for line in defLines:
                 if line[-1] not in ',.?!':
                     line = line + ','
