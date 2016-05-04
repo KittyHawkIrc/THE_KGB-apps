@@ -7,15 +7,17 @@ def declare():
 
 def callback(self):
     try:
-        r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
-        data = json.load(r)
+        req = urllib2.Request('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
+        fd = urllib2.urlopen(req)
+        ud_api = json.loads(fd.read())
+        fd.close()
 
-        if data['result_type'] != 'no_results':
-            defLines = data['list'][0]['definition'].splitlines()
+        if ud_api['result_type'] != 'no_results':
+            defLines = ud_api['list'][0]['definition'].splitlines()
             for line in defLines:
                 if line[-1] not in ',.?!':
                     line = line + ','
-            definition = '%s ( %s ) %s' % (data['list'][0]['word'], data['list'][0]['permalink'], ' '.join(defLines))
+            definition = '%s ( %s ) %s' % (ud_api['list'][0]['word'], ud_api['list'][0]['permalink'], ' '.join(defLines))
 
             if len(definition) > maxChars:
                 definition = definition[:maxChars-4] + '...'
