@@ -22,3 +22,5 @@ def callback(self):
         u = self.user.split('!',1)[0].lower()
         if u in isverified:
             self.msg('ChanServ', 'voice %s %s' % (self.channel, u))
+        elif u+'_' in isverified:
+            self.msg('Chanserv', 'voice %s %s' % (self.channel, u+'_'))
