@@ -11,8 +11,13 @@ req = urllib2.Request('https://raw.githubusercontent.com/KittyHawkIrc/FPS-verifi
 def declare():
     return {"overkill": "userjoin"}
 
-def callback(self):
+def nounderscore(u):
+    if u[len(u) - 1] == '_':
+        return nounderscore(u[:len(u) - 1])
+    else:
+        return u
 
+def callback(self):
     if self.channel == '#fatpeoplesuck':
 
         fd = urllib2.urlopen(req)
@@ -20,5 +25,6 @@ def callback(self):
         fd.close()
 
         u = self.user.split('!',1)[0].lower()
-        if u in isverified:
+
+        if nounderscore(u) in isverified:
             self.msg('ChanServ', 'voice %s %s' % (self.channel, u))
