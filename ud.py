@@ -10,7 +10,7 @@ def callback(self):
         r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
         data = json.load(r)
         r.close()
-        if data['result_type'] != 'no_results':
+        try:
             defLines = data['list'][0]['definition'].splitlines()
             for line in defLines:
                 if line[-1] not in ',.?!':
@@ -20,7 +20,7 @@ def callback(self):
             if len(definition) > maxChars:
                 definition = definition[:maxChars-4] + '...'
             return self.msg(self.channel, definition)
-        else:
+        except:
             return self.msg(self.channel, 'No definition for %s.' % self.message)
     except:
         return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
