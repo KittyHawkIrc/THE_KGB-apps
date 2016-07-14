@@ -51,7 +51,9 @@ def callback(self):
 		query = message.split()[0].lower()
 		if query == 'set':
 			bmi = mass / (height ** 2)
-			if (bmi > 30 or bmi < 15) and not self.isop:
+			if (bmi > 30 or bmi < 15):
+				if self.isop and type(message.split()[1].lower()) == str:
+					user = message.split()[1].lower()
 				return self.msg(self.channel, 'Please ask a bot operator to set your BMI for you.')
 
 			try:
@@ -59,7 +61,10 @@ def callback(self):
 			except:
 				self.locker.bmi = {user: bmi}
 
-			return self.msg(self.channel, 'Your BMI has been set to %s, which is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
+			if user == self.user.split('!')[0].lower():
+				return self.msg(self.channel, 'Your BMI has been set to %s, which is \002\003%s\017.' % (userformat(bmi, '.2f'), classifyBmi(bmi)))
+			else:
+				return self.msg(self.channel, '%s\'s BMI has been set to %s, which is \002\003%s\017.' % (message.split()[1], userformat(bmi, '.2f'), classifyBmi(bmi)))
 
 		if height and mass:
 			bmi = mass / (height ** 2)
@@ -88,9 +93,13 @@ def callback(self):
 			else:
 				return self.msg(self.channel, '%s\'s BMI is %s, which is \002\003%s\017.' % (message.split()[0], format(bmi,'.2f'), classifyBmi(bmi)))
 		else:
-			return self.msg(self.channel, 'This user has not set a BMI yet.')
+			if len(message.split()) < 2:
+				return self.msg(self.channel, 'This user has not set a BMI yet.')
+			else:
+				return self.msg(self.channel, 'Invalid input.')
 	except:
 		self.locker.bmi = dict()
+		return self.msg(self.channel, 'No user\'s BMI has been recorded yet.')
 
 def classifyBmi(bmi):
 	if bmi < 18.5:
@@ -238,10 +247,15 @@ if __name__ == "__main__":
 	if 'Please ask a bot operator to set your BMI for you.' not in callback(api):
 		exit(7)
 
+	setattr(api, 'isop', True)
+	setattr(api, 'message', '^bmi set Frank 5\'6\" 280lbs')
+	if 'Frank\'s BMI has been set to' not in callback(api):
+		exit(8)
+
 	setattr(api, 'message', '^bmi 5\'6\" 20.98bmi')
 	if 'Your mass is 129.99lbs.' not in callback(api):
-		exit(8)
+		exit(9)
 
 	setattr(api, 'message', '^bmi 130lbs 20.98bmi')
 	if 'Your height is 5\'6".' not in callback(api):
-		exit(9)
+		exit(10)
