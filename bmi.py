@@ -62,9 +62,9 @@ def callback(self):
 				self.locker.bmi = {user: bmi}
 
 			if user == self.user.split('!')[0].lower():
-				return self.msg(self.channel, 'Your BMI has been set to %s, which is \002\003%s\017.' % (userformat(bmi, '.2f'), classifyBmi(bmi)))
+				return self.msg(self.channel, 'Your BMI has been set to %s, which is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
 			else:
-				return self.msg(self.channel, '%s\'s BMI has been set to %s, which is \002\003%s\017.' % (message.split()[1], userformat(bmi, '.2f'), classifyBmi(bmi)))
+				return self.msg(self.channel, '%s\'s BMI has been set to %s, which is \002\003%s\017.' % (message.split()[1], format(bmi, '.2f'), classifyBmi(bmi)))
 
 		if height and mass:
 			bmi = mass / (height ** 2)
