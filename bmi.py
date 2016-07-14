@@ -54,7 +54,7 @@ def callback(self):
 			if (bmi > 30 or bmi < 15):
 				if self.isop and type(message.split()[1].lower()) == str:
 					user = message.split()[1].lower()
-				else if not self.isop:
+				elif not self.isop:
 					return self.msg(self.channel, 'Please ask a bot operator to set your BMI for you.')
 
 			try:
