@@ -34,11 +34,15 @@ heightUnits = [i for s in heights for i in s if type(i) == str]
 massUnits = [i for s in masses for i in s if type(i) == str]
 
 def declare():
-	return {'bmi': 'privmsg'}
+	return {'bmi': 'privmsg', 'setbmi': 'privmsg'}
 
 def callback(self):
+	channel = self.channel
+	command = self.command
 	user = self.user.split('!')[0].lower()
-	message = self.message.split(self.command, 1)[1]
+	msg = self.msg
+	isop = self.isop
+	message = self.message.split(command, 1)[1]
 
 	co = count(message)
 	bmi = co[0]
@@ -47,60 +51,63 @@ def callback(self):
 	met = co[3]
 	imp = co[4]
 
-	if len(message) > 0:
-		query = message.split()[0].lower()
-		if query == 'set':
-			bmi = mass / (height ** 2)
-			if (bmi > 30 or bmi < 15):
-				if self.isop and type(message.split()[1].lower()) == str:
-					user = message.split()[1].lower()
-				elif not self.isop:
-					return self.msg(self.channel, 'Please ask a bot operator to set your BMI for you.')
+	if command == 'setbmi':
+		bmi = mass / (height ** 2)
 
+		if message.lstrip()[0] not in '1234567890':
+			if isop:
+				user = message.split()[0].lower()
+			else:
+				return msg(channel, 'You do not have the authority to set %s\'s BMI, citizen.' % message.split()[0])
+
+		if isop or (bmi < 25 and bmi > 15):
 			try:
 				self.locker.bmi[user] = bmi
 			except:
 				self.locker.bmi = {user: bmi}
 
 			if user == self.user.split('!')[0].lower():
-				return self.msg(self.channel, 'Your BMI has been set to %s, which is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
+				return msg(channel, 'Your BMI has been set to %s, which is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
 			else:
-				return self.msg(self.channel, '%s\'s BMI has been set to %s, which is \002\003%s\017.' % (message.split()[1], format(bmi, '.2f'), classifyBmi(bmi)))
+				return msg(channel, '%s\'s BMI has been set to %s, which is \002\003%s\017.' % (message.split()[0], format(bmi, '.2f'), classifyBmi(bmi)))
+		else:
+			return msg(channel, 'Please ask a bot operator to set your BMI for you.')
 
+	elif command == 'bmi':
 		if height and mass:
 			bmi = mass / (height ** 2)
-			return self.msg(self.channel, 'Your BMI is %s, you are \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
+			return msg(channel, 'Your BMI is %s, you are \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
 
 		if height and bmi:
 			mass = bmi * (height ** 2)
 			if 'imperial' in message or (imp > met and 'metric' not in message):
-				return self.msg(self.channel, 'Your mass is %slbs.' % format(mass / 0.453592, '.2f'))
-			return self.msg(self.channel, 'Your mass is %skg.' % format(mass, '.2f'))
+				return msg(channel, 'Your mass is %slbs.' % format(mass / 0.453592, '.2f'))
+			return msg(channel, 'Your mass is %skg.' % format(mass, '.2f'))
 
 		if mass and bmi:
 			height = math.sqrt(mass / bmi)
 			if 'imperial' in message or (imp > met and 'metric' not in message):
 				iHeight = mToFtIn(height)
-				return self.msg(self.channel, 'Your height is %d\'%d".' % (iHeight[0], iHeight[1]))
-			return self.msg(self.channel, 'Your height is %sm.' % format(height, '.2f'))
-	else:
-		query = user
+				return msg(channel, 'Your height is %d\'%d".' % (iHeight[0], iHeight[1]))
+			return msg(channel, 'Your height is %sm.' % format(height, '.2f'))
 
-	try:
-		if query in self.locker.bmi:
-			bmi = self.locker.bmi[query]
-			if query == user:
-				return self.msg(self.channel, 'Your BMI is %s, which is \002\003%s\017.' % (format(bmi,'.2f'), classifyBmi(bmi)))
-			else:
-				return self.msg(self.channel, '%s\'s BMI is %s, which is \002\003%s\017.' % (message.split()[0], format(bmi,'.2f'), classifyBmi(bmi)))
-		else:
-			if len(message.split()) < 2:
-				return self.msg(self.channel, 'This user has not set a BMI yet.')
-			else:
-				return self.msg(self.channel, 'Invalid input.')
-	except:
-		self.locker.bmi = dict()
-		return self.msg(self.channel, 'No user\'s BMI has been recorded yet.')
+		if len(message) < 1 or message.lstrip()[0] not in '1234567890':
+			if len(message) > 0:
+				user = message.split()[0].lower()
+			try:
+				bmi = self.locker.bmi[user]
+
+				if user == self.user.split('!')[0].lower():
+					return msg(channel, 'Your BMI is %s, which is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
+				else:
+					return msg(channel, '%s\'s BMI is %s, which is \002\003%s\017.' % (message.split()[0], format(bmi, '.2f'), classifyBmi(bmi)))
+
+			except:
+				if user == self.user.split('!')[0].lower():
+					return msg(channel, 'Your BMI has not been set yet')
+				else:
+					return msg(channel, '%s\'s BMI has not been set yet' % message.split()[0])
+		return msg(channel, 'Invalid input.')
 
 def classifyBmi(bmi):
 	if bmi < 18.5:
@@ -176,9 +183,9 @@ def parseMessage(message):
 			# handles cases where no space between value and unit
 			if floatSearch and stringSearch:
 				parameters.append([float(reFloat.search(item).group()), reString.search(item).group()])
+			# handles cases where there is a space between the value and unit
 			elif floatSearch:
 				parameters.append([float(reFloat.search(item).group())])
-			# handles cases where there is a space between the value and unit
 			elif stringSearch and len(parameters) > 0:
 				parameters[-1].append(reString.search(item).group())
 
@@ -199,64 +206,89 @@ class empty:
 # interactive testing:
 api = api()
 setattr(api, 'type', 'privmsg')
-setattr(api, 'command', 'bmi')
 setattr(api, 'channel', "#test")
+setattr(api, 'command', 'bmi')
 setattr(api, 'locker', empty)
 setattr(api, 'user', 'joe!username@hostmask')
+setattr(api, 'isop', False)
 while(True):
 	_input = raw_input('Enter message here: ')
-	setattr(api, 'message', _input)
-	print callback(api)
+	if _input == 'op':
+		setattr(api, 'isop', True)
+		print 'User opped'
+	elif _input == 'deop':
+		setattr(api, 'isop', False)
+		print 'User deopped'
+	elif _input == 'quit':
+		exit()
+	else:
+		if 'setbmi' in _input:
+			setattr(api, 'command', 'setbmi')
+		else:
+			setattr(api, 'command', 'bmi')
+		setattr(api, 'message', _input)
+		print callback(api)
 '''
-
 if __name__ == "__main__":
 	api = api()
-	setattr(api, 'isop', True)
 	setattr(api, 'type', 'privmsg')
-	setattr(api, 'command', 'bmi')
 	setattr(api, 'channel', "#test")
 	setattr(api, 'locker', empty)
-
 	setattr(api, 'user', 'joe!username@hostmask')
-	setattr(api, 'message', '^bmi 5\'6\" 130pounds')
-	if 'Your BMI is 20.98, you are' not in callback(api):
+
+	setattr(api, 'isop', False)
+	setattr(api, 'command', 'bmi')
+	setattr(api, 'message', '^bmi 5\'6\" 130lbs')
+	if 'Your BMI is' not in callback(api):
 		exit(1)
 
-	setattr(api, 'message', '^bmi set 5\' 6\" 130lbs')
-	if 'Your BMI has been set to 20.98, which is' not in callback(api):
+	setattr(api, 'command', 'setbmi')
+	setattr(api, 'message', '^setbmi 5\' 6\" 180lbs')
+	if 'Please ask' not in callback(api):
 		exit(2)
 
+	setattr(api, 'command', 'bmi')
 	setattr(api, 'message', '^bmi')
-	if 'Your BMI is 20.98, which is' not in callback(api):
+	if 'Your BMI has not' not in callback(api):
 		exit(3)
 
 	setattr(api, 'message', '^bmi Joe')
-	if 'Your BMI is 20.98, which is' not in callback(api) and 'Joe' not in callback(api):
+	if 'Your BMI has not' not in callback(api):
 		exit(4)
 
-	setattr(api, 'user', 'blow!username@hostmask')
-	setattr(api, 'message', '^bmi joe')
-	if 'joe\'s BMI is 20.98, which is' not in callback(api):
+	setattr(api, 'message', '^bmi Jeb')
+	if 'Jeb\'s BMI has not' not in callback(api):
 		exit(5)
 
-	setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
-	if 'Your BMI has been set to ' not in callback(api):
+	setattr(api, 'command', 'setbmi')
+	setattr(api, 'message', '^setbmi 5\'6\" 130lbs')
+	if 'Your BMI has been' not in callback(api):
 		exit(6)
 
-	setattr(api, 'isop', False)
-	setattr(api, 'message', '^bmi set 5\'6\" 280lbs')
-	if 'Please ask a bot operator to set your BMI for you.' not in callback(api):
+	setattr(api, 'command', 'bmi')
+	setattr(api, 'message', '^bmi')
+	if 'Your BMI is' not in callback(api):
 		exit(7)
 
-	setattr(api, 'isop', True)
-	setattr(api, 'message', '^bmi set Frank 5\'6\" 280lbs')
-	if 'Frank\'s BMI has been set to' not in callback(api):
+	setattr(api, 'message', '^bmi Joe')
+	if 'Your BMI is' not in callback(api):
 		exit(8)
 
-	setattr(api, 'message', '^bmi 5\'6\" 20.98bmi')
-	if 'Your mass is 129.99lbs.' not in callback(api):
+	setattr(api, 'user', 'jeb!username@hostmask')
+	setattr(api, 'message', '^bmi Joe')
+	if 'Joe\'s BMI is' not in callback(api):
 		exit(9)
 
-	setattr(api, 'message', '^bmi 130lbs 20.98bmi')
-	if 'Your height is 5\'6".' not in callback(api):
+	setattr(api, 'command', 'setbmi')
+	setattr(api, 'message', '^setbmi Joe 5\'6" 180lbs')
+	if 'You do not' not in callback(api):
 		exit(10)
+
+	setattr(api, 'isop', True)
+	setattr(api, 'message', '^setbmi Joe 5\'6" 180lbs')
+	if 'Joe\'s BMI has been' not in callback(api):
+		exit(11)
+
+	setattr(api, 'message', '^setbmi 5\'6" 180lbs')
+	if 'Your BMI has been' not in callback(api):
+		exit(12)
