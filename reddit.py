@@ -1,5 +1,9 @@
 import json, random, urllib2
 
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 def declare():
     return {"reddit": "privmsg", "guess": "privmsg"}
 
@@ -76,7 +80,7 @@ class api:
 if __name__ == "__main__":
     api = api()
     c = "#test"
-    
+
     setattr(api, 'isop', True)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'command', 'reddit')
