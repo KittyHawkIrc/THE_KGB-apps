@@ -11,7 +11,7 @@ def declare():
 
 def callback(self):
     try:
-        message = self.message.split(self.command, 1)[1]
+        message = self.message.split(self.command, 1)[1].strip()
         try:
             r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=' + '+'.join(message.split()))
             data = json.loads(r.read())
