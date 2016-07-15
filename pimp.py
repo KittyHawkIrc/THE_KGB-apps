@@ -1,6 +1,10 @@
 import urllib2
 from time import ctime
 
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 #c = channel
 #u = user giving/taking points
 #t = target who's points are being modified

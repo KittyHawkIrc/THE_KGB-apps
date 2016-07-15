@@ -1,5 +1,9 @@
 import random
 
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 def declare():
     return {"bby": "privmsg"}
 
@@ -27,7 +31,7 @@ if __name__ == "__main__":
     setattr(api, 'message', '^hello')
     setattr(api, 'user', 'joe!username@hostmask')
     setattr(api, 'channel', '#test')
-    
+
     u = api.user.split('!',1)[0]
 
     if callback(api) != '[%s] Wow %s, you look absolutely gorgeous today' % (api.channel, u):

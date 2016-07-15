@@ -1,5 +1,9 @@
 import random
 
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 factimg = [
   "https://i.sli.mg/ohFHK6.png",
   "https://i.sli.mg/ELRYvY.png",
@@ -151,7 +155,7 @@ if __name__ == "__main__":
   setattr(api, 'user', 'joe!username@hostmask')
   setattr(api, 'channel', "#test")
   setattr(api, 'message', '^animalfacts')
-  
+
   if "https://i.sli.mg/" not in callback(api):
     system.exit(1)
   setattr(api, 'message', '^animalfacts new')

@@ -1,5 +1,9 @@
 import sys, os
 
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 def declare():
     return {"restart": "privmsg", "join": "privmsg", "leave": "privmsg", "nick": "privmsg", "kick": "privmsg", "ban": "privmsg", "unban": "privmsg", "msg": "privmsg", "topic": "privmsg"}
 
