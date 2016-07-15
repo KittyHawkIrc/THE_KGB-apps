@@ -13,7 +13,7 @@ def callback(self):
     try:
         message = self.message.split(self.command, 1)[1]
         try:
-            r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(message.split(' ')[1:]))
+            r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(message.split()))
             data = json.loads(r.read())
             r.close()
 
