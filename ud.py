@@ -27,9 +27,8 @@ def callback(self):
                 if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
                     definition = definition[:maxChars-(5 + len(data['list'][0]['permalink']))] + '...'
                 return self.msg(self.channel, str(definition + ' %s' % data['list'][0]['permalink']))
-            except Exception, e:
-                return self.msg('#the_kgb', str(e))
-                #return self.msg(self.channel, 'No definition for %s.' % message)
+            except:
+                return self.msg(self.channel, 'No definition for %s.' % message)
         except:
             return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
     except:
