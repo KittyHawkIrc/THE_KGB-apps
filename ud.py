@@ -12,19 +12,20 @@ def declare():
 def callback(self):
     try:
         r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
-        data = json.load(r)
+        data = json.loads(r.read())
         r.close()
-        if data['result_type'] != 'no_results':
+
+        try:
             defLines = data['list'][0]['definition'].splitlines()
             for line in defLines:
                 if line[-1] not in ',.?!':
                     line = line + ','
-            definition = '%s ( %s ) %s' % (data['list'][0]['word'], data['list'][0]['permalink'], ' '.join(defLines))
+            definition = '%s: %s' % (data['list'][0]['word'], ' '.join(defLines))
 
-            if len(definition) > maxChars:
-                definition = definition[:maxChars-4] + '...'
-            return self.msg(self.channel, definition)
-        else:
+            if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
+                definition = definition[:maxChars-(5 + len(data['list'][0]['permalink']))] + '...'
+            return self.msg(self.channel, definition + ' %s' % data['list'][0]['permalink'])
+        except:
             return self.msg(self.channel, 'No definition for %s.' % self.message)
     except:
         return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
@@ -41,6 +42,8 @@ if __name__ == "__main__":
     setattr(api, 'user', 'joe!username@hostmask')
     setattr(api, 'channel', "#test")
     setattr(api, 'message', '^ud Hitler')
+
+    print callback(api)
 
     if "urbanup" not in callback(api):
         exit(1)
