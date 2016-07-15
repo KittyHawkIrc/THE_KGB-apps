@@ -13,7 +13,7 @@ def callback(self):
     try:
         message = self.message.split(self.command, 1)[1]
         try:
-            r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(message.split()))
+            r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=' + '+'.join(message.split()))
             data = json.loads(r.read())
             r.close()
 
@@ -27,6 +27,8 @@ def callback(self):
                 if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
                     definition = definition[:maxChars-(5 + len(data['list'][0]['permalink']))] + '...'
                 return self.msg(self.channel, definition + ' %s' % data['list'][0]['permalink'])
+            except Exception, e:
+                return self.msg('#the_kgb', str(e))
             except:
                 return self.msg(self.channel, 'No definition for %s.' % self.message)
         except:
@@ -37,6 +39,20 @@ def callback(self):
 class api:
 	def msg(self, channel, text):
 		return "[%s] %s" % (channel, text)
+
+'''
+# interactive testing:
+api = api()
+setattr(api, 'type', 'privmsg')
+setattr(api, 'channel', "#test")
+setattr(api, 'command', 'ud')
+setattr(api, 'user', 'joe!username@hostmask')
+setattr(api, 'isop', False)
+while(True):
+	_input = raw_input('Enter message here: ')
+	setattr(api, 'message', _input)
+	print callback(api)
+'''
 
 if __name__ == "__main__":
     api = api()
