@@ -18,7 +18,11 @@ def callback(self):
             r.close()
 
             try:
-                definition = '%s: %s' % (data['list'][0]['word'], data['list'][0]['definition'])
+                defLines = data['list'][0]['definition'].splitlines()
+                for line in defLines:
+                    if line[-1] not in ',.?!':
+                        line = line + ','
+                definition = '%s: %s' % (data['list'][0]['word'], ' '.join(defLines))
 
                 if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
                     definition = definition[:maxChars-(5 + len(data['list'][0]['permalink']))] + '...'
