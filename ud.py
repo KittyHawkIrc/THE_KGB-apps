@@ -7,24 +7,28 @@ def declare():
 
 def callback(self):
     try:
-        r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(self.message.split(' ')[1:]))
-        data = json.loads(r.read())
-        r.close()
-
+        message = self.message.split(self.command, 1)[1]
         try:
-            defLines = data['list'][0]['definition'].splitlines()
-            for line in defLines:
-                if line[-1] not in ',.?!':
-                    line = line + ','
-            definition = '%s: %s' % (data['list'][0]['word'], ' '.join(defLines))
+            r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=%s' % '+'.join(message.split(' ')[1:]))
+            data = json.loads(r.read())
+            r.close()
 
-            if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
-                definition = definition[:maxChars-(5 + len(data['list'][0]['permalink']))] + '...'
-            return self.msg(self.channel, definition + ' %s' % data['list'][0]['permalink'])
+            try:
+                defLines = data['list'][0]['definition'].splitlines()
+                for line in defLines:
+                    if line[-1] not in ',.?!':
+                        line = line + ','
+                definition = '%s: %s' % (data['list'][0]['word'], ' '.join(defLines))
+
+                if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
+                    definition = definition[:maxChars-(5 + len(data['list'][0]['permalink']))] + '...'
+                return self.msg(self.channel, definition + ' %s' % data['list'][0]['permalink'])
+            except:
+                return self.msg(self.channel, 'No definition for %s.' % self.message)
         except:
-            return self.msg(self.channel, 'No definition for %s.' % self.message)
+            return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
     except:
-        return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
+        return self.msg(self.channel, 'You need to give me something to look for!')
 
 class api:
 	def msg(self, channel, text):
