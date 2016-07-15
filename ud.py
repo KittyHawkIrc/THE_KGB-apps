@@ -23,6 +23,8 @@ def callback(self):
                     if line[-1] not in ',.?!':
                         line = line + ','
                 definition = '%s: %s' % (data['list'][0]['word'], ' '.join(defLines))
+                while('  ' in definition):
+                    definition = definition.replace('  ', ' ')
 
                 if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
                     definition = definition[:maxChars-(5 + len(data['list'][0]['permalink']))] + '...'
