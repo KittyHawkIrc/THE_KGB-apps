@@ -69,6 +69,8 @@ def callback(self):
 				self.locker.bmi[user] = bmi
 			except:
 				self.locker.bmi = {user: bmi}
+				
+			self.cache_save() 	#persist cache post-restarts
 
 			if user == self.user.split('!')[0].lower():
 				return msg(channel, 'Your BMI has been set to %s, which is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
