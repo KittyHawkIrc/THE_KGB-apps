@@ -18,18 +18,14 @@ def callback(self):
             r.close()
 
             try:
-                defLines = data['list'][0]['definition'].splitlines()
-                for line in defLines:
-                    if line[-1] not in ',.?!':
-                        line = line + ','
-                definition = '%s: %s' % (data['list'][0]['word'], ' '.join(defLines))
+                definition = '%s: %s' % (data['list'][0]['word'], ' '.join(data['list'][0]['definition'].splitlines()))
                 while('  ' in definition):
                     definition = definition.replace('  ', ' ')
 
                 if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
-                    definition = definition[:maxChars-(5 + len(data['list'][0]['permalink']))] + '...'
+                    definition = definition[:maxChars-(4 + len(data['list'][0]['permalink']))] + '...'
                 return self.msg(self.channel, str(definition + ' %s' % data['list'][0]['permalink']))
-            except:
+            except Exception, e:
                 return self.msg(self.channel, 'No definition for %s.' % message)
         except:
             return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
@@ -40,7 +36,7 @@ class api:
 	def msg(self, channel, text):
 		return "[%s] %s" % (channel, text)
 
-'''
+
 # interactive testing:
 api = api()
 setattr(api, 'type', 'privmsg')
@@ -52,7 +48,6 @@ while(True):
 	_input = raw_input('Enter message here: ')
 	setattr(api, 'message', _input)
 	print callback(api)
-'''
 
 if __name__ == "__main__":
     api = api()
