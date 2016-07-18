@@ -21,7 +21,7 @@ def callback(self):
         try:
             if message:
                 try:
-    				query = self.locker.location[message]
+                    query = self.locker.location[message]
                 except:
                     query = message
             else:
@@ -64,7 +64,7 @@ def callback(self):
 
                 weather = ' '.join(weather.split())
 
-                return msg(channel, weather)
+                return msg(channel, str(weather))
             except:
                 return msg(channel, 'I cannot find the weather for %s' % message)
         except:
