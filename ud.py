@@ -11,6 +11,7 @@ def declare():
 
 def callback(self):
     message = self.message.split(self.command, 1)[1].strip()
+    if message:
         try:
             r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=' + '+'.join(message.split()))
             data = json.loads(r.read())
@@ -23,7 +24,7 @@ def callback(self):
 
                 if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
                     definition = definition[:maxChars-(4 + len(data['list'][0]['permalink']))] + '...'
-                return self.msg(self.channel, str(definition + ' %s' % data['list'][0]['permalink']))
+                return self.msg(self.channel, definition + ' %s' % data['list'][0]['permalink'])
             except Exception, e:
                 return self.msg(self.channel, 'No definition for %s.' % message)
         except:
