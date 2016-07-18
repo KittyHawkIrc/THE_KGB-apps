@@ -122,7 +122,6 @@ while(True):
     setattr(api, 'message', _input)
     print callback(api)
 '''
-
 if __name__ == "__main__":
     api = api()
     setattr(api, 'type', 'privmsg')
