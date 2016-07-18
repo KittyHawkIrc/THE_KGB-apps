@@ -31,21 +31,21 @@ def callback(self):
 
             #sourced from example code for Yahoo Weather API
             baseurl = 'https://query.yahooapis.com/v1/public/yql?'
-            yql_query = 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="%s")' % query
+            yql_query = 'select * from weather.forecast where woeid in (select woeid from geo.places where text="%s")' % query
             yql_url = baseurl + urllib.urlencode({'q':yql_query}) + "&format=json"
             result = urllib2.urlopen(yql_url)
             data = json.loads(result.read())
             result.close()
 
             try:
-                city = data['query']['results']['channel']['location']['city']
-                region = data['query']['results']['channel']['location']['region']
-                country = data['query']['results']['channel']['location']['country']
-                cond = data['query']['results']['channel']['item']['condition']['text']
-                temp = data['query']['results']['channel']['item']['condition']['temp']
-                humid = data['query']['results']['channel']['atmosphere']['humidity']
-                wSpeed = data['query']['results']['channel']['wind']['speed']
-                wDir = degToDirection(int(data['query']['results']['channel']['wind']['direction']))
+                city = data['query']['results']['channel'][0]['location']['city']
+                region = data['query']['results']['channel'][0]['location']['region']
+                country = data['query']['results']['channel'][0]['location']['country']
+                cond = data['query']['results']['channel'][0]['item']['condition']['text']
+                temp = data['query']['results']['channel'][0]['item']['condition']['temp']
+                humid = data['query']['results']['channel'][0]['atmosphere']['humidity']
+                wSpeed = data['query']['results']['channel'][0]['wind']['speed']
+                wDir = degToDirection(int(data['query']['results']['channel'][0]['wind']['direction']))
 
                 weather = '%s, %s, %s / %s / ' % (city, region, country, cond)
 
@@ -64,8 +64,8 @@ def callback(self):
                 weather = ' '.join(weather.split())
 
                 return msg(channel, unicode(weather))
-            except:
-                return msg(channel, 'I cannot find the weather for %s' % message)
+            except Exception, e:
+                return msg(channel, 'I cannot find the weather for %s' % str(e))
         except:
             return msg(channel, 'I cannot fetch the weather at this moment.')
     if command == 'setlocation':
@@ -104,7 +104,7 @@ class api:
 class empty:
 	pass
 
-'''
+
 # interactive testing:
 api = api()
 def cache_save():
@@ -123,7 +123,7 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
-'''
+
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
