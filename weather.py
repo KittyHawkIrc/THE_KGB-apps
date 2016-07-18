@@ -1,4 +1,4 @@
-import encoder, json, urllib, urllib2
+import json, urllib, urllib2
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -50,9 +50,9 @@ def callback(self):
                 weather = '%s, %s, %s / %s / ' % (city, region, country, cond)
 
                 if country.strip() in fCountries:
-                    weather += '%s%sF /' % (temp, encoder.decode('!b64:wrA='))
+                    weather += '%s%sF /' % (temp, decode('!b64:wrA='))
                 else:
-                    weather += '%s%sC /' % (FToC(int(temp)), encoder.decode('!b64:wrA='))
+                    weather += '%s%sC /' % (FToC(int(temp)), decode('!b64:wrA='))
 
                 weather += ' Humidity: %s%% /' % humid
 
@@ -96,6 +96,14 @@ def degToDirection(deg):
         start += span
 
     return 'N'
+
+def decode(code_str):
+    try:
+        code_str = code_str.split('!')[1]
+        code_func = coding[code_str.split(':')[0]][1]
+        return code_func(code_str.split(':')[1])
+    except:
+        return False
 
 class api:
 	def msg(self, channel, text):
