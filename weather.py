@@ -38,6 +38,8 @@ def callback(self):
             result.close()
 
             try:
+                degSign = encoder.encode('b64:°')
+
                 city = data['query']['results']['channel']['location']['city']
                 region = data['query']['results']['channel']['location']['region']
                 country = data['query']['results']['channel']['location']['country']
@@ -50,9 +52,9 @@ def callback(self):
                 weather = '%s, %s, %s / %s / ' % (city, region, country, cond)
 
                 if country.strip() in fCountries:
-                    weather += '%s%sF /' % (temp, decode('!b64:wrA='))
+                    weather += '%s%sF /' % (temp, u'\xb0')
                 else:
-                    weather += '%s%sC /' % (FToC(int(temp)), decode('!b64:wrA='))
+                    weather += '%s%sC /' % (FToC(int(temp)), u'\xb0')
 
                 weather += ' Humidity: %s%% /' % humid
 
@@ -63,7 +65,7 @@ def callback(self):
 
                 weather = ' '.join(weather.split())
 
-                return msg(channel, weather)
+                return msg(channel, unicode(weather))
             except:
                 return msg(channel, 'I cannot find the weather for %s' % message)
         except:
@@ -96,14 +98,6 @@ def degToDirection(deg):
         start += span
 
     return 'N'
-
-def decode(code_str):
-    try:
-        code_str = code_str.split('!')[1]
-        code_func = coding[code_str.split(':')[0]][1]
-        return code_func(code_str.split(':')[1])
-    except:
-        return False
 
 class api:
 	def msg(self, channel, text):
