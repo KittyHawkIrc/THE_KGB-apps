@@ -31,41 +31,42 @@ def callback(self):
 
             #sourced from example code for Yahoo Weather API
             baseurl = 'https://query.yahooapis.com/v1/public/yql?'
-            yql_query = 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="%s")' % query
+            yql_query = 'select * from weather.forecast where woeid in (select woeid from geo.places where text="%s")' % query
             yql_url = baseurl + urllib.urlencode({'q':yql_query}) + "&format=json"
             result = urllib2.urlopen(yql_url)
             data = json.loads(result.read())
             result.close()
 
             try:
-                city = data['query']['results']['channel']['location']['city']
-                region = data['query']['results']['channel']['location']['region']
-                country = data['query']['results']['channel']['location']['country']
-                cond = data['query']['results']['channel']['item']['condition']['text']
-                temp = data['query']['results']['channel']['item']['condition']['temp']
-                humid = data['query']['results']['channel']['atmosphere']['humidity']
-                wSpeed = data['query']['results']['channel']['wind']['speed']
-                wDir = degToDirection(int(data['query']['results']['channel']['wind']['direction']))
-
-                weather = '%s, %s, %s / %s / ' % (city, region, country, cond)
+                city = data['query']['results']['channel'][0]['location']['city']
+                region = data['query']['results']['channel'][0]['location']['region']
+                country = data['query']['results']['channel'][0]['location']['country']
+                cond = data['query']['results']['channel'][0]['item']['condition']['text']
+                humid = data['query']['results']['channel'][0]['atmosphere']['humidity']
+                wSpeed = data['query']['results']['channel'][0]['wind']['speed']
+                wDir = degToDirection(int(data['query']['results']['channel'][0]['wind']['direction']))
 
                 if country.strip() in fCountries:
-                    weather += '%sF /' % temp
+                    temp = data['query']['results']['channel'][0]['item']['condition']['temp'] + '%sF' % u'\xb0'
+                    high = data['query']['results']['channel'][0]['item']['forecast'][0]['high'] + '%sF' % u'\xb0'
+                    low = data['query']['results']['channel'][0]['item']['forecast'][0]['low'] + '%sF' % u'\xb0'
                 else:
-                    weather += '%sC /' % FToC(int(temp))
-
-                weather += ' Humidity: %s%% /' % humid
+                    temp = FToC(data['query']['results']['channel'][0]['item']['condition']['temp']) + '%sC' % u'\xb0'
+                    high = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['high']) + '%sC' % u'\xb0'
+                    low = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['low']) + '%sC' % u'\xb0'
 
                 if country.strip() in iCountries:
-                    weather += ' Wind: %smph %s' % (wSpeed, wDir)
+                    wSpeed = data['query']['results']['channel'][0]['wind']['speed'] + 'mph'
                 else:
-                    weather += ' Wind: %skm/h %s' % (miToKm(int(wSpeed)), wDir)
+                    wSpeed = miToKm(data['query']['results']['channel'][0]['wind']['speed']) + 'km/h'
+
+                weather = '%s, %s, %s / %s / %s / Humidity: %s%% / High: %s / Low: %s' % (city, region, country, cond, temp, humid, high, low)
 
                 weather = ' '.join(weather.split())
 
                 return msg(channel, unicode(weather))
-            except:
-                return msg(channel, 'I cannot find the weather for %s' % message)
+            except Exception, e:
+                return msg(channel, 'I cannot find the weather for %s' % str(e))
         except:
             return msg(channel, 'I cannot fetch the weather at this moment.')
     if command == 'setlocation':
@@ -74,14 +75,15 @@ def callback(self):
                 self.locker.location[user] = message
             except:
                 self.locker.location = {user: message}
+            self.cache_save()
             return msg(channel, 'Location for user %s set to %s' % (self.user.split('!')[0], message))
         return msg(channel, 'You did not give me a location to set!')
 
 def FToC(fahrenheit):
-    return int(round((fahrenheit - 32) / 1.8))
+    return str(int(round((int(fahrenheit) - 32) / 1.8)))
 
 def miToKm(miles):
-    return int(round(miles * 1.60934))
+    return str(int(round(int(miles) * 1.60934)))
 
 def degToDirection(deg):
     directions = ['NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N']
@@ -106,6 +108,9 @@ class empty:
 '''
 # interactive testing:
 api = api()
+def cache_save():
+	print 'Cache saved'
+setattr(api, 'cache_save', cache_save)
 setattr(api, 'type', 'privmsg')
 setattr(api, 'channel', "#test")
 setattr(api, 'command', 'w')
@@ -120,8 +125,12 @@ while(True):
     setattr(api, 'message', _input)
     print callback(api)
 '''
+
 if __name__ == "__main__":
+    def cache_save():
+        print 'Cache saved'
     api = api()
+    setattr(api, 'cache_save', cache_save)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', "#test")
     setattr(api, 'command', 'w')
