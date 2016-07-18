@@ -43,7 +43,6 @@ def callback(self):
                 country = data['query']['results']['channel'][0]['location']['country']
                 cond = data['query']['results']['channel'][0]['item']['condition']['text']
                 humid = data['query']['results']['channel'][0]['atmosphere']['humidity']
-                wSpeed = data['query']['results']['channel'][0]['wind']['speed']
                 wDir = degToDirection(int(data['query']['results']['channel'][0]['wind']['direction']))
 
                 if country.strip() in fCountries:
@@ -60,7 +59,7 @@ def callback(self):
                 else:
                     wSpeed = miToKm(data['query']['results']['channel'][0]['wind']['speed']) + 'km/h'
 
-                weather = '%s, %s, %s / %s / %s / Humidity: %s%% / High: %s / Low: %s' % (city, region, country, cond, temp, humid, high, low)
+                weather = '%s, %s, %s / %s / %s / Humidity: %s%% / Wind: %s %s / High: %s / Low: %s' % (city, region, country, cond, temp, humid, wSpeed, wDir, high, low)
 
                 weather = ' '.join(weather.split())
 
