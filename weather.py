@@ -111,7 +111,7 @@ class api:
 class empty:
 	pass
 
-
+'''
 # interactive testing:
 api = api()
 setattr(api, 'type', 'privmsg')
@@ -127,6 +127,7 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
+'''
 
 if __name__ == "__main__":
     api = api()
