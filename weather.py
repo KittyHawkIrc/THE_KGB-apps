@@ -20,7 +20,7 @@ def callback(self):
         try:
             if message:
                 try:
-                    query = self.locker.location[message]
+                    query = self.locker.location[message.lower()]
                 except:
                     query = message
             else:
