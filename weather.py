@@ -50,9 +50,9 @@ def callback(self):
                 weather = '%s, %s, %s / %s / ' % (city, region, country, cond)
 
                 if country.strip() in fCountries:
-                    weather += '%s%sF /' % (temp, decode('!b64:wrA='))
+                    weather += '%sF /' % temp
                 else:
-                    weather += '%s%sC /' % (FToC(int(temp)), decode('!b64:wrA='))
+                    weather += '%sC /' % FToC(int(temp))
 
                 weather += ' Humidity: %s%% /' % humid
 
@@ -63,7 +63,7 @@ def callback(self):
 
                 weather = ' '.join(weather.split())
 
-                return msg(channel, weather)
+                return msg(channel, unicode(weather))
             except:
                 return msg(channel, 'I cannot find the weather for %s' % message)
         except:
@@ -97,14 +97,6 @@ def degToDirection(deg):
 
     return 'N'
 
-def decode(code_str):
-    try:
-        code_str = code_str.split('!')[1]
-        code_func = coding[code_str.split(':')[0]][1]
-        return code_func(code_str.split(':')[1])
-    except:
-        return False
-
 class api:
 	def msg(self, channel, text):
 		return "[%s] %s" % (channel, text)
@@ -128,7 +120,6 @@ while(True):
     setattr(api, 'message', _input)
     print callback(api)
 '''
-
 if __name__ == "__main__":
     api = api()
     setattr(api, 'type', 'privmsg')
