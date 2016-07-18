@@ -1,4 +1,4 @@
-import json, urllib, urllib2
+import encoder, json, urllib, urllib2
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -15,13 +15,12 @@ def callback(self):
     command = self.command
     user = self.user.split('!')[0].lower()
     msg = self.msg
-    isop = self.isop
     message = self.message.split(command, 1)[1].strip()
     if command == 'w':
         try:
             if message:
                 try:
-    				query = self.locker.location[message]
+                    query = self.locker.location[message]
                 except:
                     query = message
             else:
@@ -51,9 +50,9 @@ def callback(self):
                 weather = '%s, %s, %s / %s / ' % (city, region, country, cond)
 
                 if country.strip() in fCountries:
-                    weather += '%s%sF /' % (temp, u'\xb0')
+                    weather += '%s%sF /' % (temp, encoder.decode('!b64:wrA='))
                 else:
-                    weather += '%s%sC /' % (FToC(int(temp)), u'\xb0')
+                    weather += '%s%sC /' % (FToC(int(temp)), encoder.decode('!b64:wrA='))
 
                 weather += ' Humidity: %s%% /' % humid
 
@@ -64,7 +63,7 @@ def callback(self):
 
                 weather = ' '.join(weather.split())
 
-                return msg(channel, str(weather))
+                return msg(channel, weather)
             except:
                 return msg(channel, 'I cannot find the weather for %s' % message)
         except:
@@ -104,7 +103,7 @@ class api:
 class empty:
 	pass
 
-'''
+
 # interactive testing:
 api = api()
 setattr(api, 'type', 'privmsg')
@@ -120,11 +119,9 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
-'''
 
 if __name__ == "__main__":
     api = api()
-    setattr(api, 'isop', True)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', "#test")
     setattr(api, 'command', 'w')
