@@ -74,6 +74,7 @@ def callback(self):
                 self.locker.location[user] = message
             except:
                 self.locker.location = {user: message}
+            self.cache_save()
             return msg(channel, 'Location for user %s set to %s' % (self.user.split('!')[0], message))
         return msg(channel, 'You did not give me a location to set!')
 
@@ -106,6 +107,9 @@ class empty:
 '''
 # interactive testing:
 api = api()
+def cache_save():
+	print 'Cache saved'
+setattr(api, 'cache_save', cache_save)
 setattr(api, 'type', 'privmsg')
 setattr(api, 'channel', "#test")
 setattr(api, 'command', 'w')
@@ -121,7 +125,11 @@ while(True):
     print callback(api)
 '''
 if __name__ == "__main__":
+	def cache_save():
+		print 'Cache saved'
+
     api = api()
+    setattr(api, 'cache_save', cache_save)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', "#test")
     setattr(api, 'command', 'w')
