@@ -47,13 +47,13 @@ def callback(self):
                 wDir = degToDirection(int(data['query']['results']['channel'][0]['wind']['direction']))
 
                 if country.strip() in fCountries:
-                    temp = data['query']['results']['channel'][0]['item']['condition']['temp'] + '%sF' % u'\xb0'
-                    high = data['query']['results']['channel'][0]['item']['forecast'][0]['high'] + '%sF' % u'\xb0'
-                    low = data['query']['results']['channel'][0]['item']['forecast'][0]['low'] + '%sF' % u'\xb0'
+                    temp = data['query']['results']['channel'][0]['item']['condition']['temp'] + 'F'
+                    high = data['query']['results']['channel'][0]['item']['forecast'][0]['high'] + 'F'
+                    low = data['query']['results']['channel'][0]['item']['forecast'][0]['low'] + 'F''
                 else:
-                    temp = FToC(data['query']['results']['channel'][0]['item']['condition']['temp']) + '%sC' % u'\xb0'
-                    high = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['high']) + '%sC' % u'\xb0'
-                    low = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['low']) + '%sC' % u'\xb0'
+                    temp = FToC(data['query']['results']['channel'][0]['item']['condition']['temp']) + 'C'
+                    high = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['high']) + 'C'
+                    low = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['low']) + 'C'
 
                 if country.strip() in iCountries:
                     wSpeed = data['query']['results']['channel'][0]['wind']['speed'] + 'mph'
@@ -64,9 +64,9 @@ def callback(self):
 
                 weather = ' '.join(weather.split())
 
-                return msg(channel, unicode(weather))
-            except Exception, e:
-                return msg(channel, 'I cannot find the weather for %s' % str(e))
+                return msg(channel, weather)
+            except:
+                return msg(channel, 'I cannot find the weather for %s' % message)
         except:
             return msg(channel, 'I cannot fetch the weather at this moment.')
     if command == 'setlocation':
