@@ -38,8 +38,6 @@ def callback(self):
             result.close()
 
             try:
-                degSign = encoder.encode('b64:°')
-
                 city = data['query']['results']['channel']['location']['city']
                 region = data['query']['results']['channel']['location']['region']
                 country = data['query']['results']['channel']['location']['country']
