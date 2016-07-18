@@ -49,7 +49,7 @@ def callback(self):
                 if country.strip() in fCountries:
                     temp = data['query']['results']['channel'][0]['item']['condition']['temp'] + 'F'
                     high = data['query']['results']['channel'][0]['item']['forecast'][0]['high'] + 'F'
-                    low = data['query']['results']['channel'][0]['item']['forecast'][0]['low'] + 'F''
+                    low = data['query']['results']['channel'][0]['item']['forecast'][0]['low'] + 'F'
                 else:
                     temp = FToC(data['query']['results']['channel'][0]['item']['condition']['temp']) + 'C'
                     high = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['high']) + 'C'
