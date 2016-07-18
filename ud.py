@@ -10,8 +10,7 @@ def declare():
   return {"ud": "privmsg"}
 
 def callback(self):
-    try:
-        message = self.message.split(self.command, 1)[1].strip()
+    message = self.message.split(self.command, 1)[1].strip()
         try:
             r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=' + '+'.join(message.split()))
             data = json.loads(r.read())
@@ -29,14 +28,13 @@ def callback(self):
                 return self.msg(self.channel, 'No definition for %s.' % message)
         except:
             return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
-    except:
-        return self.msg(self.channel, 'You need to give me something to look for!')
+    return self.msg(self.channel, 'You need to give me something to look for!')
 
 class api:
 	def msg(self, channel, text):
 		return "[%s] %s" % (channel, text)
 
-
+'''
 # interactive testing:
 api = api()
 setattr(api, 'type', 'privmsg')
@@ -48,6 +46,7 @@ while(True):
 	_input = raw_input('Enter message here: ')
 	setattr(api, 'message', _input)
 	print callback(api)
+'''
 
 if __name__ == "__main__":
     api = api()
