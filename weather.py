@@ -20,7 +20,7 @@ def callback(self):
         try:
             if message:
                 try:
-                    query = self.locker.location[message]
+                    query = self.locker.location[message.lower()]
                 except:
                     query = message
             else:
@@ -130,24 +130,29 @@ if __name__ == "__main__":
 
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w')
+    print callback(api)
     if 'You have not' not in callback(api):
     	exit(1)
 
     setattr(api, 'message', '^w Los Angeles')
+    print callback(api)
     if 'Los Angeles, CA' not in callback(api):
     	exit(2)
 
     setattr(api, 'command', 'setlocation')
     setattr(api, 'message', '^setlocation Los Angeles')
+    print callback(api)
     if 'Location for' not in callback(api):
     	exit(3)
 
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w')
+    print callback(api)
     if 'Los Angeles, CA' not in callback(api):
     	exit(4)
 
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^w joe')
+    print callback(api)
     if 'Los Angeles, CA' not in callback(api):
     	exit(5)
