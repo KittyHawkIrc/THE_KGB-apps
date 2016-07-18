@@ -50,9 +50,9 @@ def callback(self):
                 weather = '%s, %s, %s / %s / ' % (city, region, country, cond)
 
                 if country.strip() in fCountries:
-                    weather += '%s%sF /' % (temp, u'\xb0')
+                    weather += '%sF /' % temp
                 else:
-                    weather += '%s%sC /' % (FToC(int(temp)), u'\xb0')
+                    weather += '%sC /' % FToC(int(temp))
 
                 weather += ' Humidity: %s%% /' % humid
 
