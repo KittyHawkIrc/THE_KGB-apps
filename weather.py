@@ -1,9 +1,11 @@
-import json, urllib, urllib2
+import json, urllib2
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
+gApiKey = 'AIzaSyCfy-symUGtmzsqO6_sb0UKtO0YHLoDT_M'
+fApiKey = 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
 fCountries = ['Belize', 'Guam', 'Puerto Rico', 'United States', 'US Virgin Islands']
 iCountries = ['Liberia', 'Myanmar', 'United States']
 
@@ -17,57 +19,68 @@ def callback(self):
     msg = self.msg
     message = self.message.split(command, 1)[1].strip()
     if command == 'w':
-        try:
-            if message:
-                try:
-                    query = self.locker.location[message.lower()]
-                except:
-                    query = message
-            else:
-                try:
-                    query = self.locker.location[user]
-                except:
-                    return msg(channel, 'You have not set a location yet.')
+        if message:
+            try:
+                query = self.locker.location[message.lower()]
+            except:
+                query = message
+        else:
+            try:
+                query = self.locker.location[user]
+            except:
+                return msg(channel, 'You have not set a location yet.')
 
-            #sourced from example code for Yahoo Weather API
-            baseurl = 'https://query.yahooapis.com/v1/public/yql?'
-            yql_query = 'select * from weather.forecast where woeid in (select woeid from geo.places where text="%s")' % query
-            yql_url = baseurl + urllib.urlencode({'q':yql_query}) + "&format=json"
-            result = urllib2.urlopen(yql_url)
-            data = json.loads(result.read())
-            result.close()
+        try:
+            baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+            r = urllib2.urlopen(baseurl + '+'.join(query.split()) + '&key=' + gApiKey)
+            geodata = json.loads(r.read())
+            r.close()
+
+            name = geodata['results'][0]['formatted_address']
+            lat = geodata['results'][0]['geometry']['location']['lat']
+            lng = geodata['results'][0]['geometry']['location']['lng']
 
             try:
-                city = data['query']['results']['channel'][0]['location']['city']
-                region = data['query']['results']['channel'][0]['location']['region']
-                country = data['query']['results']['channel'][0]['location']['country']
-                cond = data['query']['results']['channel'][0]['item']['condition']['text']
-                humid = data['query']['results']['channel'][0]['atmosphere']['humidity']
-                wDir = degToDirection(int(data['query']['results']['channel'][0]['wind']['direction']))
+                baseurl = 'https://api.forecast.io/forecast/'
+                options = '?units=auto&exclude=minutely,hourly'
+                r = urllib2.urlopen(baseurl + fApiKey + '/%s,%s' % (lat, lng) + options)
+                wdata = json.loads(r.read())
+                r.close()
 
-                if country.strip() in fCountries:
-                    temp = data['query']['results']['channel'][0]['item']['condition']['temp'] + 'F'
-                    high = data['query']['results']['channel'][0]['item']['forecast'][0]['high'] + 'F'
-                    low = data['query']['results']['channel'][0]['item']['forecast'][0]['low'] + 'F'
-                else:
-                    temp = FToC(data['query']['results']['channel'][0]['item']['condition']['temp']) + 'C'
-                    high = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['high']) + 'C'
-                    low = FToC(data['query']['results']['channel'][0]['item']['forecast'][0]['low']) + 'C'
+                current = wdata['currently']
+                daily = wdata['daily']
+                units = wdata['flags']['units']
 
-                if country.strip() in iCountries:
-                    wSpeed = data['query']['results']['channel'][0]['wind']['speed'] + 'mph'
-                else:
-                    wSpeed = miToKm(data['query']['results']['channel'][0]['wind']['speed']) + 'km/h'
+                tempUnit = 'C'
+                if units == 'us':
+                    tempUnit = 'F'
+                    windUnit = 'mph'
+                elif units == 'si':
+                    windUnit = 'm/s'
+                elif units == 'ca':
+                    windUnit = 'km/h'
+                elif units == 'uk2':
+                    windUnit = 'mph'
 
-                weather = '%s, %s, %s / %s / %s / Humidity: %s%% / Wind: %s %s / High: %s / Low: %s' % (city, region, country, cond, temp, humid, wSpeed, wDir, high, low)
+                temp = round(current['temperature'])
+                cond = current['summary']
+                humid = current['humidity'] * 100
+                speed = round(current['windSpeed'])
+                bearing = degToDirection(current['windBearing'])
+                high = round(daily['data'][0]['temperatureMax'])
+                low = round(daily['data'][0]['temperatureMin'])
+
+                weather = '%s / %s / %i%s / Humidity: %i%% / Wind: %i%s %s / High: %i%s / Low: %i%s' %\
+                          (name, cond, temp, tempUnit, humid, speed, windUnit, bearing, high, tempUnit, low, tempUnit)
 
                 weather = ' '.join(weather.split())
 
                 return msg(channel, weather)
             except:
-                return msg(channel, 'I cannot find the weather for %s' % message)
+                return msg(channel, 'I cannot find the weather for %s' % query)
         except:
-            return msg(channel, 'I cannot fetch the weather at this moment.')
+            return msg(channel, 'I cannot find the location of %s' % query)
+
     if command == 'setlocation':
         if len(message) > 0:
             try:
@@ -77,12 +90,6 @@ def callback(self):
             self.cache_save()
             return msg(channel, 'Location for user %s set to %s' % (self.user.split('!')[0], message))
         return msg(channel, 'You did not give me a location to set!')
-
-def FToC(fahrenheit):
-    return str(int(round((int(fahrenheit) - 32) / 1.8)))
-
-def miToKm(miles):
-    return str(int(round(int(miles) * 1.60934)))
 
 def degToDirection(deg):
     directions = ['NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N']
@@ -103,7 +110,6 @@ class api:
 		return "[%s] %s" % (channel, text)
 class empty:
 	pass
-
 '''
 # interactive testing:
 api = api()
@@ -124,7 +130,6 @@ while(True):
     setattr(api, 'message', _input)
     print callback(api)
 '''
-
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
