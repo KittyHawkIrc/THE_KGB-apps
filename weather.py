@@ -109,7 +109,7 @@ class api:
 		return "[%s] %s" % (channel, text)
 class empty:
 	pass
-
+'''
 # interactive testing:
 api = api()
 def cache_save():
@@ -128,7 +128,7 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
-
+'''
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
