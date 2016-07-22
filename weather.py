@@ -91,22 +91,6 @@ def callback(self):
             return msg(channel, 'Location for user %s set to %s' % (self.user.split('!')[0], message))
         return msg(channel, 'You did not give me a location to set!')
 
-def obtainLocation(query):
-    baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-    r = urllib2.urlopen(baseurl + '+'.join(query.split()) + '&key=' + gApiKey)
-    geodata = json.loads(r.read())
-    r.close()
-    if geodata['status'] != 'ZERO_RESULTS':
-        for comp in geodata['results'][0]['address_components']:
-            if 'country' in comp['types']:
-                country = comp['long_name']
-
-        return {'country': country,
-                'name': geodata['results'][0]['formatted_address'],
-                'lat': geodata['results'][0]['geometry']['location']['lat'],
-                'lng': geodata['results'][0]['geometry']['location']['lng']}
-    return False
-
 def degToDirection(deg):
     directions = ['NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N']
     start = 11.25
