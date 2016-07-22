@@ -4,7 +4,6 @@ import json, urllib2
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
-gApiKey = 'AIzaSyCfy-symUGtmzsqO6_sb0UKtO0YHLoDT_M'
 fApiKey = 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
 fCountries = ['Belize', 'Guam', 'Puerto Rico', 'United States', 'US Virgin Islands']
 iCountries = ['Liberia', 'Myanmar', 'United States']
@@ -21,65 +20,65 @@ def callback(self):
     if command == 'w':
         if message:
             try:
-                query = self.locker.location[message.lower()]
+                location = self.locker.location[message.lower()]
             except:
-                query = message
+                location = message
         else:
             try:
-                query = self.locker.location[user]
+                location = self.locker.location[user]
             except:
                 return msg(channel, 'You have not set a location yet.')
 
         try:
             baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-            r = urllib2.urlopen(baseurl + '+'.join(query.split()) + '&key=' + gApiKey)
+            r = urllib2.urlopen(baseurl + '+'.join(location.split()))
             geodata = json.loads(r.read())
             r.close()
 
             name = geodata['results'][0]['formatted_address']
             lat = geodata['results'][0]['geometry']['location']['lat']
             lng = geodata['results'][0]['geometry']['location']['lng']
-
-            try:
-                baseurl = 'https://api.forecast.io/forecast/'
-                options = '?units=auto&exclude=minutely,hourly'
-                r = urllib2.urlopen(baseurl + fApiKey + '/%s,%s' % (lat, lng) + options)
-                wdata = json.loads(r.read())
-                r.close()
-
-                current = wdata['currently']
-                daily = wdata['daily']
-                units = wdata['flags']['units']
-
-                tempUnit = 'C'
-                if units == 'us':
-                    tempUnit = 'F'
-                    windUnit = 'mph'
-                elif units == 'si':
-                    windUnit = 'm/s'
-                elif units == 'ca':
-                    windUnit = 'km/h'
-                elif units == 'uk2':
-                    windUnit = 'mph'
-
-                temp = round(current['temperature'])
-                cond = current['summary']
-                humid = current['humidity'] * 100
-                speed = round(current['windSpeed'])
-                bearing = degToDirection(current['windBearing'])
-                high = round(daily['data'][0]['temperatureMax'])
-                low = round(daily['data'][0]['temperatureMin'])
-
-                weather = '%s / %s / %i%s / Humidity: %i%% / Wind: %i%s %s / High: %i%s / Low: %i%s' %\
-                          (name, cond, temp, tempUnit, humid, speed, windUnit, bearing, high, tempUnit, low, tempUnit)
-
-                weather = ' '.join(weather.split())
-
-                return msg(channel, weather)
-            except:
-                return msg(channel, 'I cannot find the weather for %s' % query)
         except:
-            return msg(channel, 'I cannot find the location of %s' % query)
+            return msg(channel, 'Sorry, I cannot find the location of %s.' % location)
+
+        try:
+            baseurl = 'https://api.forecast.io/forecast/'
+            options = '?units=auto&exclude=minutely,hourly'
+            r = urllib2.urlopen(baseurl + fApiKey + '/%s,%s' % (lat, lng) + options)
+            wdata = json.loads(r.read())
+            r.close()
+
+            current = wdata['currently']
+            daily = wdata['daily']
+            units = wdata['flags']['units']
+
+            tempUnit = 'C'
+            if units == 'us':
+                tempUnit = 'F'
+                windUnit = 'mph'
+            elif units == 'si':
+                windUnit = 'm/s'
+            elif units == 'ca':
+                windUnit = 'km/h'
+            elif units == 'uk2':
+                windUnit = 'mph'
+
+            temp = round(current['temperature'])
+            cond = current['summary']
+            humid = current['humidity'] * 100
+            speed = round(current['windSpeed'])
+            bearing = degToDirection(current['windBearing'])
+            high = round(daily['data'][0]['temperatureMax'])
+            low = round(daily['data'][0]['temperatureMin'])
+
+            weather = '%s / %s / %i%s / Humidity: %i%% / Wind: %i%s %s / High: %i%s / Low: %i%s' %\
+                      (name, cond, temp, tempUnit, humid, speed, windUnit, bearing, high, tempUnit, low, tempUnit)
+
+            weather = ' '.join(weather.split())
+
+            return msg(channel, weather)
+        except:
+            return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)
 
     if command == 'setlocation':
         if len(message) > 0:
