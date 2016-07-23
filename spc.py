@@ -5,7 +5,11 @@ __version__ = 1.0
 speshulcmds = {'ultimatetruth': 'RielDtok is a tranny', 'msc': '^billdred\n<MsC> I like it black like my dicks? <billdred> we agree on that too!'}
 
 def declare():
-    return {"ultimatetruth": "privmsg", 'msc': 'privmsg'}
+    dec = {}
+    cmdlist = speshulcmds.keys()
+    for cmd in cmdlist:
+        dec[cmd] = 'privmsg'
+    return dec
 
 def callback(self):
     try:
@@ -17,13 +21,9 @@ def callback(self):
 
     for cmd in cmdlist:
         if self.command == cmd:
-            return self.msg(self.channel, emulate(user, speshulcmds[cmd]))
-
-def emulate(user, output):
-    if user:
-        return '%s: %s' % (user, output)
-    else:
-        return output
+            if user:
+                return '%s: %s' % (user, speshulcmds[cmd].split('\n')[0])
+            return speshulcmds[cmd]
 
 class api:
 	def msg(self, channel, text):
@@ -31,9 +31,6 @@ class api:
 
 if __name__ == "__main__":
     api = api()
-    u = "joe!username@hostmask"
-    c = '#test'
-
     setattr(api, 'isop', True)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'user', 'joe!username@hostmask')
@@ -41,8 +38,9 @@ if __name__ == "__main__":
 
     setattr(api, 'command', 'ultimatetruth')
     setattr(api, 'message', '^ultimatetruth')
+
     print callback(api)
-    if callback(api) != "[%s] RielDtok is a tranny" % (c):
+    if 'RielDtok is a tranny' not in callback(api):
         exit(1)
 
     setattr(api, 'message', '^ultimatetruth cats')
@@ -50,13 +48,13 @@ if __name__ == "__main__":
     if 'cats: RielDtok' not in callback(api):
         exit(2)
 
-    setattr(api, 'command', 'MsC')
-    setattr(api, 'message', '^MsC')
+    setattr(api, 'command', 'msc')
+    setattr(api, 'message', '^msc')
     print callback(api)
     if '^billdred\n<MsC>' not in callback(api):
         exit(3)
 
-    setattr(api, 'message', '^MsC cats')
+    setattr(api, 'message', '^msc cats')
     print callback(api)
     if 'cats: ^billdred' not in callback(api):
         exit(4)
