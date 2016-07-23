@@ -31,25 +31,25 @@ def callback(self):
             except:
                 return msg(channel, 'You have not set a location yet.')
 
-    if location in locationCache:
-        name = locationCache[location][0]
-        lat = locationCache[location][1]
-        lng = locationCache[location][2]
+        if location in locationCache:
+            name = locationCache[location][0]
+            lat = locationCache[location][1]
+            lng = locationCache[location][2]
 
-    else:
-        try:
-            baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-            r = urllib2.urlopen(baseurl + '+'.join(location.split()))
-            geodata = json.loads(r.read())
-            r.close()
+        else:
+            try:
+                baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+                r = urllib2.urlopen(baseurl + '+'.join(location.split()))
+                geodata = json.loads(r.read())
+                r.close()
 
-            name = geodata['results'][0]['formatted_address']
-            lat = geodata['results'][0]['geometry']['location']['lat']
-            lng = geodata['results'][0]['geometry']['location']['lng']
+                name = geodata['results'][0]['formatted_address']
+                lat = geodata['results'][0]['geometry']['location']['lat']
+                lng = geodata['results'][0]['geometry']['location']['lng']
 
-            locationCache[location] = [name, lat, lng]
-        except:
-            return msg(channel, 'Sorry, I cannot find the location of %s.' % location)
+                locationCache[location] = [name, lat, lng]
+            except:
+                return msg(channel, 'Sorry, I cannot find the location of %s.' % location)
 
         try:
             baseurl = 'https://api.forecast.io/forecast/'
