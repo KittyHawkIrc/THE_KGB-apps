@@ -4,14 +4,16 @@ import json, urllib2
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
-fApiKey = 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
 fCountries = ['Belize', 'Guam', 'Puerto Rico', 'United States', 'US Virgin Islands']
 iCountries = ['Liberia', 'Myanmar', 'United States']
+
+locationCache = {}
 
 def declare():
   return {"w": "privmsg", "setlocation": "privmsg"}
 
 def callback(self):
+    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present 
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0].lower()
@@ -29,17 +31,25 @@ def callback(self):
             except:
                 return msg(channel, 'You have not set a location yet.')
 
-        try:
-            baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-            r = urllib2.urlopen(baseurl + '+'.join(location.split()))
-            geodata = json.loads(r.read())
-            r.close()
+        if location in locationCache:
+            name = locationCache[location][0]
+            lat = locationCache[location][1]
+            lng = locationCache[location][2]
 
-            name = geodata['results'][0]['formatted_address']
-            lat = geodata['results'][0]['geometry']['location']['lat']
-            lng = geodata['results'][0]['geometry']['location']['lng']
-        except:
-            return msg(channel, 'Sorry, I cannot find the location of %s.' % location)
+        else:
+            try:
+                baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+                r = urllib2.urlopen(baseurl + '+'.join(location.split()))
+                geodata = json.loads(r.read())
+                r.close()
+
+                name = geodata['results'][0]['formatted_address']
+                lat = geodata['results'][0]['geometry']['location']['lat']
+                lng = geodata['results'][0]['geometry']['location']['lng']
+
+                locationCache[location] = [name, lat, lng]
+            except:
+                return msg(channel, 'Sorry, I cannot find the location of %s.' % location)
 
         try:
             baseurl = 'https://api.forecast.io/forecast/'
@@ -76,7 +86,7 @@ def callback(self):
 
             weather = ' '.join(weather.split())
 
-            return msg(channel, weather)
+            return msg(channel, str(weather))
         except:
             return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)
 
@@ -132,8 +142,12 @@ while(True):
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
+    def config_get(item):
+        return 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
+
     api = api()
     setattr(api, 'cache_save', cache_save)
+    setattr(api, 'config_get', config_get)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', "#test")
     setattr(api, 'command', 'w')
