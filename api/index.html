@@ -75,7 +75,7 @@
                 
                     <li><a class="toctree-l4" href="#persistent-storage">persistent storage</a></li>
                 
-                    <li><a class="toctree-l4" href="#long-term-config">Long term config</a></li>
+                    <li><a class="toctree-l4" href="#configuration-settings">Configuration settings</a></li>
                 
             
             </ul>
@@ -325,17 +325,11 @@ print self.locker.value
 &gt;&gt;&gt; 2
 </code></pre>
 
-<h2 id="long-term-config">Long term config</h2>
+<h2 id="configuration-settings">Configuration settings</h2>
 <p>The long term configuration system allows you to store data like API keys and passwords in an isolated scope helping prevent issues like people storing billable API keys directly in a modules source code.</p>
 <p>Operators: please run help_config to manage data outside of modules.</p>
 <hr />
 <h3 id="config_setitem-value">config_set(item, value)</h3>
-<p>Stores data to the config file.</p>
-<pre><code>self.config_set('api_key', '123456')
-</code></pre>
-
-<hr />
-<h3 id="config_setitem-value_1">config_set(item, value)</h3>
 <p>Stores data to the config file.</p>
 <pre><code>self.config_set('api_key', '123456')
 </code></pre>
