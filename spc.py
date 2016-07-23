@@ -31,9 +31,6 @@ class api:
 
 if __name__ == "__main__":
     api = api()
-    u = "joe!username@hostmask"
-    c = '#test'
-
     setattr(api, 'isop', True)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'user', 'joe!username@hostmask')
