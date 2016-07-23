@@ -4,9 +4,6 @@ import json, urllib2
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
-fCountries = ['Belize', 'Guam', 'Puerto Rico', 'United States', 'US Virgin Islands']
-iCountries = ['Liberia', 'Myanmar', 'United States']
-
 locationCache = {}
 
 def declare():
