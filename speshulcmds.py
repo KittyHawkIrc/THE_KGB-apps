@@ -18,7 +18,10 @@ def callback(self):
 
     for cmd in cmdlist:
         if self.command.lower() == cmd.lower():
-            return self.msg(self.channel, emulate(message, speshulcmds[cmd]))
+            try:
+                return '%s: %s' % (message.split()[0], speshulcmds[cmd].split('\n')[0])
+            except:
+                return speshulcmds[cmd]
 
 def emulate(message, output):
     try:
