@@ -17,8 +17,13 @@
         }, 
         {
             "location": "/#adding-modules", 
-            "text": "Before we focus on writing modules, let's first learn how to add modules.  First verify you're an owner by running the command  ^hello  in any channel he's in, he should respond by greeting you with the word owner in the reply. If this is not the case you will be unable to load modules.  Now that you know you're an owner, message it the following data:  mod_inject [module] [url]  Do not add brackets, the module name is the  whatever.py  without the  .py  part. The URL is a raw link to the source of the module.  Now that the modules installed it has to be loaded to be processed. to do this run the following:  mod_load [module] .  Tips:   The module name is normally the file.py but without the file extension.  Do not include the brackets.  The URL  must  be a direct link to the file, and not a file host or pastebin.", 
+            "text": "Before we focus on writing modules, let's first learn how to add modules.  First verify you're an owner by running the command  ^hello  in any channel he's in, he should respond by greeting you with the word owner in the reply. If this is not the case you will be unable to load modules.  Now that you know you're an owner, message it the following data:  mod_inject [module] [url]  Do not add brackets, the module name is the  whatever.py  without the  .py  part. The URL is a raw link to the source of the module.  Now that the modules installed it has to be loaded to be processed. to do this run the following:  mod_load [module] .", 
             "title": "Adding modules"
+        }, 
+        {
+            "location": "/#tips", 
+            "text": "The module name is normally the file.py but without the file extension.  Do not include the brackets.  The URL  must  be a direct link to the file, and not a file host or pastebin.", 
+            "title": "Tips:"
         }, 
         {
             "location": "/#whats-an-owner-or-operator", 
@@ -27,7 +32,7 @@
         }, 
         {
             "location": "/api/", 
-            "text": "API Reference\n\n\nThe Arsenic superclass provides a fairly large number of functions and variables to make designing modules easy. Note that all things mentioned here must start with \nself.\n\n\nVariables\n\n\nThese are traditional variables passed by Arsenic, many of them started out as arguments in the early API.\n\n\nisop\n\n\nThis is a boolian indicating if the user of the command is an operator or not.\n\n\nif self.isop:\n    do something\n\n\n\n\n\n\nisowner\n\n\nThis is a boolian indicating if the user of the command is an owner or not, when this is true isop is always true.\n\n\nif self.isowner:\n    do something\n\n\n\n\n\n\ntype\n\n\nThis is a string declaring the type of hook used to activate the callback, this is one of the following:\n\n\n\n\nprivmsg\n\n\nuserjoin\n\n\n\n\nif self.type == 'privmsg':\n    do something\n\n\n\n\n\n\ncommand\n\n\nThis is a string which contains the name of the actual \n^command\n passed to activate it. Note that it will never include the key character. (defaults to ^)\n\n\nif self.command == 'hello':\n    do something\n\n\n\n\n\n\nmessage\n\n\nThis is a string containing the full message including the hook.\n\n\nprint self.message\n\n ^echo I am a bot\nprint self.command\n\n echo\nprint self.message.split(self.command, 1)[1]\n\n I am a bot\n\n\n\n\n\n\nuser\n\n\nThis is the full hostmask of the user calling the command, it goes in \nnickname!username@hostname\n order.\n\n\nprint self.user\n\n joe!rocks@isp.com\nname = self.user.split('!',1)[0]\nprint 'Hello, !' % (name)\n\n Hello, Joe!\n\n\n\n\n\n\nchannel\n\n\nThis the a string of the channel the modules being called from, please be aware that when the bot is messaged the channel is \nself.nickname\n and not \nself.user\n. \nFailure to follow this can cause infinite loops!\n\n\nif self.channel.startswith('#'):\n    self.msg(self.channel, 'we are in a channel!')\nelse:\n    name = self.user.split('!',1)[0]\n    self.msg(name, 'We are messaging!')\n\n\n\n\n\n\n\nver\n\n\nTypically only used for supporting specific API versions, returns a string.\n\n\nprint self.ver\n\n '1.0.0'\n\n\n\n\n\n\nnickname\n\n\nThis is the bots own nickname, useful for ignoring itself.\n\n\nprint self.nickname\n\n 'supercoolbot107'\n\n\n\n\n\n\nFunctions\n\n\nmsg(channel, message)\n\n\nThis function sends the message to the specified channel, silently failing if the channel isn't joined.\n\n\nself.msg(self.channel, 'Hi guys!')\n\n\n\n\n\n\nme(channel, message)\n\n\nThis function is just like msg but performs an action like /me would.\n\n\nself.me(self.channel, 'dances')\n\n\n\n\n\n\nnotice(channel, message)\n\n\nThis function sends a notice, sorta like using /notice.\n\n\nself.notice(self.channel, 'I want to piss people off with alerts.')\n\n\n\n\n\n\naway(optional=message)\n\n\nThis sets the bot as away.\n\n\nself.away('brb!')\n\n\n\n\n\n\nback()\n\n\nThis sets marks the bot as returned.\n\n\nself.back()\n\n\n\n\n\n\njoin(channel, optional=key)\n\n\nJoins a channel, providing a key if needed.\n\n\nself.join('#secret-test-channel')\nself.msg('#secret-test-channel', 'Hey friends!')\n\n\n\n\n\n\nleave(channel, optional=reason)\n\n\nNormally parts from a channel optionally stating why in the message.\n\n\nself.leave('secret-test-channel', 'Too secret for me tbh')\n\n\n\n\n\n\nkick(channel, user, optional=reason)\n\n\nAttempts to kick a user from a channel with an optional reason, fails silently if this does not work.\n\n\nself.kick('#top-secret-channel', annoying_troll, 'Trolling')\n\n\n\n\n\n\ntopic(channel, optional=topic)\n\n\nSets the topic of the channel, when no topic is passed it blanks it out. Note that this also silently fails.\n\n\nself.topic('#secret-room', 'Welcome to the secret!')\n\n\n\n\n\n\nmode(channel, set, modes, optional=user, optional=limit)\n\n\nThis sets the mode of a channel to the letters passed to modes. \nset\n is a boolian that controls if the mode should be enabled on or off. Limit is used for flags like +l that limit the number of users. User is who to apply the flag to.\n\n\nself.msg(self.channel, True, 'o', user='alan')\n\n the_kgb sets mode +o on alan\n\n\n\n\n\n\nsetNick(nickname)\n\n\nAttempts to set the bots nickname to this, note that it will silently fail without feedback if taken so please check self.nickname.\n\n\nwhile self.nickname != 'admin':\n    self.setNick('admin')\n\n\n\n\n\n\n\npersistent storage\n\n\nstore\n\n\nStore is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules. \n\n\nTo store and read data simply add a new attribute and set a value, it can then be accessed anywhere else during the life of the program.\n\n\nModule a\n:\n\n\nself.store.counter = 0\nself.store.oldvalue = 3\n\n\n\n\nModule b\n:\n\n\nvalue = self.store.oldvalue\nprint value\n\n 3\nself.store.counter += 1\nself.store.newvalue = value + 1\n\n\n\n\nModule a\n:\n\n\nprint self.store.counter\n\n 1\nprint self.store.newvalue\n\n 4\nprint value\n\n NameError: name 'value' is not defined\n\n\n\n\n\n\nlocker\n\n\nLockers expand on the concept of store while removing the shared aspect, letting us use scope to create per-module stores, much like lockers. This is handy when you're worried about modules naming persisting variables the same thing or want to protect data from other modules.\n\n\nModule a\n:\n\n\nself.store.value = 1\nself.locker.value = 2\n\n\n\n\nModule b\n:\n\n\nprint self.store.value\n\n 1\nprint self.locker.value\n\n persist instance has no attribute 'value'\nself.store.value = 5\nself.locker.value = 6\n\n\n\n\nModule a\n:\n\n\nprint self.store.value\n\n 5\nprint self.locker.value\n\n 2", 
+            "text": "API Reference\n\n\nThe Arsenic superclass provides a fairly large number of functions and variables to make designing modules easy. Note that all things mentioned here must start with \nself.\n\n\nVariables\n\n\nThese are traditional variables passed by Arsenic, many of them started out as arguments in the early API.\n\n\nisop\n\n\nThis is a boolian indicating if the user of the command is an operator or not.\n\n\nif self.isop:\n    do something\n\n\n\n\n\n\nisowner\n\n\nThis is a boolian indicating if the user of the command is an owner or not, when this is true isop is always true.\n\n\nif self.isowner:\n    do something\n\n\n\n\n\n\ntype\n\n\nThis is a string declaring the type of hook used to activate the callback, this is one of the following:\n\n\n\n\nprivmsg\n\n\nuserjoin\n\n\n\n\nif self.type == 'privmsg':\n    do something\n\n\n\n\n\n\ncommand\n\n\nThis is a string which contains the name of the actual \n^command\n passed to activate it. Note that it will never include the key character. (defaults to ^)\n\n\nif self.command == 'hello':\n    do something\n\n\n\n\n\n\nmessage\n\n\nThis is a string containing the full message including the hook.\n\n\nprint self.message\n\n ^echo I am a bot\nprint self.command\n\n echo\nprint self.message.split(self.command, 1)[1]\n\n I am a bot\n\n\n\n\n\n\nuser\n\n\nThis is the full hostmask of the user calling the command, it goes in \nnickname!username@hostname\n order.\n\n\nprint self.user\n\n joe!rocks@isp.com\nname = self.user.split('!',1)[0]\nprint 'Hello, !' % (name)\n\n Hello, Joe!\n\n\n\n\n\n\nchannel\n\n\nThis the a string of the channel the modules being called from, please be aware that when the bot is messaged the channel is \nself.nickname\n and not \nself.user\n. \nFailure to follow this can cause infinite loops!\n\n\nif self.channel.startswith('#'):\n    self.msg(self.channel, 'we are in a channel!')\nelse:\n    name = self.user.split('!',1)[0]\n    self.msg(name, 'We are messaging!')\n\n\n\n\n\n\n\nver\n\n\nTypically only used for supporting specific API versions, returns a string.\n\n\nprint self.ver\n\n '1.0.0'\n\n\n\n\n\n\nnickname\n\n\nThis is the bots own nickname, useful for ignoring itself.\n\n\nprint self.nickname\n\n 'supercoolbot107'\n\n\n\n\n\n\nFunctions\n\n\nmsg(channel, message)\n\n\nThis function sends the message to the specified channel, silently failing if the channel isn't joined.\n\n\nself.msg(self.channel, 'Hi guys!')\n\n\n\n\n\n\nme(channel, message)\n\n\nThis function is just like msg but performs an action like /me would.\n\n\nself.me(self.channel, 'dances')\n\n\n\n\n\n\nnotice(channel, message)\n\n\nThis function sends a notice, sorta like using /notice.\n\n\nself.notice(self.channel, 'I want to piss people off with alerts.')\n\n\n\n\n\n\naway(optional=message)\n\n\nThis sets the bot as away.\n\n\nself.away('brb!')\n\n\n\n\n\n\nback()\n\n\nThis sets marks the bot as returned.\n\n\nself.back()\n\n\n\n\n\n\njoin(channel, optional=key)\n\n\nJoins a channel, providing a key if needed.\n\n\nself.join('#secret-test-channel')\nself.msg('#secret-test-channel', 'Hey friends!')\n\n\n\n\n\n\nleave(channel, optional=reason)\n\n\nNormally parts from a channel optionally stating why in the message.\n\n\nself.leave('secret-test-channel', 'Too secret for me tbh')\n\n\n\n\n\n\nkick(channel, user, optional=reason)\n\n\nAttempts to kick a user from a channel with an optional reason, fails silently if this does not work.\n\n\nself.kick('#top-secret-channel', annoying_troll, 'Trolling')\n\n\n\n\n\n\ntopic(channel, optional=topic)\n\n\nSets the topic of the channel, when no topic is passed it blanks it out. Note that this also silently fails.\n\n\nself.topic('#secret-room', 'Welcome to the secret!')\n\n\n\n\n\n\nmode(channel, set, modes, optional=user, optional=limit)\n\n\nThis sets the mode of a channel to the letters passed to modes. \nset\n is a boolian that controls if the mode should be enabled on or off. Limit is used for flags like +l that limit the number of users. User is who to apply the flag to.\n\n\nself.msg(self.channel, True, 'o', user='alan')\n\n the_kgb sets mode +o on alan\n\n\n\n\n\n\nsetNick(nickname)\n\n\nAttempts to set the bots nickname to this, note that it will silently fail without feedback if taken so please check self.nickname.\n\n\nwhile self.nickname != 'admin':\n    self.setNick('admin')\n\n\n\n\n\n\n\npersistent storage\n\n\nstore\n\n\nStore is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules.\n\n\nTo store and read data simply add a new attribute and set a value, it can then be accessed anywhere else during the life of the program.\n\n\nModule a\n:\n\n\nself.store.counter = 0\nself.store.oldvalue = 3\n\n\n\n\nModule b\n:\n\n\nvalue = self.store.oldvalue\nprint value\n\n 3\nself.store.counter += 1\nself.store.newvalue = value + 1\n\n\n\n\nModule a\n:\n\n\nprint self.store.counter\n\n 1\nprint self.store.newvalue\n\n 4\nprint value\n\n NameError: name 'value' is not defined\n\n\n\n\n\n\nlocker\n\n\nLockers expand on the concept of store while removing the shared aspect, letting us use scope to create per-module stores, much like lockers. This is handy when you're worried about modules naming persisting variables the same thing or want to protect data from other modules.\n\n\nModule a\n:\n\n\nself.store.value = 1\nself.locker.value = 2\n\n\n\n\nModule b\n:\n\n\nprint self.store.value\n\n 1\nprint self.locker.value\n\n persist instance has no attribute 'value'\nself.store.value = 5\nself.locker.value = 6\n\n\n\n\nModule a\n:\n\n\nprint self.store.value\n\n 5\nprint self.locker.value\n\n 2\n\n\n\n\nLong term config\n\n\nThe long term configuration system allows you to store data like API keys and passwords in an isolated scope helping prevent issues like people storing billable API keys directly in a modules source code.\n\n\nOperators: please run help_config to manage data outside of modules.\n\n\n\n\nconfig_set(item, value)\n\n\nStores data to the config file.\n\n\nself.config_set('api_key', '123456')\n\n\n\n\n\n\nconfig_set(item, value)\n\n\nStores data to the config file.\n\n\nself.config_set('api_key', '123456')\n\n\n\n\n\n\nconfig_get(item, default=False)\n\n\nFetches a value from a config item. Returns optional default if not found, or False otherwise.\n\n\nself.config_get('api_key')\n\n 123456\n\n\n\n\n\n\nconfig_remove(item, value)\n\n\nRemoves an item, returns False if it doesn't exist.\n\n\nself.config_remove('api_key')\n\n True\n\nself.config_remove('fake_item')\n\n False", 
             "title": "API reference"
         }, 
         {
@@ -37,18 +42,153 @@
         }, 
         {
             "location": "/api/#variables", 
-            "text": "These are traditional variables passed by Arsenic, many of them started out as arguments in the early API.  isop  This is a boolian indicating if the user of the command is an operator or not.  if self.isop:\n    do something   isowner  This is a boolian indicating if the user of the command is an owner or not, when this is true isop is always true.  if self.isowner:\n    do something   type  This is a string declaring the type of hook used to activate the callback, this is one of the following:   privmsg  userjoin   if self.type == 'privmsg':\n    do something   command  This is a string which contains the name of the actual  ^command  passed to activate it. Note that it will never include the key character. (defaults to ^)  if self.command == 'hello':\n    do something   message  This is a string containing the full message including the hook.  print self.message  ^echo I am a bot\nprint self.command  echo\nprint self.message.split(self.command, 1)[1]  I am a bot   user  This is the full hostmask of the user calling the command, it goes in  nickname!username@hostname  order.  print self.user  joe!rocks@isp.com\nname = self.user.split('!',1)[0]\nprint 'Hello, !' % (name)  Hello, Joe!   channel  This the a string of the channel the modules being called from, please be aware that when the bot is messaged the channel is  self.nickname  and not  self.user .  Failure to follow this can cause infinite loops!  if self.channel.startswith('#'):\n    self.msg(self.channel, 'we are in a channel!')\nelse:\n    name = self.user.split('!',1)[0]\n    self.msg(name, 'We are messaging!')   ver  Typically only used for supporting specific API versions, returns a string.  print self.ver  '1.0.0'   nickname  This is the bots own nickname, useful for ignoring itself.  print self.nickname  'supercoolbot107'", 
+            "text": "These are traditional variables passed by Arsenic, many of them started out as arguments in the early API.", 
             "title": "Variables"
         }, 
         {
+            "location": "/api/#isop", 
+            "text": "This is a boolian indicating if the user of the command is an operator or not.  if self.isop:\n    do something", 
+            "title": "isop"
+        }, 
+        {
+            "location": "/api/#isowner", 
+            "text": "This is a boolian indicating if the user of the command is an owner or not, when this is true isop is always true.  if self.isowner:\n    do something", 
+            "title": "isowner"
+        }, 
+        {
+            "location": "/api/#type", 
+            "text": "This is a string declaring the type of hook used to activate the callback, this is one of the following:   privmsg  userjoin   if self.type == 'privmsg':\n    do something", 
+            "title": "type"
+        }, 
+        {
+            "location": "/api/#command", 
+            "text": "This is a string which contains the name of the actual  ^command  passed to activate it. Note that it will never include the key character. (defaults to ^)  if self.command == 'hello':\n    do something", 
+            "title": "command"
+        }, 
+        {
+            "location": "/api/#message", 
+            "text": "This is a string containing the full message including the hook.  print self.message  ^echo I am a bot\nprint self.command  echo\nprint self.message.split(self.command, 1)[1]  I am a bot", 
+            "title": "message"
+        }, 
+        {
+            "location": "/api/#user", 
+            "text": "This is the full hostmask of the user calling the command, it goes in  nickname!username@hostname  order.  print self.user  joe!rocks@isp.com\nname = self.user.split('!',1)[0]\nprint 'Hello, !' % (name)  Hello, Joe!", 
+            "title": "user"
+        }, 
+        {
+            "location": "/api/#channel", 
+            "text": "This the a string of the channel the modules being called from, please be aware that when the bot is messaged the channel is  self.nickname  and not  self.user .  Failure to follow this can cause infinite loops!  if self.channel.startswith('#'):\n    self.msg(self.channel, 'we are in a channel!')\nelse:\n    name = self.user.split('!',1)[0]\n    self.msg(name, 'We are messaging!')", 
+            "title": "channel"
+        }, 
+        {
+            "location": "/api/#ver", 
+            "text": "Typically only used for supporting specific API versions, returns a string.  print self.ver  '1.0.0'", 
+            "title": "ver"
+        }, 
+        {
+            "location": "/api/#nickname", 
+            "text": "This is the bots own nickname, useful for ignoring itself.  print self.nickname  'supercoolbot107'", 
+            "title": "nickname"
+        }, 
+        {
             "location": "/api/#functions", 
-            "text": "msg(channel, message)  This function sends the message to the specified channel, silently failing if the channel isn't joined.  self.msg(self.channel, 'Hi guys!')   me(channel, message)  This function is just like msg but performs an action like /me would.  self.me(self.channel, 'dances')   notice(channel, message)  This function sends a notice, sorta like using /notice.  self.notice(self.channel, 'I want to piss people off with alerts.')   away(optional=message)  This sets the bot as away.  self.away('brb!')   back()  This sets marks the bot as returned.  self.back()   join(channel, optional=key)  Joins a channel, providing a key if needed.  self.join('#secret-test-channel')\nself.msg('#secret-test-channel', 'Hey friends!')   leave(channel, optional=reason)  Normally parts from a channel optionally stating why in the message.  self.leave('secret-test-channel', 'Too secret for me tbh')   kick(channel, user, optional=reason)  Attempts to kick a user from a channel with an optional reason, fails silently if this does not work.  self.kick('#top-secret-channel', annoying_troll, 'Trolling')   topic(channel, optional=topic)  Sets the topic of the channel, when no topic is passed it blanks it out. Note that this also silently fails.  self.topic('#secret-room', 'Welcome to the secret!')   mode(channel, set, modes, optional=user, optional=limit)  This sets the mode of a channel to the letters passed to modes.  set  is a boolian that controls if the mode should be enabled on or off. Limit is used for flags like +l that limit the number of users. User is who to apply the flag to.  self.msg(self.channel, True, 'o', user='alan')  the_kgb sets mode +o on alan   setNick(nickname)  Attempts to set the bots nickname to this, note that it will silently fail without feedback if taken so please check self.nickname.  while self.nickname != 'admin':\n    self.setNick('admin')", 
+            "text": "", 
             "title": "Functions"
         }, 
         {
+            "location": "/api/#msgchannel-message", 
+            "text": "This function sends the message to the specified channel, silently failing if the channel isn't joined.  self.msg(self.channel, 'Hi guys!')", 
+            "title": "msg(channel, message)"
+        }, 
+        {
+            "location": "/api/#mechannel-message", 
+            "text": "This function is just like msg but performs an action like /me would.  self.me(self.channel, 'dances')", 
+            "title": "me(channel, message)"
+        }, 
+        {
+            "location": "/api/#noticechannel-message", 
+            "text": "This function sends a notice, sorta like using /notice.  self.notice(self.channel, 'I want to piss people off with alerts.')", 
+            "title": "notice(channel, message)"
+        }, 
+        {
+            "location": "/api/#awayoptionalmessage", 
+            "text": "This sets the bot as away.  self.away('brb!')", 
+            "title": "away(optional=message)"
+        }, 
+        {
+            "location": "/api/#back", 
+            "text": "This sets marks the bot as returned.  self.back()", 
+            "title": "back()"
+        }, 
+        {
+            "location": "/api/#joinchannel-optionalkey", 
+            "text": "Joins a channel, providing a key if needed.  self.join('#secret-test-channel')\nself.msg('#secret-test-channel', 'Hey friends!')", 
+            "title": "join(channel, optional=key)"
+        }, 
+        {
+            "location": "/api/#leavechannel-optionalreason", 
+            "text": "Normally parts from a channel optionally stating why in the message.  self.leave('secret-test-channel', 'Too secret for me tbh')", 
+            "title": "leave(channel, optional=reason)"
+        }, 
+        {
+            "location": "/api/#kickchannel-user-optionalreason", 
+            "text": "Attempts to kick a user from a channel with an optional reason, fails silently if this does not work.  self.kick('#top-secret-channel', annoying_troll, 'Trolling')", 
+            "title": "kick(channel, user, optional=reason)"
+        }, 
+        {
+            "location": "/api/#topicchannel-optionaltopic", 
+            "text": "Sets the topic of the channel, when no topic is passed it blanks it out. Note that this also silently fails.  self.topic('#secret-room', 'Welcome to the secret!')", 
+            "title": "topic(channel, optional=topic)"
+        }, 
+        {
+            "location": "/api/#modechannel-set-modes-optionaluser-optionallimit", 
+            "text": "This sets the mode of a channel to the letters passed to modes.  set  is a boolian that controls if the mode should be enabled on or off. Limit is used for flags like +l that limit the number of users. User is who to apply the flag to.  self.msg(self.channel, True, 'o', user='alan')  the_kgb sets mode +o on alan", 
+            "title": "mode(channel, set, modes, optional=user, optional=limit)"
+        }, 
+        {
+            "location": "/api/#setnicknickname", 
+            "text": "Attempts to set the bots nickname to this, note that it will silently fail without feedback if taken so please check self.nickname.  while self.nickname != 'admin':\n    self.setNick('admin')", 
+            "title": "setNick(nickname)"
+        }, 
+        {
             "location": "/api/#persistent-storage", 
-            "text": "store  Store is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules.   To store and read data simply add a new attribute and set a value, it can then be accessed anywhere else during the life of the program.  Module a :  self.store.counter = 0\nself.store.oldvalue = 3  Module b :  value = self.store.oldvalue\nprint value  3\nself.store.counter += 1\nself.store.newvalue = value + 1  Module a :  print self.store.counter  1\nprint self.store.newvalue  4\nprint value  NameError: name 'value' is not defined   locker  Lockers expand on the concept of store while removing the shared aspect, letting us use scope to create per-module stores, much like lockers. This is handy when you're worried about modules naming persisting variables the same thing or want to protect data from other modules.  Module a :  self.store.value = 1\nself.locker.value = 2  Module b :  print self.store.value  1\nprint self.locker.value  persist instance has no attribute 'value'\nself.store.value = 5\nself.locker.value = 6  Module a :  print self.store.value  5\nprint self.locker.value  2", 
+            "text": "", 
             "title": "persistent storage"
+        }, 
+        {
+            "location": "/api/#store", 
+            "text": "Store is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules.  To store and read data simply add a new attribute and set a value, it can then be accessed anywhere else during the life of the program.  Module a :  self.store.counter = 0\nself.store.oldvalue = 3  Module b :  value = self.store.oldvalue\nprint value  3\nself.store.counter += 1\nself.store.newvalue = value + 1  Module a :  print self.store.counter  1\nprint self.store.newvalue  4\nprint value  NameError: name 'value' is not defined", 
+            "title": "store"
+        }, 
+        {
+            "location": "/api/#locker", 
+            "text": "Lockers expand on the concept of store while removing the shared aspect, letting us use scope to create per-module stores, much like lockers. This is handy when you're worried about modules naming persisting variables the same thing or want to protect data from other modules.  Module a :  self.store.value = 1\nself.locker.value = 2  Module b :  print self.store.value  1\nprint self.locker.value  persist instance has no attribute 'value'\nself.store.value = 5\nself.locker.value = 6  Module a :  print self.store.value  5\nprint self.locker.value  2", 
+            "title": "locker"
+        }, 
+        {
+            "location": "/api/#long-term-config", 
+            "text": "The long term configuration system allows you to store data like API keys and passwords in an isolated scope helping prevent issues like people storing billable API keys directly in a modules source code.  Operators: please run help_config to manage data outside of modules.", 
+            "title": "Long term config"
+        }, 
+        {
+            "location": "/api/#config_setitem-value", 
+            "text": "Stores data to the config file.  self.config_set('api_key', '123456')", 
+            "title": "config_set(item, value)"
+        }, 
+        {
+            "location": "/api/#config_setitem-value_1", 
+            "text": "Stores data to the config file.  self.config_set('api_key', '123456')", 
+            "title": "config_set(item, value)"
+        }, 
+        {
+            "location": "/api/#config_getitem-defaultfalse", 
+            "text": "Fetches a value from a config item. Returns optional default if not found, or False otherwise.  self.config_get('api_key')  123456", 
+            "title": "config_get(item, default=False)"
+        }, 
+        {
+            "location": "/api/#config_removeitem-value", 
+            "text": "Removes an item, returns False if it doesn't exist.  self.config_remove('api_key')  True\n\nself.config_remove('fake_item')  False", 
+            "title": "config_remove(item, value)"
         }, 
         {
             "location": "/tutorial/", 
@@ -62,13 +202,28 @@
         }, 
         {
             "location": "/tutorial/#declaring-hooks", 
-            "text": "All modules must declare hooks. A hook is a set of option(s) and cases that are added in to the runtime to expand the scope and functionality of KittyHawk.  First, start by creating the initial declare callback function. It returns a dict of hooks.  def declare():\n    return { hello :  privmsg }  In this example the hook type  privmsg  is specified with the hook name  hello . If we assume the command key (typically ^) is its default this means that KittyHawk will run the module only if  key + hook name  is called. In this case that would be  ^hello .  Not all hooks are commands, actions like  userjoin  and messages from syncs can also be used, where the hook name is usually the modules name.  Other hook types  In a module where we wanted to auto-voice users when they join a channel we'd specify something like the following:  def declare():\n    return { autovoice :  userjoin }  If we wanted to specify  userjoin  and a couple hooks, we can do this too.  def declare():\n    return { hello :  privmsg ,  autojoin :  userjoin ,  greet :  privmsg }", 
+            "text": "All modules must declare hooks. A hook is a set of option(s) and cases that are added in to the runtime to expand the scope and functionality of KittyHawk.  First, start by creating the initial declare callback function. It returns a dict of hooks.  def declare():\n    return { hello :  privmsg }  In this example the hook type  privmsg  is specified with the hook name  hello . If we assume the command key (typically ^) is its default this means that KittyHawk will run the module only if  key + hook name  is called. In this case that would be  ^hello .  Not all hooks are commands, actions like  userjoin  and messages from syncs can also be used, where the hook name is usually the modules name.", 
             "title": "Declaring hooks"
         }, 
         {
+            "location": "/tutorial/#other-hook-types", 
+            "text": "In a module where we wanted to auto-voice users when they join a channel we'd specify something like the following:  def declare():\n    return { autovoice :  userjoin }  If we wanted to specify  userjoin  and a couple hooks, we can do this too.  def declare():\n    return { hello :  privmsg ,  autojoin :  userjoin ,  greet :  privmsg }", 
+            "title": "Other hook types"
+        }, 
+        {
             "location": "/tutorial/#the-callback", 
-            "text": "The real bread of the module is the callback function, this is executed every time the hook declared prior is called. These all start exactly the same:  def callback(self):  The self object is documented in the  API documentation .  Now that we've got our  hello  hook added, let's first check the users permissions before moving forward so we know what to say next.  if self.isowner:\n    user_type = 'owner'\n\nelif self.isop:\n    user_type = 'operator'\n\nelse:\n    user_type = 'user'  Here we're setting the value of the  user_type  string based on permissions, noting that while  self.isop  is true for owners,  self.isowner  being first causes the if statement to finish.  Showing the user  Next we just need to print our finished string to the channel, so just toss in an extra line:  self.msg(self.channel,  And a hello to you too, %s %s!  % (user_type, self.user))  If you have the  API documentation  open this line should be pretty self-explanatory.  The finished code  By now you should have a fully working and completed  ^hello  hook and module all ready to add. This should look like the following:  ```\ndef declare():\n    return {\"hello\": \"privmsg\"}  def callback(self):\n    if self.isowner:\n        user_type = 'owner'  elif self.isop:\n    user_type = 'operator'\n\nelse:\n    user_type = 'user'\n\nself.msg(self.channel, \"And a hello to you too, %s %s!\" % (user_type, self.user))  ```", 
+            "text": "The real bread of the module is the callback function, this is executed every time the hook declared prior is called. These all start exactly the same:  def callback(self):  The self object is documented in the  API documentation .  Now that we've got our  hello  hook added, let's first check the users permissions before moving forward so we know what to say next.  if self.isowner:\n    user_type = 'owner'\n\nelif self.isop:\n    user_type = 'operator'\n\nelse:\n    user_type = 'user'  Here we're setting the value of the  user_type  string based on permissions, noting that while  self.isop  is true for owners,  self.isowner  being first causes the if statement to finish.", 
             "title": "The callback"
+        }, 
+        {
+            "location": "/tutorial/#showing-the-user", 
+            "text": "Next we just need to print our finished string to the channel, so just toss in an extra line:  self.msg(self.channel,  And a hello to you too, %s %s!  % (user_type, self.user))  If you have the  API documentation  open this line should be pretty self-explanatory.", 
+            "title": "Showing the user"
+        }, 
+        {
+            "location": "/tutorial/#the-finished-code", 
+            "text": "By now you should have a fully working and completed  ^hello  hook and module all ready to add. This should look like the following:  ```\ndef declare():\n    return {\"hello\": \"privmsg\"}  def callback(self):\n    if self.isowner:\n        user_type = 'owner'  elif self.isop:\n    user_type = 'operator'\n\nelse:\n    user_type = 'user'\n\nself.msg(self.channel, \"And a hello to you too, %s %s!\" % (user_type, self.user))  ```", 
+            "title": "The finished code"
         }, 
         {
             "location": "/tutorial/#executing-code-on-load", 

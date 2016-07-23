@@ -3,7 +3,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
   
   <title>API reference - KittyHawk Documentation</title>
   
@@ -21,6 +24,8 @@
   <script>
     // Current page data
     var mkdocs_page_name = "API reference";
+    var mkdocs_page_input_path = "api.md";
+    var mkdocs_page_url = "/api/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -69,6 +74,8 @@
                     <li><a class="toctree-l4" href="#functions">Functions</a></li>
                 
                     <li><a class="toctree-l4" href="#persistent-storage">persistent storage</a></li>
+                
+                    <li><a class="toctree-l4" href="#long-term-config">Long term config</a></li>
                 
             
             </ul>
@@ -270,7 +277,7 @@ self.msg('#secret-test-channel', 'Hey friends!')
 <hr />
 <h2 id="persistent-storage">persistent storage</h2>
 <h3 id="store">store</h3>
-<p>Store is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules. </p>
+<p>Store is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules.</p>
 <p>To store and read data simply add a new attribute and set a value, it can then be accessed anywhere else during the life of the program.</p>
 <p><em>Module a</em>:</p>
 <pre><code>self.store.counter = 0
@@ -317,6 +324,38 @@ self.locker.value = 6
 print self.locker.value
 &gt;&gt;&gt; 2
 </code></pre>
+
+<h2 id="long-term-config">Long term config</h2>
+<p>The long term configuration system allows you to store data like API keys and passwords in an isolated scope helping prevent issues like people storing billable API keys directly in a modules source code.</p>
+<p>Operators: please run help_config to manage data outside of modules.</p>
+<hr />
+<h3 id="config_setitem-value">config_set(item, value)</h3>
+<p>Stores data to the config file.</p>
+<pre><code>self.config_set('api_key', '123456')
+</code></pre>
+
+<hr />
+<h3 id="config_setitem-value_1">config_set(item, value)</h3>
+<p>Stores data to the config file.</p>
+<pre><code>self.config_set('api_key', '123456')
+</code></pre>
+
+<hr />
+<h3 id="config_getitem-defaultfalse">config_get(item, default=False)</h3>
+<p>Fetches a value from a config item. Returns optional default if not found, or False otherwise.</p>
+<pre><code>self.config_get('api_key')
+&gt;&gt;&gt; 123456
+</code></pre>
+
+<hr />
+<h3 id="config_removeitem-value">config_remove(item, value)</h3>
+<p>Removes an item, returns False if it doesn't exist.</p>
+<pre><code>self.config_remove('api_key')
+&gt;&gt;&gt; True
+
+self.config_remove('fake_item')
+&gt;&gt;&gt; False
+</code></pre>
               
             </div>
           </div>
@@ -324,7 +363,7 @@ print self.locker.value
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../tutorial/" class="btn btn-neutral float-right" title="Tutorial"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../tutorial/" class="btn btn-neutral float-right" title="Tutorial">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href=".." class="btn btn-neutral" title="Intro"><span class="icon icon-circle-arrow-left"></span> Previous</a>
