@@ -1,3 +1,7 @@
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 spdb =  {
         "creative":"turning everything into corn",
         "marlow":"creating buncy balls and quicksand",
@@ -5,8 +9,8 @@ spdb =  {
         "ruston":"controlling squirrels",
         "redubious":"turning inorganic matter into glass",
         "homersimpson":"shooting Christmas lights out of his wrists like spiderman",
-        "rieldtok":"instantly giving anyone an orgasm",
-        "gyst":"making any liquid into bubbles",
+        "rieldtok":"sucking tons of cock",
+        "gyist":"making any liquid into bubbles",
         "uvulectomy":"having superpowered sneezes",
         "justnotfair":"having the power of conversation",
         "[deleted]":"turning into gas powered vehicles",
@@ -17,7 +21,7 @@ spdb =  {
         "billdred":"just flying. That's it.",
         "madam_psycho_sexy":"yarn bombing things",
         "fphrefugee":"shooting icicles out of her eyes",
-        "coup_de_shitlord":"being a cyborg with a hot dog cannon arm",
+        "coup":"being a cyborg with a hot dog cannon arm",
         "skruff":"instantly predicting the outcome of sports games!",
         "purpleisafruit":"throwing fruit at anyone and it would explode like a grenade!"
     }
@@ -31,14 +35,14 @@ def callback(self):
 
         if var[1] == "help":
             return self.msg(self.channel,"^superpower username")
-            
+
 
         try:
             return self.msg(self.channel,"%s's superpower is %s" % (var[1], spdb[var[1].lower()]))
-            
+
         except:
             return self.msg(self.channel,"%s's not on the list" % (var[1]))
-           
+
 
 class api:
         def msg(self, channel, text):

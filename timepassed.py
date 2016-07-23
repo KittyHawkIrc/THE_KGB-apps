@@ -1,7 +1,11 @@
 import datetime
 
+#Update schema
+__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
+__version__ = 1.0
+
 channels = {'#soopersekrit'}
-ignore = {'fatstats', 'homersimpson', 'shiznitlord', 'shiznitleader', 'tj', 'besterbesterbesterbesterbester', 'assgoblinofauschwitz'}
+ignore = {'fatstats', 'homersimpson', 'nwo-chan', 'shiznitlord', 'shiznitleader', 'tj', 'besterbesterbesterbesterbester', 'assgoblinofauschwitz', 'assgoblinofauswitzch'}
 
 def declare():
     return {"timepassed": "syncmsg", "time": "privmsg"}
@@ -9,7 +13,7 @@ def declare():
 def callback(self):
 	if self.user.lower().split('!')[0] in ignore:
     		return 'IGNORED'
-  
+
 	if self.outgoing_channel.lower() in channels:
 		#check if time's been set
 		try:
@@ -20,7 +24,7 @@ def callback(self):
 			except:
 				self.locker.time = {self.outgoing_channel: datetime.datetime.now()}
 			return 'NOTIME'
-		
+
 		diff = datetime.datetime.now() - time
 
 		if diff.total_seconds() < 600:
@@ -29,17 +33,17 @@ def callback(self):
 			else:
 				self.locker.time[self.outgoing_channel] = datetime.datetime.now()
 				return "It's been less than 10 minutes"
-		
+
 		hours = diff.total_seconds() / 3600
 		minutes = int(hours % 1 * 60)
 		hours = int(hours)
-		
+
 		if self.command == "time":
-			return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
-		
+			return self.msg(self.outgoing_channel, "This has been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
+
 		#set this time in the locker
 		self.locker.time[self.outgoing_channel] = datetime.datetime.now()
-		
+
 		#add total seconds into the store
 		try:
 			self.store.timepassed[self.outgoing_channel][datetime.datetime.now()] = diff.total_seconds()
@@ -49,20 +53,20 @@ def callback(self):
 					datetime.datetime.now() : diff.total_seconds()
 				}
 			}
-		
-		return self.msg(self.outgoing_channel, "It's been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
-		
+
+		return self.msg(self.outgoing_channel, "It has been %s hours and %s minutes since the last message was sent in %s (total %s seconds)" % (hours, minutes, self.incoming_channel,diff.total_seconds()))
+
 	else:
 		return 'WRONGCHANNEL'
 
 class api:
-	
+
 	def msg(self, channel, text):
 		return "[%s] %s" % (channel, text)
-	
+
 class empty:
 	pass
-	
+
 if __name__ == "__main__":
 	api = api()
 	setattr(api, 'isop', True)
@@ -76,7 +80,7 @@ if __name__ == "__main__":
 	setattr(api, 'lockerbox', {'timepassed':api.locker})
 	setattr(api, 'ver', '1.1.7')
 	setattr(api, 'store', empty)
-	
+
 	if callback(api) != 'IGNORED':
 		exit(1)
 	setattr(api, 'user', 'cooooop!username@hostmask')
