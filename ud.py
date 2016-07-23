@@ -27,8 +27,8 @@ def callback(self):
             if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
                 definition = definition[:maxChars-(4 + len(data['list'][0]['permalink']))] + '...'
             return self.msg(self.channel, definition + ' %s' % data['list'][0]['permalink'])
-        except Exception, e:
-            return self.msg(self.channel, 'No definition for %s. Error: %s' % (message, str(e)))
+        except:
+            return self.msg(self.channel, str('No definition for %s.' % (message, str(e))))
     return self.msg(self.channel, 'You need to give me something to look for!')
 
 class api:
