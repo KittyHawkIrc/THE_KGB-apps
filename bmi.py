@@ -241,6 +241,7 @@ while(True):
 if __name__ == "__main__":
 	def cache_save():
 		print 'Cache saved'
+
 	api = api()
 	setattr(api, 'cache_save', cache_save)
 	setattr(api, 'type', 'privmsg')
