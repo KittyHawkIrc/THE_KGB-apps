@@ -69,7 +69,7 @@ def callback(self):
 				self.locker.bmi[user] = bmi
 			except:
 				self.locker.bmi = {user: bmi}
-				
+
 			self.cache_save() 	#persist cache post-restarts
 
 			if user == self.user.split('!')[0].lower():
@@ -210,7 +210,10 @@ class empty:
 
 '''
 # interactive testing:
+def cache_save():
+	print 'Cache saved'
 api = api()
+setattr(api, 'cache_save', cache_save)
 setattr(api, 'type', 'privmsg')
 setattr(api, 'channel', "#test")
 setattr(api, 'command', 'bmi')
@@ -238,7 +241,6 @@ while(True):
 if __name__ == "__main__":
 	def cache_save():
 		print 'Cache saved'
-		
 	api = api()
 	setattr(api, 'cache_save', cache_save)
 	setattr(api, 'type', 'privmsg')
