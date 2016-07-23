@@ -255,13 +255,6 @@ Stores data to the config file.
 self.config_set('api_key', '123456')
 ```
 ***
-### config_set(item, value)
-Stores data to the config file.
-
-```
-self.config_set('api_key', '123456')
-```
-***
 ### config_get(item, default=False)
 Fetches a value from a config item. Returns optional default if not found, or False otherwise.
 
