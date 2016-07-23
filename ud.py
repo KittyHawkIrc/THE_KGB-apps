@@ -16,19 +16,19 @@ def callback(self):
             r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=' + '+'.join(message.split()))
             data = json.loads(r.read())
             r.close()
-
-            try:
-                definition = '%s: %s' % (data['list'][0]['word'], ' '.join(data['list'][0]['definition'].splitlines()))
-                while('  ' in definition):
-                    definition = definition.replace('  ', ' ')
-
-                if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
-                    definition = definition[:maxChars-(4 + len(data['list'][0]['permalink']))] + '...'
-                return self.msg(self.channel, definition + ' %s' % data['list'][0]['permalink'])
-            except Exception, e:
-                return self.msg(self.channel, 'No definition for %s.' % message)
         except:
             return self.msg(self.channel, 'I cannot fetch this definition at the moment.')
+
+        try:
+            definition = '%s: %s' % (data['list'][0]['word'], ' '.join(data['list'][0]['definition'].splitlines()))
+            while('  ' in definition):
+                definition = definition.replace('  ', ' ')
+
+            if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
+                definition = definition[:maxChars-(4 + len(data['list'][0]['permalink']))] + '...'
+            return self.msg(self.channel, definition + ' %s' % data['list'][0]['permalink'])
+        except Exception, e:
+            return self.msg(self.channel, 'No definition for %s. Error: %s' % (message, str(e)))
     return self.msg(self.channel, 'You need to give me something to look for!')
 
 class api:
