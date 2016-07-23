@@ -5,10 +5,14 @@ __version__ = 1.0
 speshulcmds = {'ultimatetruth': 'RielDtok is a tranny', 'MsC': '^billdred\n<MsC> I like it black like my dicks? <billdred> we agree on that too!'}
 
 def declare():
-    return {"ultimatetruth": "privmsg", 'MsC': 'privmsg'}
+    dec = {}
+    cmdlist = speshulcmds.keys()
+    for cmd in cmdlist:
+        dec[cmd] = 'privmsg'
+    return dec
 
 def callback(self):
-    message = self.message.split(self.command, 1)[1].strip()
+    message = self.message.lower().split(self.command, 1)[1].strip()
 
     cmdlist = speshulcmds.keys()
 
