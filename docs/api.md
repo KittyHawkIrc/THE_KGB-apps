@@ -132,7 +132,7 @@ self.back()
 ***
 ### join(channel, optional=key)
 Joins a channel, providing a key if needed.
- 
+
 ```
 self.join('#secret-test-channel')
 self.msg('#secret-test-channel', 'Hey friends!')
@@ -140,7 +140,7 @@ self.msg('#secret-test-channel', 'Hey friends!')
 ***
 ### leave(channel, optional=reason)
 Normally parts from a channel optionally stating why in the message.
- 
+
 ```
 self.leave('secret-test-channel', 'Too secret for me tbh')
 ```
@@ -154,14 +154,14 @@ self.kick('#top-secret-channel', annoying_troll, 'Trolling')
 ***
 ### topic(channel, optional=topic)
 Sets the topic of the channel, when no topic is passed it blanks it out. Note that this also silently fails.
- 
+
 ```
 self.topic('#secret-room', 'Welcome to the secret!')
 ```
 ***
 ### mode(channel, set, modes, optional=user, optional=limit)
 This sets the mode of a channel to the letters passed to modes. `set` is a boolian that controls if the mode should be enabled on or off. Limit is used for flags like +l that limit the number of users. User is who to apply the flag to.
- 
+
 ```
 self.msg(self.channel, True, 'o', user='alan')
 >>> the_kgb sets mode +o on alan
@@ -169,7 +169,7 @@ self.msg(self.channel, True, 'o', user='alan')
 ***
 ### setNick(nickname)
 Attempts to set the bots nickname to this, note that it will silently fail without feedback if taken so please check self.nickname.
- 
+
 ```
 while self.nickname != 'admin':
 	self.setNick('admin')
@@ -179,7 +179,7 @@ while self.nickname != 'admin':
 ## persistent storage
 
 ### store
-Store is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules. 
+Store is a system for sharing data between modules with minimal external work. All data stored in it is 100% public to all other modules.
 
 To store and read data simply add a new attribute and set a value, it can then be accessed anywhere else during the life of the program.
 
@@ -240,4 +240,43 @@ print self.store.value
 >>> 5
 print self.locker.value
 >>> 2
+```
+
+## Configuration settings
+The long term configuration system allows you to store data like API keys and passwords in an isolated scope helping prevent issues like people storing billable API keys directly in a modules source code.
+
+Operators: please run help_config to manage data outside of modules.
+
+***
+### config_set(item, value)
+Stores data to the config file.
+
+```
+self.config_set('api_key', '123456')
+```
+***
+### config_set(item, value)
+Stores data to the config file.
+
+```
+self.config_set('api_key', '123456')
+```
+***
+### config_get(item, default=False)
+Fetches a value from a config item. Returns optional default if not found, or False otherwise.
+
+```
+self.config_get('api_key')
+>>> 123456
+```
+***
+### config_remove(item, value)
+Removes an item, returns False if it doesn't exist.
+
+```
+self.config_remove('api_key')
+>>> True
+
+self.config_remove('fake_item')
+>>> False
 ```
