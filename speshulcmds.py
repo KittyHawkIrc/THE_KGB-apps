@@ -5,7 +5,7 @@ __version__ = 1.0
 speshulcmds = {'ultimatetruth': 'RielDtok is a tranny', 'MsC': '^billdred\n<MsC> I like it black like my dicks? <billdred> we agree on that too!'}
 
 def declare():
-    return {"ultimatetruth": "privmsg", 'msc': 'privmsg', 'MsC': 'privmsg'}
+    return {"ultimatetruth": "privmsg", 'MsC': 'privmsg'}
 
 def callback(self):
     message = self.message.split(self.command, 1)[1].strip()
