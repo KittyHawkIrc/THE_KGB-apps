@@ -2,26 +2,25 @@
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
+speshulcmds = {'ultimatetruth': 'RielDtok is a tranny', 'MsC': '^billdred\n<MsC> I like it black like my dicks? <billdred> we agree on that too!'}
+
 def declare():
     return {"ultimatetruth": "privmsg", 'msc': 'privmsg'}
 
 def callback(self):
     message = self.message.split(self.command, 1)[1].strip()
 
-    if self.command.lower() == 'ultimatetruth':
-        return self.msg(self.channel, emulate(message, 'RielDtok is a tranny'))
-    if self.command.lower() == 'msc':
-        return self.msg(self.channel, emulate(message, '^billdred\n<MsC> I like it black like my dicks? <billdred> we agree on that too!'))
+    cmdlist = speshulcmds.keys()
+
+    for cmd in cmdlist:
+        if self.command.lower() == cmd.lower():
+            return self.msg(self.channel, emulate(message, speshulcmds[cmd]))
 
 def emulate(message, output):
     try:
-        try:
-            return '%s: %s' % (message.split()[0], output.split('\n')[0])
-        except:
-            return '%s: %s' % (message.split()[0], output)
+        return '%s: %s' % (message.split()[0], output.split('\n')[0])
     except:
         return output
-
 
 class api:
 	def msg(self, channel, text):
