@@ -56,5 +56,5 @@ if __name__ == "__main__":
 
     setattr(api, 'message', '^MsC cats')
     print callback(api)
-    if 'cats: ^billdred' != callback(api):
+    if 'cats: ^billdred' not in callback(api):
         exit(4)
