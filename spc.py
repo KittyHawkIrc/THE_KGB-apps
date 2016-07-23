@@ -22,8 +22,9 @@ def callback(self):
     for cmd in cmdlist:
         if self.command == cmd:
             if user:
-                return '%s: %s' % (user, speshulcmds[cmd].split('\n')[0])
-            return speshulcmds[cmd]
+                return self.msg(self.channel, '%s: %s' % (user, speshulcmds[cmd].split('\n')[0]))
+            else:
+                return self.msg(self.channel, speshulcmds[cmd])
 
 class api:
 	def msg(self, channel, text):
