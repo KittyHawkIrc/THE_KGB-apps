@@ -1,5 +1,9 @@
 import json, urllib2
-from unidecode import unidecode
+try:
+    from unidecode import unidecode
+except:
+    def unidecode(uni):
+        return str(uni)
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
