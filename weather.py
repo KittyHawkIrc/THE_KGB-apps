@@ -87,6 +87,7 @@ def callback(self):
 
             return msg(channel, weather)
         except Exception, e:
+            return msg(channel, 'Sorry, I cannot fetch the weather for %s. Error: %s' % (location, str(e)))
 
     if command == 'setlocation':
         if len(message) > 0:
@@ -174,24 +175,24 @@ if __name__ == "__main__":
     	exit(1)
 
     setattr(api, 'message', '^w Los Angeles')
-    print decode(callback(api))
-    if 'Los Angeles, CA' not in decode(callback(api)):
+    print callback(api)
+    if '!b64:' not in callback(api):
     	exit(2)
 
     setattr(api, 'command', 'setlocation')
     setattr(api, 'message', '^setlocation Los Angeles')
     print callback(api)
-    '''if 'Location for' not in decode(callback(api)):
-    	exit(3)'''
+    if 'Location for' not in callback(api):
+    	exit(3)
 
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w')
-    print decode(callback(api))
-    if 'Los Angeles, CA' not in decode(callback(api)):
+    print callback(api)
+    if '!b64:' not in callback(api):
     	exit(4)
 
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^w joe')
-    print decode(callback(api))
-    if 'Los Angeles, CA' not in decode(callback(api)):
+    print callback(api)
+    if '!b64:' not in callback(api):
     	exit(5)
