@@ -10,7 +10,7 @@ def declare():
   return {"w": "privmsg", "setlocation": "privmsg"}
 
 def callback(self):
-    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present 
+    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0].lower()
@@ -83,8 +83,8 @@ def callback(self):
 
             weather = ' '.join(weather.split())
 
-            return msg(channel, str(weather))
-        except:
+            return msg(channel, unicode(weather))
+        except Exception, e:
             return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)
 
     if command == 'setlocation':
