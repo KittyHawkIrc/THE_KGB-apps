@@ -12,8 +12,7 @@ def declare():
   return {"w": "privmsg", "setlocation": "privmsg"}
 
 def callback(self):
-    #fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
-    fApiKey = 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
+    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0].lower()
@@ -134,7 +133,7 @@ class api:
 		return "[%s] %s" % (channel, text)
 class empty:
 	pass
-
+'''
 # interactive testing:
 api = api()
 def cache_save():
@@ -153,7 +152,7 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
-
+'''
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
