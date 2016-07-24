@@ -1,4 +1,5 @@
-import sys, os, base64, json, urllib2
+import json, urllib2
+from unidecode import unidecode
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -6,13 +7,12 @@ __version__ = 1.0
 
 locationCache = {}
 
-coding = {'b64':[base64.b64encode, base64.b64decode]}
-
 def declare():
   return {"w": "privmsg", "setlocation": "privmsg"}
 
 def callback(self):
-    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
+    #fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
+    fApiKey = 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0].lower()
@@ -83,15 +83,11 @@ def callback(self):
             weather = '%s / %s / %i%s / Humidity: %i%% / Wind: %i%s %s / High: %i%s / Low: %i%s' %\
                       (name, cond, temp, tempUnit, humid, speed, windUnit, bearing, high, tempUnit, low, tempUnit)
 
-            weather = encode('b64:' + ' '.join(weather.split()))
+            weather = unidecode(unicode(' '.join(weather.split())))
 
             return msg(channel, weather)
-        except Exception as e:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print (exc_type, fname, exc_tb.tb_lineno)
-        #except:
-        #    return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)
+        except:
+            return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)
 
     if command == 'setlocation':
         if len(message) > 0:
@@ -137,7 +133,7 @@ class api:
 		return text
 class empty:
 	pass
-'''
+
 # interactive testing:
 api = api()
 def cache_save():
@@ -156,7 +152,7 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
-'''
+
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
