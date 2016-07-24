@@ -1,4 +1,4 @@
-import json, urllib2
+import base64, json, urllib2
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -6,11 +6,14 @@ __version__ = 1.0
 
 locationCache = {}
 
+coding = {'b64':[base64.b64encode, base64.b64decode]}
+
 def declare():
   return {"w": "privmsg", "setlocation": "privmsg"}
 
 def callback(self):
-    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
+    #fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
+    fApiKey = 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0].lower()
@@ -81,9 +84,9 @@ def callback(self):
             weather = '%s / %s / %i%s / Humidity: %i%% / Wind: %i%s %s / High: %i%s / Low: %i%s' %\
                       (name, cond, temp, tempUnit, humid, speed, windUnit, bearing, high, tempUnit, low, tempUnit)
 
-            weather = ' '.join(weather.split())
+            weather = encode('b64:' + ' '.join(weather.split()))
 
-            return msg(channel, unicode(weather))
+            return msg(channel, weather)
         except Exception, e:
             return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)
 
@@ -96,6 +99,21 @@ def callback(self):
             self.cache_save()
             return msg(channel, 'Location for user %s set to %s' % (self.user.split('!')[0], message))
         return msg(channel, 'You did not give me a location to set!')
+
+def encode(code_str):
+    try:
+        code_func = coding[code_str.split(':')[0]][0]
+        return '!' + code_str.split(':')[0] + ':' + code_func(code_str.split(':')[1])
+    except:
+        return False
+
+def decode(code_str):
+    try:
+        code_str = code_str.split('!')[1]
+        code_func = coding[code_str.split(':')[0]][1]
+        return code_func(code_str.split(':')[1])
+    except:
+        return False
 
 def degToDirection(deg):
     directions = ['NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N']
@@ -116,7 +134,7 @@ class api:
 		return "[%s] %s" % (channel, text)
 class empty:
 	pass
-'''
+
 # interactive testing:
 api = api()
 def cache_save():
@@ -135,7 +153,7 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
-'''
+
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
