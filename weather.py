@@ -60,7 +60,7 @@ def callback(self):
             current = wdata['currently']
             daily = wdata['daily']
             units = wdata['flags']['units']
-            
+
             tempUnit = 'C'
             if units == 'us':
                 tempUnit = 'F'
@@ -87,7 +87,6 @@ def callback(self):
 
             return msg(channel, weather)
         except Exception, e:
-            return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)
 
     if command == 'setlocation':
         if len(message) > 0:
