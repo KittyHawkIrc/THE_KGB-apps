@@ -11,8 +11,7 @@ def declare():
   return {"w": "privmsg", "setlocation": "privmsg"}
 
 def callback(self):
-    #fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
-    fApiKey = 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
+    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0].lower()
@@ -133,7 +132,7 @@ class api:
 		return text
 class empty:
 	pass
-
+'''
 # interactive testing:
 api = api()
 def cache_save():
@@ -152,7 +151,7 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
-
+'''
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
@@ -176,7 +175,7 @@ if __name__ == "__main__":
 
     setattr(api, 'message', '^w Los Angeles')
     print callback(api)
-    if '!b64:' not in callback(api):
+    if 'Los Angeles, CA' not in callback(api):
     	exit(2)
 
     setattr(api, 'command', 'setlocation')
@@ -188,11 +187,11 @@ if __name__ == "__main__":
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w')
     print callback(api)
-    if '!b64:' not in callback(api):
+    if 'Los Angeles, CA' not in callback(api):
     	exit(4)
 
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^w joe')
     print callback(api)
-    if '!b64' not in callback(api):
+    if 'Los Angeles, CA' not in callback(api):
     	exit(5)
