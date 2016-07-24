@@ -1,4 +1,4 @@
-import json, urllib2
+import base64, json, urllib2
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -6,11 +6,13 @@ __version__ = 1.0
 
 locationCache = {}
 
+coding = {'b64':[base64.b64encode, base64.b64decode]}
+
 def declare():
   return {"w": "privmsg", "setlocation": "privmsg"}
 
 def callback(self):
-    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present 
+    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0].lower()
@@ -81,11 +83,15 @@ def callback(self):
             weather = '%s / %s / %i%s / Humidity: %i%% / Wind: %i%s %s / High: %i%s / Low: %i%s' %\
                       (name, cond, temp, tempUnit, humid, speed, windUnit, bearing, high, tempUnit, low, tempUnit)
 
-            weather = ' '.join(weather.split())
+            weather = encode('b64:' + ' '.join(weather.split()))
 
-            return msg(channel, str(weather))
-        except:
-            return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)
+            return msg(channel, weather)
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            return msg(channel, '%s %s %s' % (exc_type, fname, exc_tb.tb_lineno))
+        '''except:
+            return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)'''
 
     if command == 'setlocation':
         if len(message) > 0:
@@ -96,6 +102,21 @@ def callback(self):
             self.cache_save()
             return msg(channel, 'Location for user %s set to %s' % (self.user.split('!')[0], message))
         return msg(channel, 'You did not give me a location to set!')
+
+def encode(code_str):
+    try:
+        code_func = coding[code_str.split(':')[0]][0]
+        return '!' + code_str.split(':')[0] + ':' + code_func(code_str.split(':')[1])
+    except:
+        return False
+
+def decode(code_str):
+    try:
+        code_str = code_str.split('!')[1]
+        code_func = coding[code_str.split(':')[0]][1]
+        return code_func(code_str.split(':')[1])
+    except:
+        return False
 
 def degToDirection(deg):
     directions = ['NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N']
@@ -113,7 +134,7 @@ def degToDirection(deg):
 
 class api:
 	def msg(self, channel, text):
-		return "[%s] %s" % (channel, text)
+		return text
 class empty:
 	pass
 '''
@@ -159,7 +180,7 @@ if __name__ == "__main__":
 
     setattr(api, 'message', '^w Los Angeles')
     print callback(api)
-    if 'Los Angeles, CA' not in callback(api):
+    if '!b64:' not in callback(api):
     	exit(2)
 
     setattr(api, 'command', 'setlocation')
@@ -171,11 +192,11 @@ if __name__ == "__main__":
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w')
     print callback(api)
-    if 'Los Angeles, CA' not in callback(api):
+    if '!b64:' not in callback(api):
     	exit(4)
 
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^w joe')
     print callback(api)
-    if 'Los Angeles, CA' not in callback(api):
+    if '!b64' not in callback(api):
     	exit(5)
