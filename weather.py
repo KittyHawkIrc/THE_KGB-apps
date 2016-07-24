@@ -1,4 +1,4 @@
-import base64, json, urllib2
+import sys, os, base64, json, urllib2
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -89,7 +89,7 @@ def callback(self):
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            return msg(channel, '%s %s %s' % (exc_type, fname, exc_tb.tb_lineno))
+            return msg(channel, '%s %s %s' % (str(exc_type), str(fname), str(exc_tb.tb_lineno)))
         '''except:
             return msg(channel, 'Sorry, I cannot fetch the weather for %s.' % location)'''
 
