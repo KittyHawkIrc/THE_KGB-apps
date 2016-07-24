@@ -60,7 +60,7 @@ def callback(self):
             current = wdata['currently']
             daily = wdata['daily']
             units = wdata['flags']['units']
-
+            
             tempUnit = 'C'
             if units == 'us':
                 tempUnit = 'F'
@@ -130,7 +130,7 @@ def degToDirection(deg):
 
 class api:
 	def msg(self, channel, text):
-		return "[%s] %s" % (channel, text)
+		return text
 class empty:
 	pass
 '''
@@ -175,24 +175,24 @@ if __name__ == "__main__":
     	exit(1)
 
     setattr(api, 'message', '^w Los Angeles')
-    print callback(api)
-    if 'Los Angeles, CA' not in callback(api):
+    print decode(callback(api))
+    if 'Los Angeles, CA' not in decode(callback(api)):
     	exit(2)
 
     setattr(api, 'command', 'setlocation')
     setattr(api, 'message', '^setlocation Los Angeles')
     print callback(api)
-    if 'Location for' not in callback(api):
-    	exit(3)
+    '''if 'Location for' not in decode(callback(api)):
+    	exit(3)'''
 
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w')
-    print callback(api)
-    if 'Los Angeles, CA' not in callback(api):
+    print decode(callback(api))
+    if 'Los Angeles, CA' not in decode(callback(api)):
     	exit(4)
 
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^w joe')
-    print callback(api)
-    if 'Los Angeles, CA' not in callback(api):
+    print decode(callback(api))
+    if 'Los Angeles, CA' not in decode(callback(api)):
     	exit(5)
