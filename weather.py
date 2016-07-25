@@ -92,9 +92,7 @@ def callback(self):
         except:
             if private and user == rUser:
                 return msg(channel, 'Sorry, I cannot fetch your weather.')
-            if private:
-                return msg(channel, 'Sorry, I cannot fetch the weather at %s\'s location.' % rUser)
-            return msg(channel, 'Sorry, I cannot fetch the weather at %s.' % location)
+            return msg(channel, 'Sorry, I cannot fetch the weather at that location.')
 
     if command == 'time':
         gLocation = getLocation(self)
@@ -140,9 +138,7 @@ def callback(self):
         except:
             if private and user == rUser:
                 return msg(channel, 'Sorry, I cannot fetch your time, try looking at a clock.')
-            if private:
-                return msg(channel, 'Sorry, I cannot fetch the time at %s\'s location.' % rUser)
-            return msg(channel, 'Sorry, I cannot fetch the time at %s.' % location)
+            return msg(channel, 'Sorry, I cannot fetch the time at that location.')
 
 def getLocation(self):
     user = self.user.split('!')[0]
