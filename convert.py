@@ -83,7 +83,7 @@ def stringparse(text): #it took me 15 mintues to write a better string parser th
     unit1 = tempconv(unit1) #fixing any naming issues
     unit2 = tempconv(unit2)
 
-    return unit1, int(num), unit2
+    return unit1, float(num), unit2
 
 
 def callback(self): #remove_bym
