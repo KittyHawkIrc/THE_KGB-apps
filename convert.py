@@ -12,7 +12,7 @@ unit = UnitRegistry() #can't code for shit
 convert = unit.Quantity #like how do you fuck up conversions that bad
 
 def declare():  #SERIOUSLY. no one used the 30000 hooks in here.
-    return {"convert":"privmsg", "fuckbym":"privmsg"}
+    return {"convert":"privmsg", "fuckbym":"privmsg", "c": "privmsg"}
 
 def tempconv(unit):     #the library is a little iffy on names
     c = ['c', 'celc', 'celsius']
