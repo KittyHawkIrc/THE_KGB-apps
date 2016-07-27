@@ -1,3 +1,5 @@
+pip install pint
+
 for f in *.py
 do
     echo Testing: [$f]
