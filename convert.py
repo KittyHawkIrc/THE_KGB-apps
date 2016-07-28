@@ -110,8 +110,8 @@ def callback(self): #remove_bym
 class api: #You're now known as remove_bym
     def msg(self, channel, text):
         return "[%s] %s" % (channel, text)
-
-if __name__ == "__main__":
+        
+if __name__ == "__main__": 
     api = api()
     setattr(api, 'isop', True)
     setattr(api, 'type', 'privmsg')
