@@ -133,7 +133,11 @@ def callback(self): #remove_bym
     try:
         num, unit2 = '{0}'.format(convert(num, unit(unit1)).to(unit2)).split() #dirty, but it works perfectly
 
-        num = str(round(float(num), 3)).replace('.0', '') #fix 123.0 bug
+        num = str(round(float(num), 3))
+
+        if num[len(num) - 2:] == '.0':  #fix 123.0 bug, ALSO prevent 2.04 from a hit
+            num = num.replace('.0', '')
+
         unit2 = prettytemp(unit2, float(num))                                               #things bym can't say ^
 
     except Exception as e:
