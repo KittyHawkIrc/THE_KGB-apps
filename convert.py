@@ -51,14 +51,24 @@ def prettytemp(unit, num):
     elif unit == 'degR':
         return 'R'
 
-    elif unit == 'foot':
-        return 'feet'
-
     else:
         if num == 1:
             return unit
         else:
-            return unit + 's'
+            if unit == 'foot':
+                return 'feet'
+
+            elif unit == 'inch':
+                return 'inches'
+
+            elif unit == 'mph':
+                return unit
+
+            elif unit == 'kph':
+                return unit
+
+            else:
+                return unit + 's'
 
 def stringparse(text): #it took me 15 mintues to write a better string parser than bym took a week
     text_list = text.split()
@@ -69,7 +79,7 @@ def stringparse(text): #it took me 15 mintues to write a better string parser th
     unit2 = text_list[len(text_list) - 1] #it's implied the last string is always going to be the conversion
                                       #thus, '2 cm wooooo 2k16 wooooo in' would still work
 
-    if text_list[0].replace('.', '').isdigit(): #2 cm (decimal workaround)
+    if text_list[0].replace('.', '').replace('-','').isdigit(): #2 cm (ensure special characters don't get in thh way
         num = text_list[0]
         unit1 = text_list[1]
 
@@ -88,16 +98,25 @@ def stringparse(text): #it took me 15 mintues to write a better string parser th
                 unit1 += i
             elif i == '.': #decimal workaround
                 num += i
+            elif i == '-':
+                num += i
 
     unit1 = tempconv(unit1) #fixing any naming issues
     unit2 = tempconv(unit2)
 
-    if len(text_list) <= 2 and unit1.startswith('deg'): #support single item conversions for temp
-        if unit1 == 'degF': #We can safely assume this is either 18f or 18 f
-            unit2 = 'degC'
+    if len(text_list) == 1 or (len(text_list) == 2 and text_list[0].replace('.', '').replace('-','').isdigit()):
+                            #support single item conversions for temp
+                            #We can safely assume this is either 18f or 18 f
 
-        elif unit1 == 'degC':
-            unit2 = 'degF'
+        fliplist = {'degC':'degF', 'degF':'degC', 'kg':'lbs', 'lbs':'kg', 'km':'mi', 'mi':'km', 'kph': 'mph', 'mph':'kph', 'ft':'m', 'm':'ft'}
+
+        if unit1 in fliplist:
+            unit2 = fliplist[unit1]
+
+        #Breakdown of the if:
+        #the fliplist is used for clarity, nested if's are technically far more efficient
+        #case 1: 2f, this is verified by making sure it's 1 digit
+        #case 2: if it's 2 digits, ensure the first digit is a number otherwise 2f k gets caught
 
     return unit1, float(num), unit2
 
@@ -136,7 +155,7 @@ if __name__ == "__main__":
     setattr(api, 'user', 'joe!username@hostmask')
 
     setattr(api, 'message', '^convert 18.5 cm in')
-    if not 'inchs' in callback(api):
+    if not 'inches' in callback(api):
         exit(1)
 
     setattr(api, 'message', '^convert 5 cm to mm')
