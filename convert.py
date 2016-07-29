@@ -108,7 +108,7 @@ def stringparse(text): #it took me 15 mintues to write a better string parser th
                             #support single item conversions for temp
                             #We can safely assume this is either 18f or 18 f
 
-        fliplist = {'degC':'degF', 'degF':'degC', 'kg':'lbs', 'lbs':'kg', 'km':'mi', 'mi':'km', 'kph': 'mph', 'mph':'kph', 'ft':'m', 'm':'ft'}:
+        fliplist = {'degC':'degF', 'degF':'degC', 'kg':'lbs', 'lbs':'kg', 'km':'mi', 'mi':'km', 'kph': 'mph', 'mph':'kph', 'ft':'m', 'm':'ft'}
 
         if unit1 in fliplist:
             unit2 = fliplist[unit1]
