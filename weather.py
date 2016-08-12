@@ -25,9 +25,9 @@ def callback(self):
     if command == 'setlocation':
         if len(message) > 0:
             try:
-                self.locker.location[user] = message
+                self.locker.location[user.lower()] = message
             except:
-                self.locker.location = {user: message}
+                self.locker.location = {user.lower(): message}
             self.cache_save()
             return msg(channel, 'Location for user %s set to %s' % (self.user.split('!')[0], message))
         return msg(channel, 'You did not give me a location to set.')
