@@ -77,22 +77,42 @@ def callback(self):
                 windUnit = 'mph'
 
             # use ifs to bulletproof the code (api does not always return all the information it can)
-            if current['summary']:
+            try:
                 weather += '/ %s ' % current['summary']
-            if current['temperature']:
+            except:
+                pass
+            try:
                 weather += '/ %i%s ' % (round(current['temperature']), tempUnit)
-            if current['humidity']:
+            except:
+                pass
+            try:
                 weather += '/ Humidity: %i%% ' % (current['humidity'] * 100)
-            if current['windSpeed']:
+            except:
+                pass
+            try:
+                weather += '/ Precipitation: %i%% ' % (current['precipProbability'] * 100)
+            except:
+                pass
+            try:
                 weather += '/ %i%s ' % (round(current['windSpeed']), windUnit)
-                if current['windBearing']:
+                try:
                     weather += '%s ' % degToDirection(current['windBearing'])
-            if daily['data'][0]['temperatureMax']:
+                except:
+                    pass
+            except:
+                pass
+            try:
                 weather += '/ High: %i%s ' % (round(daily['data'][0]['temperatureMax']), tempUnit)
-            if daily['data'][0]['temperatureMin']:
+            except:
+                pass
+            try:
                 weather += '/ Low: %i%s ' % (round(daily['data'][0]['temperatureMin']), tempUnit)
-            if daily['summary']:
+            except:
+                pass
+            try:
                 weather += '/ %s' % daily['summary']
+            except:
+                pass
 
             # hide the location if it is not given in the parameters
             if private:
