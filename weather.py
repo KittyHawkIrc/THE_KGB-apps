@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json, time, urllib2
 try:
     from unidecode import unidecode
@@ -51,6 +53,7 @@ def callback(self):
 
         try:
             baseurl = 'https://api.forecast.io/forecast/'
+            # remove unnecessary categories
             options = '?units=auto&exclude=minutely,hourly'
             r = urllib2.urlopen(baseurl + fApiKey + '/%s,%s' % (lat, lng) + options)
             wdata = json.loads(r.read())
@@ -59,7 +62,9 @@ def callback(self):
             current = wdata['currently']
             daily = wdata['daily']
             units = wdata['flags']['units']
+            weather = ''
 
+            # specific units not given in api response, so they must be set here
             tempUnit = 'C'
             if units == 'us':
                 tempUnit = 'F'
@@ -71,29 +76,44 @@ def callback(self):
             elif units == 'uk2':
                 windUnit = 'mph'
 
-            temp = round(current['temperature'])
-            cond = current['summary']
-            humid = current['humidity'] * 100
-            speed = round(current['windSpeed'])
-            bearing = degToDirection(current['windBearing'])
-            high = round(daily['data'][0]['temperatureMax'])
-            low = round(daily['data'][0]['temperatureMin'])
+            # use ifs to bulletproof the code (api does not always return all the information it can)
+            if current['summary']:
+                weather += '/ %s ' % current['summary']
+            if current['temperature']:
+                weather += '/ %i%s ' % (round(current['temperature']), tempUnit)
+            if current['humidity']:
+                weather += '/ Humidity: %i%% ' % (current['humidity'] * 100)
+            if current['windSpeed']:
+                weather += '/ %i%s ' % (round(current['windSpeed']), windUnit)
+                if current['windBearing']:
+                    weather += '%s ' % degToDirection(current['windBearing'])
+            if daily['data'][0]['temperatureMax']:
+                weather += '/ High: %i%s ' % (round(daily['data'][0]['temperatureMax']), tempUnit)
+            if daily['data'][0]['temperatureMin']:
+                weather += '/ Low: %i%s ' % (round(daily['data'][0]['temperatureMin']), tempUnit)
+            if daily['summary']:
+                weather += '/ %s' % daily['summary']
 
+            # hide the location if it is not given in the parameters
             if private:
-                weather = '%s / %s / %i%s / Humidity: %i%% / Wind: %i%s %s / High: %i%s / Low: %i%s' %\
-                          (rUser, cond, temp, tempUnit, humid, speed, windUnit, bearing, high, tempUnit, low, tempUnit)
+                weather = '%s %s' % (rUser, weather)
             else:
-                weather = '%s / %s / %i%s / Humidity: %i%% / Wind: %i%s %s / High: %i%s / Low: %i%s' %\
-                          (name, cond, temp, tempUnit, humid, speed, windUnit, bearing, high, tempUnit, low, tempUnit)
+                weather = '%s %s' % (name, weather)
 
+            # get rid of all degree signs (could be introduced by summary)
+            weather = weather.replace(u'\xb0', '')
+
+            # turn unicode into ASCII
             weather = unidecode(unicode(' '.join(weather.split())))
 
             return msg(channel, weather)
         except:
+            # different output if no parameters given (user tried to check their own weather)
             if private and user == rUser:
                 return msg(channel, 'Sorry, I cannot fetch your weather.')
             return msg(channel, 'Sorry, I cannot fetch the weather at that location.')
 
+    # time shouldn't be here, but because locations are stored in locker, this is the best solution
     if command == 'time':
         gLocation = getLocation(self)
         if type(gLocation) == str:
@@ -295,3 +315,5 @@ if __name__ == "__main__":
     print callback(api)
     if 'joe /' not in callback(api):
     	exit(9)
+
+    print 'All tests passed.'
