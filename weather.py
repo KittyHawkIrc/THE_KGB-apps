@@ -90,11 +90,7 @@ def callback(self):
             except:
                 pass
             try:
-                weather += '/ Precipitation: %i%% ' % (current['precipProbability'] * 100)
-            except:
-                pass
-            try:
-                weather += '/ %i%s ' % (round(current['windSpeed']), windUnit)
+                weather += '/ Wind: %i%s ' % (round(current['windSpeed']), windUnit)
                 try:
                     weather += '%s ' % degToDirection(current['windBearing'])
                 except:
