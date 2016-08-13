@@ -1,210 +1,175 @@
+# Module dedicated to this Nirvana cover of a David Bowie song
+# https://open.spotify.com/track/15VRO9CQwMpbqUYA7e6Hwg
+
+from pint import UnitRegistry
+
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
-#the number is the value of %base% converted to %unit%
-#naturally the base itself will always equal 1, larger values will be less than 0
+#fuck bym
+unit = UnitRegistry() #can't code for shit
+convert = unit.Quantity #like how do you fuck up conversions that bad
 
-#IMPORTANT, EACH SUB ARRAY MUST BE ORDERED LONGEST TO SHORTEST
-#Failure to do so may result in mi (miles) being interpreted as m (meters)
-#this is because of use of startswith for matchBoth
-units = [
+def declare():  #SERIOUSLY. no one used the 30000 hooks in here.
+    return {"convert":"privmsg", "fuckbym":"privmsg", "c":"privmsg"}
 
-#lengths | use meter as base
-[
-#common names
-["centimeter",100, "centimeters"],
-["millimeter",1000, "milimeters"],
-["nanometer",1e+9, "nanometers"],
-["meter",1,"meters"],
-["naught",0.000539957, "naughts"],
-["mi",0.000621371, "miles"],
-["kilo",0.001, "kilometers"],
-["yard",1.09361, "yards"],
-["foot",3.28084, "feet"],
-["feet",3.28084, "feet"],
-["inch",39.3701, "inches"],
+def tempconv(unit):     #the library is a little iffy on names
+    c = ['c', 'celc', 'celsius']
+    f = ['f', 'far', 'fahrenheit']
+    k = ['k', 'kel', 'kelvin']
+    r = ['r', 'rank', 'rankine']
 
-["km",0.001, "kilometers"],
-["cm",100, "centimeters"],
-["mm",1000, "milimeters"],
-["nm",1e+9, "nanometers"],
-["mi",0.000621371, "miles"],
-["yr",1.09361, "yards"],
-["ft",3.28084, "feet"],
-["in",39.3701, "inches"],
-["na",0.000539957, "naughts"],
-["m",1,"meters"]
+    unit = unit.lower()
 
-],
+    if unit in c:
+        return 'degC'
 
-#data | use byte as base
-[
-#common names
-["petabyte",1e-15,"Petabytes"],
-["kilobyte",0.001,"kilobytes"],
-["megabyte",1e-6,"Megabytes"],
-["byte",1,"bytes"],
-["bit",8,"bits"],
-["mb",1e-6,"Megabytes"],
-["gb",1e-9,"Gigabytes"],
-["tb",1e-12,"Terabytes"],
-["pb",1e-15,"Petabytes"],
-["kb",0.001,"kilobytes"],
+    elif unit in f:
+        return 'degF'
 
+    elif unit in k:
+        return 'degK'
 
-["kib",0.0078125,"kibibits"],
-["Mib",7.6294e-6,"Mebibits"],
-["Gib",7.4506e-9,"Gibibits"],
-["Tib",7.276e-12,"Tebibits"],
-["Pib",7.1054e-15,"Pebibits"],
-["kiB",0.000976563,"kibibytes"],
-["MiB",9.5367e-7,"Mebibytes"],
+    elif unit in r:
+        return 'degR'
 
-["GiB",9.3131e-10,"Gibibytes"],
-["TiB",9.0949e-13,"Tebibytes"],
-["PiB",8.8818e-16,"Pebibytes"],
-["kb",0.008,"kilobits"],
-["Mb",8e-6,"Megabits"],
-["Gb",8e-9,"Gigabits"],
-["Tb",8e-12,"Terabits"],
-["Pb",8e-15,"Petabits"],
-["kB",0.001,"kilobytes"],
-["MB",1e-6,"Megabytes"],
-["GB",1e-9,"Gigabytes"],
-["TB",1e-12,"Terabytes"],
-["PB",1e-15,"Petabytes"],
-["b",8,"bits"],
-["B",1,"bytes"]
-],
+    else:
+        return unit
 
-#mass | use kg as base
-[
-#common names
-["millegram",1e+6,"milligrams"],
-["stone",0.157473,"stone"],
-["pound",2.20462,"pounds"],
-["kilo",1,"kilograms"],
-["gram",1000,"grams"],
-["ton",0.001,"tonnes"],
-["ou",35.274,"ounces"],
+def prettytemp(unit, num):
 
-["kg",1,"kilograms"],
-["to",0.001,"tonnes"],
-["st",0.157473,"stone"],
-["lb",2.20462,"pounds"],
-["oz",35.274,"ounces"],
-["g",1000,"grams"]
-]
+    if unit == 'degC':
+        return 'C'
 
-]
+    elif unit == 'degF':
+        return 'F'
 
-def matchBoth(u1, u2):
-    strength = ""
-    for i in range (len(units)):
-        temp = ""
-        found1 = ""
-        found2 = ""
+    elif unit == 'degK':
+        return 'K'
 
-        for j in range (len(units[i])):
-            if u1.startswith(units[i][j][0]):
-                found1 = units[i][j]
-            if u2.startswith(units[i][j][0]):
-                found2 = units[i][j]
+    elif unit == 'degR':
+        return 'R'
 
-            if (found1 != "")&(found2 != ""):
-                temp = [found1, found2]
-                break
-
-        if temp != "":
-            if strength == "":
-                strength = temp
-            elif len(u1[len(temp[0][0]):]) + len(u2[len(temp[1][0]):]) <\
-                len(u1[len(strength[0][0]):]) + len(u2[len(strength[1][0]):]):
-                strength = temp
-
-    return strength
-
-def convert(condex, v):
-    return (v / condex[0][1]) * condex[1][1]
-
-def declare():
-    val = {"convert":"privmsg"}
-    for i in range (len(units)):
-        for j in range (len(units[i])):
-            val[ units[i][j][0] ] = "privmsg"
-    return val
-
-def callback(self):
-    channel = self.channel
-    command = self.command
-    user = self.user
-    msg = self.message
-    type = self.type
-    isop = self.isop
-    #   ^convert 5 in to cm
-    #   ^kg 5 to lb
-    #msg is  value to unit
-    values = msg.split(' ')
-
-    if channel.startswith('#'):
-        if values[1] == "help":
-
-            self.msg(channel, "^convert [value] [unit1] to [unit2]'. Use ^convert units to be messaged the units accepted.")
-            return
-
-        elif values[1] == "units":
-            s = ""
-            for i in range (len(units)):
-                for j in range (len(units[i])):
-                    s = s + " " + units[i][j][2] + " (" + units[i][j][0] + "),"
-            self.msg(user.split('!')[0], 'You can use the following: ' + s.strip(','))
-            return
-
-        #deal with getting the value
-        try:
-            value = float(values[1])
-        except ValueError:
-            self.msg(channel, 'First parameter must be a number')
-            return;
-
-        #deal with unit1
-        unit1 = command.strip('^')
-
-        if unit1 == "convert":  #must be using ^convert
-            unit1 = values[2]
-
-        #deal with unit2
-        unit2 = values[len(values)-1]   #last index must be the second unit
-
-        condex = matchBoth(unit1, unit2)
-        if condex != "":    #must be supported units
-            value = float(value)
-
-            converted = convert(condex,value)
-
-            converted = round(converted, 3)
-            return self.msg(channel, "%s %s is %s in %s." % (value, condex[0][2], converted, condex[1][2]))
+    else:
+        if num == 1:
+            return unit
         else:
-            return self.msg(channel, 'Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values')
+            if unit == 'foot':
+                return 'feet'
 
-class api:
+            elif unit == 'inch':
+                return 'inches'
+
+            elif unit == 'mph':
+                return unit
+
+            elif unit == 'kph':
+                return unit
+
+            else:
+                return unit + 's'
+
+def stringparse(text): #it took me 15 mintues to write a better string parser than bym took a week
+    text_list = text.split()
+
+    if len(text_list) < 1:  #18F is the smallest I can think of
+        return False, False, False
+
+    unit2 = text_list[len(text_list) - 1] #it's implied the last string is always going to be the conversion
+                                      #thus, '2 cm wooooo 2k16 wooooo in' would still work
+
+    if text_list[0].replace('.', '').replace('-','').isdigit(): #2 cm (ensure special characters don't get in thh way
+        num = text_list[0]
+        unit1 = text_list[1]
+
+    elif text_list[0].isalpha(): # ^c kg lbs
+        num = 1
+        unit1 = text_list[0]
+
+    else:   #2c/2cm/etc
+        num = ''
+        unit1 = ''
+
+        for i in text_list[0]:
+            if i.isdigit():
+                num += i
+            elif i.isalpha():
+                unit1 += i
+            elif i == '.': #decimal workaround
+                num += i
+            elif i == '-':
+                num += i
+
+    unit1 = tempconv(unit1) #fixing any naming issues
+    unit2 = tempconv(unit2)
+
+    if len(text_list) == 1 or (len(text_list) == 2 and text_list[0].replace('.', '').replace('-','').isdigit()):
+                            #support single item conversions for temp
+                            #We can safely assume this is either 18f or 18 f
+
+        fliplist = {'degC':'degF', 'degF':'degC', 'kg':'lbs', 'lbs':'kg', 'km':'mi', 'mi':'km', 'kph': 'mph', 'mph':'kph', 'ft':'m', 'm':'ft'}
+
+        if unit1 in fliplist:
+            unit2 = fliplist[unit1]
+
+        #Breakdown of the if:
+        #the fliplist is used for clarity, nested if's are technically far more efficient
+        #case 1: 2f, this is verified by making sure it's 1 digit
+        #case 2: if it's 2 digits, ensure the first digit is a number otherwise 2f k gets caught
+
+    return unit1, float(num), unit2
+
+
+def callback(self): #remove_bym
+    try:
+        unit1, num, unit2 = stringparse(self.message.split(' ', 1)[1])
+    except:
+        return self.msg(self.msg, 'You have to actually add things after the command')
+
+    if unit1 == False:
+        return self.msg(self.channel, "Error, it doesn't look like you're trying to convert properly")
+
+    try:
+        num, unit2 = '{0}'.format(convert(num, unit(unit1)).to(unit2)).split() #dirty, but it works perfectly
+
+        num = str(round(float(num), 3))
+
+        if num[len(num) - 2:] == '.0':  #fix 123.0 bug, ALSO prevent 2.04 from a hit
+            num = num.replace('.0', '')
+
+        unit2 = prettytemp(unit2, float(num))                                               #things bym can't say ^
+
+    except Exception as e:
+        return self.msg(self.channel, 'Conversion error! (%s)' % (e))
+
+    return self.msg(self.channel, "%s %s" % (num, unit2))
+
+
+class api: #You're now known as remove_bym
     def msg(self, channel, text):
         return "[%s] %s" % (channel, text)
 
 if __name__ == "__main__":
     api = api()
-    u = "joe!username@hostmask"
-    c = '#test'
-    cm = "^convert"
-    isop = True
+    setattr(api, 'isop', True)
+    setattr(api, 'type', 'privmsg')
+    setattr(api, 'command', 'convert')
+    setattr(api, 'channel', "#test")
+    setattr(api, 'user', 'joe!username@hostmask')
 
-    #test full program
-    #if callback(api, '', isop=isop, command=cm, msg="^convert 36 mb to MiB", channel=c, user=u) != "[%s] 36.0 Megabytes is 34.332 in Mebibytes"%(c):
-    #   exit(1)
-    #elif   callback(api, '', isop=isop, command=cm, msg="^convert 12 MB to m", channel=c, user=u) != '[%s] Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values'%(c):
-    #   exit(1)
-    #elif   callback(api, '', isop=isop, command=cm, msg="^convert 12 m to m", channel=c, user=u) != '[%s] Conversion format must match "^convert [value] [unit1] in [unit2]". ^convert help for information on available values' %(c):
-    #   exit(1)
-    #elif   callback(api, '', isop=isop, command=cm, msg="^convert 4566 km to miles", channel=c, user=u) != "[%s] 4566.0 kilometers is 2837.181 in miles"%(c):
-    #   exit(1)
+    setattr(api, 'message', '^convert 18.5 cm in')
+    if not 'inches' in callback(api):
+        exit(1)
+
+    setattr(api, 'message', '^convert 5 cm to mm')
+    if '.0' in callback(api):
+        exit(2)
+
+    setattr(api, 'message', '^convert kg lbs')
+    if not 'pounds' in callback(api):
+        exit(3)
+
+    setattr(api, 'message', '^c 18f')
+    if not 'C' in callback(api):
+        exit(4)
