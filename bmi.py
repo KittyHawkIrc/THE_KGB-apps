@@ -82,7 +82,7 @@ def callback(self):
 	elif command == 'bmi':
 		if height and mass:
 			bmi = mass / (height ** 2)
-			return msg(channel, 'Your BMI is %s, you are \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
+			return msg(channel, 'Your BMI is %s, which is \002\003%s\017.' % (format(bmi, '.2f'), classifyBmi(bmi)))
 
 		if height and bmi:
 			mass = bmi * (height ** 2)
