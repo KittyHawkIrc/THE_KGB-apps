@@ -156,8 +156,8 @@ if __name__ == "__main__":
   setattr(api, 'channel', "#test")
   setattr(api, 'message', '^animalfacts')
 
-  if "https://i.sli.mg/" not in callback(api):
+  if "Here\'s a" not in callback(api):
     system.exit(1)
   setattr(api, 'message', '^animalfacts new')
-  if factimg[0] not in callback(api):
+  if "Here\'s the" not in callback(api):
     exit(2)
