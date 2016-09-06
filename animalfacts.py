@@ -138,10 +138,10 @@ def declare():
 def callback(self):
   try:
     if self.message.split(' ')[1] == "new":
-      return self.msg(self.channel, "Here's the newest sad animal fact! %s" % (factimg[0]))
+      return self.msg(self.channel, "Here's the newest sad animal fact! %s" % ('http://i.imgur.com/WfhlfQR.jpg'))
   except:
     pass
-  return self.msg(self.channel, "Here's a sad animal fact for you! %s" % (random.choice(factimg)))
+  return self.msg(self.channel, "Here's a sad animal fact for you! %s" % ('http://i.imgur.com/WfhlfQR.jpg'))
 
 class api:
   def msg(self, channel, text):
