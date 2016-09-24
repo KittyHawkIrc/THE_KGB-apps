@@ -52,7 +52,7 @@ def callback(self):
             lng = gLatLong[2]
 
         try:
-            baseurl = 'https://api.forecast.io/forecast/'
+            baseurl = 'https://api.darksky.net/forecast/'
             # remove unnecessary categories
             options = '?units=auto&exclude=minutely,hourly'
             r = urllib2.urlopen(baseurl + fApiKey + '/%s,%s' % (lat, lng) + options)
