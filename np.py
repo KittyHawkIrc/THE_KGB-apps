@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import json, time, urllib2
-try:
-    from unidecode import unidecode
-except:
-    def unidecode(uni):
-        return str(uni)
+import json, urllib2
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -92,7 +87,7 @@ setattr(api, 'cache_save', cache_save)
 setattr(api, 'config_get', config_get)
 setattr(api, 'type', 'privmsg')
 setattr(api, 'channel', "#test")
-setattr(api, 'command', 'w')
+setattr(api, 'command', 'np')
 setattr(api, 'locker', empty)
 setattr(api, 'user', 'joe!username@hostmask')
 while(True):
