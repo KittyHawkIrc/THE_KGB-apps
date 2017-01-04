@@ -17,7 +17,7 @@ def declare():
   return {"w": "privmsg", "time": "privmsg", "setlocation": "privmsg"}
 
 def callback(self):
-    fApiKey = self.config_get('ApiKey').split()[0] #remove extra formatting if present
+    fApiKey = self.config_get('apikey')
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0]
