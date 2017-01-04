@@ -32,7 +32,7 @@ def callback(self):
                 self.locker.location = {user.lower(): message}
             self.cache_save()
             return msg(channel, 'Location for user %s set to %s' % (self.user.split('!')[0], message))
-        return msg(channel, 'You did not give me a location to set.')
+        return
 
     if command == 'w':
         gLocation = getLocation(self)
@@ -76,13 +76,17 @@ def callback(self):
             elif units == 'uk2':
                 windUnit = 'mph'
 
-            # use ifs to bulletproof the code (api does not always return all the information it can)
+            # use try's to bulletproof the code (api does not always return all the information it can)
             try:
                 weather += '/ %s ' % current['summary']
             except:
                 pass
             try:
                 weather += '/ %i%s ' % (round(current['temperature']), tempUnit)
+            except:
+                pass
+            try:
+                weather += '/ %i%s ' % (round(current['apparentTemperature']), tempUnit)
             except:
                 pass
             try:
@@ -124,10 +128,7 @@ def callback(self):
 
             return msg(channel, weather)
         except:
-            # different output if no parameters given (user tried to check their own weather)
-            if private and user == rUser:
-                return msg(channel, 'Sorry, I cannot fetch your weather.')
-            return msg(channel, 'Sorry, I cannot fetch the weather at that location.')
+            return
 
     # time shouldn't be here, but because locations are stored in locker, this is the best solution
     if command == 'time':
@@ -172,9 +173,7 @@ def callback(self):
 
             return msg(channel, timeinfo)
         except:
-            if private and user == rUser:
-                return msg(channel, 'Sorry, I cannot fetch your time, try looking at a clock.')
-            return msg(channel, 'Sorry, I cannot fetch the time at that location.')
+            return
 
 def getLocation(self):
     user = self.user.split('!')[0]
@@ -194,7 +193,7 @@ def getLocation(self):
             rUser = user
             private = True
         except:
-            return 'You have not set a location yet.'
+            return
     return [location, private, rUser]
 
 def getLatLong(location):
@@ -215,7 +214,7 @@ def getLatLong(location):
 
             locationCache[location] = [name, lat, lng]
         except:
-            return 'Sorry, I cannot find the location of %s.' % location
+            return
     return [name, lat, lng]
 
 def degToDirection(deg):
@@ -274,62 +273,51 @@ if __name__ == "__main__":
     setattr(api, 'config_get', config_get)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', "#test")
-    setattr(api, 'command', 'w')
     setattr(api, 'locker', empty)
     setattr(api, 'user', 'joe!username@hostmask')
 
     setattr(api, 'command', 'w')
-    setattr(api, 'message', '^w')
-    print callback(api)
-    if 'You have not' not in callback(api):
-    	exit(1)
-
     setattr(api, 'message', '^w Los Angeles')
     print callback(api)
     if 'Los Angeles, CA' not in callback(api):
-    	exit(2)
+    	exit(1)
 
     setattr(api, 'command', 'time')
-    setattr(api, 'message', '^time')
-    print callback(api)
-    if 'You have not' not in callback(api):
-    	exit(3)
-
     setattr(api, 'message', '^time Los Angeles')
     print callback(api)
     if 'Pacific' not in callback(api):
-    	exit(4)
+    	exit(2)
 
     setattr(api, 'command', 'setlocation')
     setattr(api, 'message', '^setlocation Los Angeles')
     print callback(api)
     if 'Location for' not in callback(api):
-    	exit(5)
+    	exit(3)
 
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w')
     print callback(api)
     if 'joe /' not in callback(api):
-    	exit(6)
+    	exit(4)
 
     setattr(api, 'command', 'time')
     setattr(api, 'message', '^time')
     print callback(api)
     if 'joe /' not in callback(api):
-    	exit(7)
+    	exit(5)
 
     setattr(api, 'command', 'w')
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^w joe')
     print callback(api)
     if 'joe /' not in callback(api):
-    	exit(8)
+    	exit(6)
 
     setattr(api, 'command', 'time')
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^time joe')
     print callback(api)
     if 'joe /' not in callback(api):
-    	exit(9)
+    	exit(7)
 
     print 'All tests passed.'
