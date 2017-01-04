@@ -12,8 +12,9 @@ def declare():
   return {"np": "privmsg", "setlastfm": "privmsg"}
 
 def callback(self):
-    fApiKey = self.config_get('LfmApiKey').split()[0]
+    fApiKey = self.config_get('apikey').split()[0]
     command = self.command
+    channel = self.channel
     user = self.user.split('!')[0]
     message = self.message.split(self.command, 1)[1].strip()
     msg = self.msg
@@ -25,7 +26,7 @@ def callback(self):
             except:
                 self.locker.lastfm = {user.lower(): message.split()[0]}
             self.cache_save()
-            return msg(self.channel, 'Last.FM for user %s set to %s' % (self.user.split('!')[0], message))
+            return msg(channel, 'Last.FM for user %s set to %s' % (self.user.split('!')[0], message))
         return
 
     if command == 'np':
@@ -65,9 +66,9 @@ def callback(self):
             except:
                 pass
 
-            return msg(self.channel, nowPlaying)
-        except Exception, e:
-            print e
+            return msg(channel, nowPlaying)
+        except:
+            return
 
 class api:
 	def msg(self, channel, text):
