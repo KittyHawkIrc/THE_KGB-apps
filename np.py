@@ -15,7 +15,7 @@ def declare():
   return {"np": "privmsg", "setlastfm": "privmsg"}
 
 def callback(self):
-    lApiKey = '48a737c88c910cb86a38dd012fe27745'
+    lApiKey = self.config_get('apikey')
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0]
@@ -60,8 +60,7 @@ def callback(self):
             except:
                 pass
             try:
-		if str(lfmData['album']['#text']):
-                    nowPlaying += ' / %s.' % lfmData['album']['#text']
+        		nowPlaying += ' / %s' % lfmData['album']['#text']
             except:
                 pass
 
