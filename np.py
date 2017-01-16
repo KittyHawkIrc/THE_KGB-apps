@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
 
 import json, urllib2
+try:
+    from unidecode import unidecode
+except:
+    def unidecode(uni):
+        return str(uni)
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
-locationCache = {}
-
 def declare():
   return {"np": "privmsg", "setlastfm": "privmsg"}
 
 def callback(self):
-    fApiKey = self.config_get('apikey').split()[0]
-    command = self.command
+    lApiKey = '48a737c88c910cb86a38dd012fe27745'
     channel = self.channel
+    command = self.command
     user = self.user.split('!')[0]
     message = self.message.split(self.command, 1)[1].strip()
     msg = self.msg
@@ -31,44 +34,41 @@ def callback(self):
 
     if command == 'np':
         try:
-            baseurl = 'http://ws.audioscrobbler.com/2.0/?'
-            method = 'method=user.getrecenttracks'
+            url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='
             if len(message) == 0:
-                lfmUser = 'user=%s' % self.locker.lastfm[user.lower()]
-                u = user.lower()
+                url += self.locker.lastfm[user.lower()]
+                u = user
             else:
                 try:
-                    lfmUser = 'user=%s' % self.locker.lastfm[message.split()[0]]
+                    url += self.locker.lastfm[message.split()[0].lower()]
                     u = message.split()[0]
                 except:
-                    lfmUser = 'user=%s' % message.split()[0]
+                    url += message.split()[0]
                     u = message.split()[0]
-            key = 'api_key=%s' % fApiKey
-            fmt = 'format=json'
-            params = [method, lfmUser, key, fmt]
-            r = urllib2.urlopen(baseurl + '&'.join(params))
-            data = json.loads(r.read())
+            url += '&api_key=%s&format=json' % lApiKey
+            r = urllib2.urlopen(url)
+            lfmData = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
-            lfmData = data['recenttracks']['track']
-            nowPlaying = '%s now playing: ' % u
-
+            nowPlaying = '%s np: ' % u
             # use try's to bulletproof the code (api does not always return all the information it can)
             try:
-                nowPlaying += lfmData[0]['name']
+                nowPlaying += lfmData['name']
             except:
                 pass
             try:
-                nowPlaying += ' / %s' % lfmData[0]['artist']['#text']
+                nowPlaying += ' / %s' % lfmData['artist']['#text']
             except:
                 pass
             try:
-                nowPlaying += ' / %s.' % lfmData[0]['album']['#text']
+		if str(lfmData['album']['#text']):
+                    nowPlaying += ' / %s.' % lfmData['album']['#text']
             except:
                 pass
 
+            nowPlaying = unidecode(unicode(' '.join(nowPlaying.split())))
             return msg(channel, nowPlaying)
-        except:
-            return
+        except Exception as e:
+            return msg(channel, e)
 
 class api:
 	def msg(self, channel, text):
