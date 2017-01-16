@@ -37,10 +37,10 @@ def callback(self):
             url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='
             if len(message) == 0:
                 url += self.locker.lastfm[user.lower()]
-                u = user.lower()
+                u = user
             else:
                 try:
-                    url += self.locker.lastfm[message.split()[0]]
+                    url += self.locker.lastfm[message.split()[0].lower()]
                     u = message.split()[0]
                 except:
                     url += message.split()[0]
@@ -49,7 +49,7 @@ def callback(self):
             r = urllib2.urlopen(url)
             lfmData = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
-            nowPlaying = '%s now playing: ' % u
+            nowPlaying = '%s np: ' % u
             # use try's to bulletproof the code (api does not always return all the information it can)
             try:
                 nowPlaying += lfmData['name']
@@ -60,7 +60,8 @@ def callback(self):
             except:
                 pass
             try:
-                nowPlaying += ' / %s.' % lfmData['album']['#text']
+                if str(lfmData['album']['#text']):
+                    nowPlaying += ' / %s.' % lfmData['album']['#text']
             except:
                 pass
 
