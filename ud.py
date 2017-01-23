@@ -49,9 +49,9 @@ setattr(api, 'command', 'ud')
 setattr(api, 'user', 'joe!username@hostmask')
 setattr(api, 'isop', False)
 while(True):
-	_input = raw_input('Enter message here: ')
-	setattr(api, 'message', _input)
-	print callback(api)
+    _input = raw_input('Enter message here: ')
+    setattr(api, 'message', _input)
+    print callback(api)
 '''
 
 if __name__ == "__main__":
