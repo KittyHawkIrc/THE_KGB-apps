@@ -1,4 +1,9 @@
 import json, urllib2
+try:
+    from unidecode import unidecode
+except:
+    def unidecode(uni):
+        return str(uni)
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -26,7 +31,7 @@ def callback(self):
 
             if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
                 definition = definition[:maxChars-(4 + len(data['list'][0]['permalink']))] + '...'
-            return self.msg(self.channel, str(definition + ' %s' % data['list'][0]['permalink']))
+            return self.msg(self.channel, unidecode(unicode(definition + ' %s' % data['list'][0]['permalink'])))
         except:
             return self.msg(self.channel, 'No definition for %s.' % message)
     return self.msg(self.channel, 'You need to give me something to look for!')
@@ -44,9 +49,9 @@ setattr(api, 'command', 'ud')
 setattr(api, 'user', 'joe!username@hostmask')
 setattr(api, 'isop', False)
 while(True):
-	_input = raw_input('Enter message here: ')
-	setattr(api, 'message', _input)
-	print callback(api)
+    _input = raw_input('Enter message here: ')
+    setattr(api, 'message', _input)
+    print callback(api)
 '''
 
 if __name__ == "__main__":

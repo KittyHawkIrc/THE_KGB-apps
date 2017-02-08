@@ -35,7 +35,15 @@ def callback(self):
         return
 
     if command == 'w':
-        gLocation = getLocation(self)
+        units = 'auto'
+        for i in ['ca', 'uk2', 'us', 'si']:
+            if i in message.split():
+                units = i
+                messageList = message.split()
+                messageList.remove(units)
+                message = ' '.join(messageList)
+
+        gLocation = getLocation(self, user, message)
         if type(gLocation) == str:
             return msg(channel, gLocation)
         else:
@@ -52,9 +60,10 @@ def callback(self):
             lng = gLatLong[2]
 
         try:
-            baseurl = 'https://api.forecast.io/forecast/'
+            baseurl = 'https://api.darksky.net/forecast/'
+
             # remove unnecessary categories
-            options = '?units=auto&exclude=minutely,hourly'
+            options = '?units=%s&exclude=minutely,hourly' % units
             r = urllib2.urlopen(baseurl + fApiKey + '/%s,%s' % (lat, lng) + options)
             wdata = json.loads(r.read())
             r.close()
@@ -86,7 +95,7 @@ def callback(self):
             except:
                 pass
             try:
-                weather += '/ %i%s ' % (round(current['apparentTemperature']), tempUnit)
+                weather += '/ Feels like: %i%s ' % (round(current['apparentTemperature']), tempUnit)
             except:
                 pass
             try:
@@ -132,7 +141,7 @@ def callback(self):
 
     # time shouldn't be here, but because locations are stored in locker, this is the best solution
     if command == 'time':
-        gLocation = getLocation(self)
+        gLocation = getLocation(self, user, message)
         if type(gLocation) == str:
             return msg(channel, gLocation)
         else:
@@ -175,9 +184,7 @@ def callback(self):
         except:
             return
 
-def getLocation(self):
-    user = self.user.split('!')[0]
-    message = self.message.split(self.command, 1)[1].strip()
+def getLocation(self, user, message):
     if message:
         try:
             location = self.locker.location[message.lower()]
