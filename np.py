@@ -60,7 +60,7 @@ def callback(self):
             except:
                 pass
             try:
-        		nowPlaying += ' / %s' % lfmData['album']['#text']
+        		    nowPlaying += ' / %s' % lfmData['album']['#text']
             except:
                 pass
 
