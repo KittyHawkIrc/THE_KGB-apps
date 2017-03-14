@@ -65,7 +65,7 @@ def callback(self):
             except:
                 pass
 
-            nowPlaying = unidecode(unicode(nowPlaying + '/'.join(npList)))
+            nowPlaying = unidecode(unicode(nowPlaying + ' / '.join(npList)))
             return msg(channel, nowPlaying)
         except Exception as e:
             return msg(channel, e)
