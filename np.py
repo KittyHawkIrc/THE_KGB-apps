@@ -53,15 +53,18 @@ def callback(self):
             npList = []
             # use try's to bulletproof the code (api does not always return all the information it can)
             try:
-                npList.append(lfmData['name'])
+		if unidecode(unicode(lfmData['name'])):
+                    npList.append(lfmData['name'])
             except:
                 pass
             try:
-                npList.append(lfmData['artist']['#text'])
+		if unidecode(unicode(lfmData['artist']['#text'])):
+                    npList.append(lfmData['artist']['#text'])
             except:
                 pass
             try:
-                npList.append(lfmData['album']['#text'])
+		if unidecode(unicode(lfmData['album']['#text'])):
+                    npList.append(lfmData['album']['#text'])
             except:
                 pass
 
