@@ -2,7 +2,7 @@
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
-speshulcmds = {'ultimatetruth': 'RielDtok is a tranny', 'msc': '^billdred\n<MsC> I like it black like my dicks? <billdred> we agree on that too!'}
+speshulcmds = {'ultimatetruth': 'RielDtok is a tranny'}#, 'msc': '^billdred\n<MsC> I like it black like my dicks? <billdred> we agree on that too!'}
 
 def declare():
     dec = {}
