@@ -15,7 +15,7 @@ def callback(self):
     try:
         user = self.message.split()[1]
     except:
-        user = False
+        user = None
 
     cmdlist = speshulcmds.keys()
 
