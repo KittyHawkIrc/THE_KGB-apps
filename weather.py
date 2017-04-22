@@ -244,7 +244,6 @@ class api:
 class empty:
 	pass
 
-'''
 # interactive testing:
 def cache_save():
     print 'Cache saved'
@@ -268,7 +267,6 @@ while(True):
         setattr(api, 'command', 'w')
     setattr(api, 'message', _input)
     print callback(api)
-'''
 
 if __name__ == "__main__":
     def cache_save():
