@@ -129,12 +129,6 @@ def callback(self):
             else:
                 weather = '%s %s' % (name, weather)
 
-            # get rid of all degree signs (could be introduced by summary)
-            weather = weather.replace(u'\xb0', '')
-
-            # turn unicode into ASCII
-            weather = unidecode(unicode(' '.join(weather.split())))
-
             return msg(channel, weather)
         except:
             return
