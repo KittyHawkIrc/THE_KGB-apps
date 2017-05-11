@@ -50,21 +50,25 @@ def callback(self):
             lfmData = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
             nowPlaying = '%s np: ' % u
+            npList = []
             # use try's to bulletproof the code (api does not always return all the information it can)
             try:
-                nowPlaying += lfmData['name']
+		if unidecode(unicode(lfmData['name'])):
+                    npList.append(lfmData['name'])
             except:
                 pass
             try:
-                nowPlaying += ' / %s' % lfmData['artist']['#text']
+		if unidecode(unicode(lfmData['artist']['#text'])):
+                    npList.append(lfmData['artist']['#text'])
             except:
                 pass
             try:
-        		nowPlaying += ' / %s' % lfmData['album']['#text']
+		if unidecode(unicode(lfmData['album']['#text'])):
+                    npList.append(lfmData['album']['#text'])
             except:
                 pass
 
-            nowPlaying = unidecode(unicode(' '.join(nowPlaying.split())))
+            nowPlaying = unidecode(unicode(nowPlaying + ' / '.join(npList)))
             return msg(channel, nowPlaying)
         except Exception as e:
             return msg(channel, e)
