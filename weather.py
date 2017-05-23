@@ -69,7 +69,7 @@ def callback(self):
             weather = ''
 
             # specific units not given in api response, so they must be set here
-            degSign = u'\u2103'
+            degSign = u'\xb0'
 	
             tempUnit = degSign + 'C'
             if units == 'us':
@@ -88,11 +88,11 @@ def callback(self):
             except:
                 pass
             try:
-                weather += '/ ' + round(current['temperature']) + tempUnit + ' '
+                weather += '/ %i%s' % (round(current['temperature']), tempUnit)
             except:
                 pass
             try:
-                weather += '/ Feels like: ' + round(current['apparentTemperature']) + tempUnit + ' '
+                weather += '/ Feels like: %i%s' % (round(current['apparentTemperature']), tempUnit)
             except:
                 pass
             try:
