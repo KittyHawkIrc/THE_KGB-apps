@@ -10,7 +10,7 @@ def declare():
   return {"np": "privmsg", "setlastfm": "privmsg"}
 
 def callback(self):
-    lApiKey = self.config_get('apikey')
+    key = self.config_get('apikey')
     channel = self.channel
     command = self.command
     user = self.user.split('!')[0]
@@ -40,7 +40,7 @@ def callback(self):
                 except:
                     url += message.split()[0]
                     u = message.split()[0]
-            url += '&api_key=%s&format=json' % lApiKey
+            url += '&api_key=%s&format=json' % key
             r = urllib2.urlopen(url)
             lfmData = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
