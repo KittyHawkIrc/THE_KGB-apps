@@ -69,9 +69,11 @@ def callback(self):
             weather = ''
 
             # specific units not given in api response, so they must be set here
-            tempUnit = '°C'
+            degSign = u'\u2103'
+	
+            tempUnit = degSign + 'C'
             if units == 'us':
-                tempUnit = '°F'
+                tempUnit = degSign + 'F'
                 windUnit = 'mph'
             elif units == 'si':
                 windUnit = 'm/s'
