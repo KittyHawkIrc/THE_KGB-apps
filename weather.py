@@ -88,11 +88,11 @@ def callback(self):
             except:
                 pass
             try:
-                weather += '/ %i%s' % (round(current['temperature']), tempUnit)
+                weather += '/ %i%s ' % (round(current['temperature']), tempUnit)
             except:
                 pass
             try:
-                weather += '/ Feels like: %i%s' % (round(current['apparentTemperature']), tempUnit)
+                weather += '/ Feels like: %i%s ' % (round(current['apparentTemperature']), tempUnit)
             except:
                 pass
             try:
