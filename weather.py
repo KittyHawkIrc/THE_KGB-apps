@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json, time, urllib2
 
 #Update schema
@@ -165,7 +167,7 @@ def callback(self):
                 timeinfo = '%s / %s / %s / DST: %s' %\
                            (name, timezone, time.strftime("%I:%M %p", currentTime), bool(dst))
 
-            timeinfo = unidecode(unicode(' '.join(timeinfo.split())))
+            timeinfo = ' '.join(timeinfo.split())
 
             return msg(channel, timeinfo)
         except:
