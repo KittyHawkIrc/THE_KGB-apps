@@ -84,6 +84,8 @@ def callback(self):
                 windUnit = 'km/h'
             elif units == 'uk2':
                 windUnit = 'mph'
+		
+	    tempUnit = '°'+tempUnit
 
             # use try's to bulletproof the code (api does not always return all the information it can)
             try:
