@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import json, urllib2
-try:
-    from unidecode import unidecode
-except:
-    def unidecode(uni):
-        return str(uni)
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -53,22 +48,22 @@ def callback(self):
             npList = []
             # use try's to bulletproof the code (api does not always return all the information it can)
             try:
-		if unidecode(unicode(lfmData['name'])):
+		if lfmData['name']:
                     npList.append(lfmData['name'])
             except:
                 pass
             try:
-		if unidecode(unicode(lfmData['artist']['#text'])):
+		if lfmData['artist']['#text']:
                     npList.append(lfmData['artist']['#text'])
             except:
                 pass
             try:
-		if unidecode(unicode(lfmData['album']['#text'])):
+		if lfmData['album']['#text']:
                     npList.append(lfmData['album']['#text'])
             except:
                 pass
 
-            nowPlaying = unidecode(unicode(nowPlaying + ' / '.join(npList)))
+            nowPlaying = nowPlaying + ' / '.join(npList)
             return msg(channel, nowPlaying)
         except Exception as e:
             return msg(channel, e)
