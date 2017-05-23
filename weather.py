@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-16 -*-
 
 import json, time, urllib2
 try:
