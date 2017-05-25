@@ -8,16 +8,16 @@ __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" +
 __version__ = 1.0
 
 def declare():
-    return {"hello": "privmsg"}
+    return {"hello": "privmsg", "henlo": "privmsg"}
 
 def callback(self):
-
     if self.channel.startswith('#'):
         if 'b64' in self.message:
             self.user = encoder.encode('b64:' + self.user)
-
-        return self.msg(self.channel, "And a hello to you too, " + ("operator" if self.isop else "user") + " %s!" % (self.user))
-
+        
+        if self.command.lower() == 'hello':
+            return self.msg(self.channel, "And a hello to you too, " + ("operator" if self.isop else "user") + " %s!" % (self.user))
+        return self.msg(self.channel, "and a henlo 2 u 2, " + ("operator" if self.isop else "user") + " %s!" % (self.user))
 
 class api:
 
