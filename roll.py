@@ -73,22 +73,30 @@ if __name__ == "__main__":
 
     # check normal die roll
     setattr(api, 'message', '^roll 5d20')
-    if int(callback(api)) < 5 or int(callback(api)) > 20:
+    print(callback(api))
+    if int(callback(api)) < 5 or int(callback(api)) > 5*20:
+        print ('5d20 failed')
         exit(1)
 
     # check when num_rolls is 0
     setattr(api, 'message', '^roll 0d20')
+    print(callback(api))
     if int(callback(api)) != 0:
+        print ('0d20 failed')
         exit(2)
 
     # check when num_sides is 0
     setattr(api, 'message', '^roll 5d0')
+    print(callback(api))
     if int(callback(api)) != 0:
+        print ('5d0 failed')
         exit(3)
 
     # check when num_rolls and num_sides are 0
     setattr(api, 'message', '^roll 0d0')
+    print(callback(api))
     if int(callback(api)) != 0:
+        print ('0d0 failed')
         exit(4)
 
     print ('All tests passed!')
