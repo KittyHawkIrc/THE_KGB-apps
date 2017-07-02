@@ -38,7 +38,7 @@ def roll(self, rolls, sides):
 
     # raise error if length of roll_sum is greater than maximum allowed length
     if len(str(roll_sum)) > max_len:
-        raise ValueError('Overflow!')
+        return self.msg(self.channel, "Overflow!")
 
     return roll_sum
 
@@ -87,28 +87,28 @@ if __name__ == "__main__":
     # check when num_rolls is 0
     setattr(api, 'message', '^roll 0d20')
     print(callback(api))
-    if int(callback(api)) != 0:
+    if callback(api) != "0":
         print ('0d20 failed')
         exit(2)
 
     # check when num_sides is 0
     setattr(api, 'message', '^roll 5d0')
     print(callback(api))
-    if int(callback(api)) != 0:
+    if callback(api) != "0":
         print ('5d0 failed')
         exit(3)
 
     # check when num_rolls and num_sides are 0
     setattr(api, 'message', '^roll 0d0')
     print(callback(api))
-    if int(callback(api)) != 0:
+    if callback(api) != "0":
         print ('0d0 failed')
         exit(4)
 
     # check when num_rolls and num_sides are 0
     setattr(api, 'message', '^roll joint')
     print(callback(api))
-    if int(callback(api)) != 420:
+    if callback(api) != "420":
         print ('joint failed')
         exit(5)
 
