@@ -13,6 +13,8 @@ def declare():
 
 # response to trigger
 def callback(self):
+    if "joint" in self.message.lower():
+        return self.msg(self.channel, "420")
     try:
         # find search pattern in self.message
         match = match_roll(self, self.message)
@@ -102,5 +104,12 @@ if __name__ == "__main__":
     if int(callback(api)) != 0:
         print ('0d0 failed')
         exit(4)
+
+    # check when num_rolls and num_sides are 0
+    setattr(api, 'message', '^roll joint')
+    print(callback(api))
+    if int(callback(api)) != 420:
+        print ('joint failed')
+        exit(5)
 
     print ('All tests passed!')
