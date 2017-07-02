@@ -14,7 +14,7 @@ def declare():
 # response to trigger
 def callback(self):
     if "joint" in self.message.lower():
-        return self.msg(self.channel, "420")
+        return self.msg(self.channel, "See ^420")
     try:
         # find search pattern in self.message
         match = match_roll(self, self.message)
@@ -36,7 +36,6 @@ def roll(self, rolls, sides):
     # use randint to simulate die rolls
     else:
         roll_sum = random.randint(rolls, rolls * sides)
-
 
     # raise error if length of roll_sum is greater than maximum allowed length
     if len(str(roll_sum)) > max_len:
@@ -108,7 +107,7 @@ if __name__ == "__main__":
     # check when num_rolls and num_sides are 0
     setattr(api, 'message', '^roll joint')
     print(callback(api))
-    if int(callback(api)) != 420:
+    if 420 not in callback(api):
         print ('joint failed')
         exit(5)
 
