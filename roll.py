@@ -15,9 +15,10 @@ def declare():
 def callback(self):
     try:
         # find search pattern in self.message
-        match = match_roll(self.message)
+        match = match_roll(self, self.message)
         # return roll result
-        return self.msg(self.channel, roll(match[0], match[1]))
+        value = roll(self, match[0], match[1])
+        return self.msg(self.channel, unicode(value))
     except Exception as e:
         # return error
         return self.msg(self.channel, e)
@@ -26,7 +27,7 @@ def callback(self):
 #   from rolls to (rolls * sides), except when result is greater than global var
 #   max_len
 # roll: Int Int => Int
-def roll(rolls, sides):
+def roll(self, rolls, sides):
     # return 0 if either rolls or sides are 0
     if rolls == 0 or sides == 0:
         return 0
@@ -34,9 +35,10 @@ def roll(rolls, sides):
     else:
         roll_sum = random.randint(rolls, rolls * sides)
 
+
     # raise error if length of roll_sum is greater than maximum allowed length
     if len(str(roll_sum)) > max_len:
-        raise ValueError('Overflow!')
+        return self.msg(self.channel, "Overflow!")
 
     return roll_sum
 
@@ -44,7 +46,7 @@ def roll(rolls, sides):
 #   '\d+d\d+' (#d#, where # are digits of len 1 or greater), and returns a tuple
 #   containing the numbers before and after the 'd'.
 # match_roll: Str => (Int, Int)
-def match_roll(input_string):
+def match_roll(self, input_string):
     # compile regex to case insensitively match digits, 'd', and more digits
     input_format = re.compile('\d+d\d+', re.IGNORECASE)
     # match input_string to imput_format
@@ -53,11 +55,11 @@ def match_roll(input_string):
     # make sure match is found
     if match:
         # return result of match
-        roll_input = match.group().split('d')
+        roll_input = re.findall(r'\d+', match.group())
         # return match results as tuple
         return (int(roll_input[0]), int(roll_input[1]))
     else:
-        raise ValueError('No input found!')
+        return self.msg(self.channel, "Invalid input!")
 
 # test class
 class api:
@@ -83,22 +85,29 @@ if __name__ == "__main__":
     # check when num_rolls is 0
     setattr(api, 'message', '^roll 0d20')
     print(callback(api))
-    if int(callback(api)) != 0:
+    if callback(api) != "0":
         print ('0d20 failed')
         exit(2)
 
     # check when num_sides is 0
     setattr(api, 'message', '^roll 5d0')
     print(callback(api))
-    if int(callback(api)) != 0:
+    if callback(api) != "0":
         print ('5d0 failed')
         exit(3)
 
     # check when num_rolls and num_sides are 0
     setattr(api, 'message', '^roll 0d0')
     print(callback(api))
-    if int(callback(api)) != 0:
+    if callback(api) != "0":
         print ('0d0 failed')
         exit(4)
+
+    # check when num_rolls and num_sides are 0
+    setattr(api, 'message', '^roll joint')
+    print(callback(api))
+    if callback(api) != "420":
+        print ('joint failed')
+        exit(5)
 
     print ('All tests passed!')
