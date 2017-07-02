@@ -53,11 +53,9 @@ def match_roll(input_string):
     # make sure match is found
     if match:
         # return result of match
-        roll_input = match.group()
-        # split and return match results
-        num_rolls = int(roll_input.split('d')[0])
-        num_sides = int(roll_input.split('d')[1])
-        return (num_rolls, num_sides)
+        roll_input = match.group().split('d')
+        # return match results as tuple
+        return (int(roll_input[0]), int(roll_input[1]))
     else:
         raise ValueError('No input found!')
 
