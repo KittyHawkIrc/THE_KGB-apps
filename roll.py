@@ -71,16 +71,24 @@ if __name__ == "__main__":
     setattr(api, 'user', 'nick!ident@host')
     setattr(api, 'channel', '#test')
 
+    # check normal die roll
     setattr(api, 'message', '^roll 5d20')
     if int(callback(api)) < 5 or int(callback(api)) > 20:
         exit(1)
 
+    # check when num_rolls is 0
     setattr(api, 'message', '^roll 0d20')
     if int(callback(api)) != 0:
         exit(2)
 
+    # check when num_sides is 0
     setattr(api, 'message', '^roll 5d0')
     if int(callback(api)) != 0:
         exit(3)
+
+    # check when num_rolls and num_sides are 0
+    setattr(api, 'message', '^roll 0d0')
+    if int(callback(api)) != 0:
+        exit(4)
 
     print ('All tests passed!')
