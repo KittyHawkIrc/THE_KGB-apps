@@ -58,8 +58,6 @@ def match_roll(self, input_string):
         roll_input = re.findall(r'\d+', match.group())
         # return match results as tuple
         return (int(roll_input[0]), int(roll_input[1]))
-    elif 'joint' in input_string:
-        return self.msg(self.channel, "420")
     else:
         return self.msg(self.channel, "Invalid input!")
 
