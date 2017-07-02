@@ -51,7 +51,7 @@ def match_roll(input_string):
     match = input_format.search(input_string)
 
     # make sure match is found
-    if match is not None:
+    if match:
         # return result of match
         roll_input = match.group()
         # split and return match results
@@ -61,7 +61,7 @@ def match_roll(input_string):
     else:
         raise ValueError('No input found!')
 
-# test module
+# test class
 class api:
     def msg(self, channel, text):
         return text
