@@ -13,10 +13,13 @@ def declare():
 
 # response to trigger
 def callback(self):
-    match = match_roll(self.message)
     try:
+        # find search pattern in self.message
+        match = match_roll(self.message)
+        # return roll result
         return self.msg(self.channel, roll(match[0], match[1]))
     except Exception as e:
+        # return error
         return self.msg(self.channel, e)
 
 # roll(rolls, sides) takes integers rolls and sides, and returns a random number
@@ -63,6 +66,7 @@ class api:
     def msg(self, channel, text):
         return text
 
+# run tests if main program
 if __name__ == "__main__":
     api = api()
     setattr(api, 'isop', True)
