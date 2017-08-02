@@ -15,7 +15,7 @@ def declare():
 def callback(self):
     channel = self.channel
     command = self.command.lower()
-    user = self.user.split('!')[0].lower()
+    user = self.user.split('!')[0]
     msg = self.msg
     isop = self.isop
     message = self.message.split(command, 1)[1].strip()
@@ -23,9 +23,6 @@ def callback(self):
 
     try:
         mass, height, bmi = parse_input(message)
-        mass_round = format(mass.magnitude, '.2f')
-        height_round = format(height.magnitude, '.2f')
-        bmi_round = format(bmi, '.2f')
         bmi_class = classify_bmi(bmi)
     except AttributeError:
         pass
@@ -41,21 +38,21 @@ def callback(self):
 
         if isop or (bmi < 25 and bmi > 15):
             try:
-                self.locker.bmi[user.lower()] = bmi
+                self.locker.bmi2[user.lower()] = mass, height
             except:
-                self.locker.bmi = {user.lower(): bmi}
+                self.locker.bmi2 = {user.lower(): (mass, height)}
 
             self.cache_save()
 
-            return msg(channel, 'BMI for user [{}] set to {} / {}'.format(user, bmi_round, bmi_class)) 
+            return msg(channel, 'BMI for user [{}] set to {:.2f} bmi / {}'.format(user, bmi, bmi_class))
         else:
             return msg(channel, 'BMI out of range settable by [{}]'.format(user))
 
     else:
         if bmi:
-            mass_string = '{}{:~P}'.format(mass_round, mass.units)
-            height_string = '{}{:~P}'.format(height_round, height.units)
-            bmi_string = '{}bmi'.format(bmi_round)
+            mass_string = '{:.2f~P}'.format(mass)
+            height_string = '{:.2f~P}'.format(height)
+            bmi_string = '{:.2f} bmi'.format(bmi)
 
             output = [mass_string, height_string, bmi_string, bmi_class]
             
@@ -64,12 +61,27 @@ def callback(self):
         if len(message) > 0:
             user = message.split()[0]
         try:
-            bmi = self.locker.bmi[user.lower()]
-            bmi_round = format(bmi, '.2f')
-            bmi_class = classify_bmi(bmi)
-            return msg(channel, '{} / {}bmi / {}'.format(user, bmi_round, bmi_class))
+            (mass, height) = self.locker.bmi2[user.lower()]
+            if command == 'bmi':
+                bmi = (mass / height ** 2).to(ureg.kg / ureg.m ** 2).magnitude
+                bmi_class = classify_bmi(bmi)
+                output_info = '{:.2f} bmi / {}'.format(bmi, bmi_class)
+            elif command == 'height':
+                output_info = format(height, '.2f~P')
+            else:
+                output_info = format(mass, '.2f~P')
+            return msg(channel, '{} / {}'.format(user, output_info))
         except:
-            return msg(channel, 'BMI not found for user [{}]'.format(user))
+            if command == 'bmi':
+                try:
+                    bmi = self.locker.bmi[user.lower()]
+                    bmi_round = format(bmi, '.2f')
+                    bmi_class = classify_bmi(bmi)
+                    return msg(channel, '{} / {}bmi / {}'.format(user, bmi_round, bmi_class))
+                except:
+                    return msg(channel, 'BMI not found for user [{}]'.format(user))
+            else:
+                return msg(channel, 'User [{}] has not updated their info since migration to bmi2, try setting BMI again'.format(user))
         
 # parse_input(message) takes string 'message' and attempts to extract and return
 #   heights, masses, and BMIs from the string.
