@@ -57,7 +57,7 @@ def callback(self):
         if len(message) > 0:
             user = words[0]
         try:
-            (mass, height) = self.locker.bmi2[user.lower()]
+            mass, height = self.locker.bmi2[user.lower()]
             if command == 'bmi':
                 bmi = (mass / height ** 2).to(ureg.bmi)
                 output = '{u} / {b:.4g~P} / {b_c}'
@@ -215,8 +215,6 @@ class empty:
     pass
 
 if __name__ == "__main__":
-    def cache_save():
-        print 'Cache saved'
 
     api = api()
     declares = ['bmi', 'weight', 'mass', 'height', 'setbmi']
@@ -228,6 +226,8 @@ if __name__ == "__main__":
     setattr(api, 'isop', False)
 ########################## START: Interactive Testing ##########################
 '''
+    def cache_save():
+        print 'Cache saved'
     while(True):
         _input = raw_input('Enter message here: ')
         input_split = _input.split()
