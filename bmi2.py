@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ -*- coding: utf-8 -*-
 
 from pint import UnitRegistry
 
@@ -12,7 +12,7 @@ __version__ = 2.0
 # declare() sets the strings that trigger this module.
 # declare: None -> Dict{Str: Str}
 def declare():
-    declares = ['bmi', 'weight', 'mass', 'height', 'setbmi']
+    declares = ['bmi', 'weight', 'mass', 'height', 'setbmi', 'clear']
     return {command: 'privmsg' for command in declares}
 
 def callback(self):
@@ -29,7 +29,10 @@ def callback(self):
     except AttributeError:
         pass
 
-    if mass and height and bmi:
+    if command == 'clear':
+        self.locker.bmi2 = None
+        output = 'All stored values cleared.'
+    elif mass and height and bmi:
         if command == 'setbmi' and len(words) > 0:
             set_other = not message[0].isdigit() and isop
             set_self = bool(message[0].isdigit() and bmi.magnitude < 25)
@@ -224,7 +227,7 @@ if __name__ == "__main__":
     setattr(api, 'user', 'nick!ident@host')
     setattr(api, 'isop', False)
 ########################## START: Interactive Testing ##########################
-'''
+
     while(True):
         _input = raw_input('Enter message here: ')
         input_split = _input.split()
@@ -247,7 +250,7 @@ if __name__ == "__main__":
             setattr(api, 'message', _input)
             print callback(api)
             continue
-'''
+
 ########################### END: Interactive Testing ###########################
 
 ################################# END: Testing #################################
