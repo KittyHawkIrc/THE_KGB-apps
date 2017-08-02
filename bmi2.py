@@ -34,7 +34,7 @@ def callback(self):
     except AttributeError:
         pass
 
-    elif mass and height and bmi:
+    if mass and height and bmi:
         if command == 'setbmi' and len(words) > 0:
             set_other = not message[0].isdigit() and isop
             set_self = bool(message[0].isdigit() and bmi.magnitude < 25)
