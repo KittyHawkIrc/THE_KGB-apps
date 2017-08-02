@@ -227,7 +227,7 @@ if __name__ == "__main__":
     setattr(api, 'user', 'nick!ident@host')
     setattr(api, 'isop', False)
 ########################## START: Interactive Testing ##########################
-
+'''
     while(True):
         _input = raw_input('Enter message here: ')
         input_split = _input.split()
@@ -250,7 +250,7 @@ if __name__ == "__main__":
             setattr(api, 'message', _input)
             print callback(api)
             continue
-
+'''
 ########################### END: Interactive Testing ###########################
 
 ################################# END: Testing #################################
