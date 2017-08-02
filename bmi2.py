@@ -6,6 +6,8 @@ ureg = UnitRegistry()
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 2.0
 
+# declare() sets the strings that trigger this module.
+# declare: None -> Dict{Str: Str}
 def declare():
     declares = ['bmi', 'weight', 'mass', 'height', 'setbmi']
     return {command: 'privmsg' for command in declares}
@@ -69,7 +71,9 @@ def callback(self):
         except:
             return msg(channel, 'BMI not found for user [{}]'.format(user))
         
-
+# parse_input(message) takes string 'message' and attempts to extract and return
+#   heights, masses, and BMIs from the string.
+# parse_input: Str -> Quantity, Quantity, Float
 def parse_input(message):
     words = message.replace('"','inch ').replace("'",'foot ').split()
     
@@ -82,7 +86,7 @@ def parse_input(message):
             continue
         
         if is_float(word) and (i + 1 < len(words) and not is_float(words[i + 1])):
-            word = word + message_split.pop(i+1)
+            word = word + words.pop(i+1)
 
         if len(word) > 3 and is_float(word[:-3]) and word[-3:].lower() == 'bmi':
             bmi = float(word[:-3]) * (ureg.kg / ureg.m ** 2)
@@ -144,7 +148,6 @@ def is_float(object_):
 # is_quantity: Any -> Bool
 def is_quantity(object_):
     return type(object_).__name__ == 'Quantity'
-
 
 ##################################### TEST #####################################
 class api:
