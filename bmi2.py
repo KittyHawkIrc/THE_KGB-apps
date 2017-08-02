@@ -42,7 +42,7 @@ def callback(self):
                 except:
                     self.locker.bmi2 = {user.lower(): (mass, height)}
 
-                self.cache_save()
+                self.cache_save()   #persist cache post-restarts
 
                 output = 'BMI for user [{u}] set to {b:.4g~P} / {b_c}'
             elif set_self:
@@ -57,7 +57,7 @@ def callback(self):
         if len(message) > 0:
             user = words[0]
         try:
-            (mass, height) = self.locker.bmi2[user.lower()]
+            mass, height = self.locker.bmi2[user.lower()]
             if command == 'bmi':
                 bmi = (mass / height ** 2).to(ureg.bmi)
                 output = '{u} / {b:.4g~P} / {b_c}'
@@ -73,7 +73,7 @@ def callback(self):
                 except:
                     output = 'BMI not found for user [{u}]'
             else:
-                output = 'User [{u}] has not updated their info since migration to bmi2, try setting BMI again'
+                output = '{c} for [{u}] has not been updated since bmi2 update.'
 
     if height and height.units == ureg.foot:
         output = output.replace('h:.4g~P', 'i_h')
@@ -217,7 +217,6 @@ class empty:
 if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
-
     api = api()
     declares = ['bmi', 'weight', 'mass', 'height', 'setbmi']
     setattr(api, 'cache_save', cache_save)
