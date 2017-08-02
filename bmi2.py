@@ -43,9 +43,9 @@ def callback(self):
                 if set_other:
                     user = words[0]
                 try:
-                    self.locker.bmi2[user.lower()] = (mass, height)
+                    self.locker.bmi2[user.lower()] = (mass, height, bmi)
                 except:
-                    self.locker.bmi2 = {user.lower(): (mass, height)}
+                    self.locker.bmi2 = {user.lower(): (mass, height, bmi)}
 
                 self.cache_save()   #persist cache post-restarts
 
@@ -62,9 +62,8 @@ def callback(self):
         if len(words) > 0 and not message[0].isdigit():
             user = words[0]
         try:
-            mass, height = self.locker.bmi2[user.lower()]
+            mass, height, bmi = self.locker.bmi2[user.lower()]
             if command == 'bmi':
-                bmi = (mass / height ** 2).to(ureg.bmi)
                 output = '{u} / {b:.4g~P} / {b_c}'
             elif command == 'height':
                 output = '{u} / {h:.4g~P}'
