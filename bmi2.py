@@ -2,8 +2,8 @@
 
 from pint import UnitRegistry
 
-ureg = UnitRegistry()
-ureg.define('bmi = kilogram / meter **2')
+ureg_bmi = UnitRegistry()
+ureg_bmi.define('bmi = kilogram / meter **2')
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -54,12 +54,12 @@ def callback(self):
     elif mass or height or bmi or command == 'setbmi':
         output = 'Insufficient input given for {c}'
     else:
-        if len(message) > 0:
+        if len(words) > 0 and not message[0].isdigit():
             user = words[0]
         try:
             mass, height = self.locker.bmi2[user.lower()]
             if command == 'bmi':
-                bmi = (mass / height ** 2).to(ureg.bmi)
+                bmi = (mass / height ** 2).to(ureg_bmi.bmi)
                 output = '{u} / {b:.4g~P} / {b_c}'
             elif command == 'height':
                 output = '{u} / {h:.4g~P}'
@@ -68,14 +68,14 @@ def callback(self):
         except:
             if command == 'bmi':
                 try:
-                    bmi = self.locker.bmi[user.lower()] * ureg.bmi
+                    bmi = self.locker.bmi[user.lower()] * ureg_bmi.bmi
                     output = '{u} / {b} / {b_c}'
                 except:
                     output = 'BMI not found for user [{u}]'
             else:
                 output = '{c} for [{u}] has not been updated since bmi2 update.'
 
-    if height and height.units == ureg.foot:
+    if height and height.units == ureg_bmi.foot:
         output = output.replace('h:.4g~P', 'i_h')
 
     return msg(channel, output.format(w = words,   b = bmi,
@@ -94,7 +94,7 @@ def parse_input(message):
     # create variables
     heights = []
     masses = []
-    bmi = None
+    bmi = 0
 
     for i, word in enumerate(words):
         # only allow numbers to be processed
@@ -108,30 +108,28 @@ def parse_input(message):
 
         # check for bmi values included
         if len(word) > 3 and is_float(word[:-3]) and word[-3:].lower() == 'bmi':
-            bmi = float(word[:-3]) * (ureg.kg / ureg.m ** 2)
+            bmi = float(word[:-3]) * (ureg_bmi.bmi)
             continue
 
-        # otherwise, check for quantities recognized by ureg
-        quantity = ureg.Quantity(word)
+        # otherwise, check for quantities recognized by ureg_bmi
+        quantity = ureg_bmi.Quantity(word)
         if is_quantity(quantity):
             if str(quantity.dimensionality) == '[length]':
                 heights.append(quantity)
             elif str(quantity.dimensionality) == '[mass]':
                 masses.append(quantity)
 
-    # sum quantities recognized by ureg
+    # sum quantities recognized by ureg_bmi
     height = sum(heights)
     mass = sum(masses)
 
     # fill in missing quantity with maths
     if is_quantity(height) and is_quantity(mass):
-        bmi = (mass / height ** 2).to(ureg.bmi)
+        bmi = (mass / height ** 2).to(ureg_bmi.bmi)
     elif is_quantity(bmi) and is_quantity(height):
         mass = (bmi * height ** 2).to_base_units()
     elif is_quantity(bmi) and is_quantity(mass):
         height = ((mass / bmi) ** 0.5).to_base_units()
-    else:
-        return None, None, None
 
     # return tuple in order of mass, height (as mass/height^2=bmi)
     return mass, height, bmi
@@ -161,8 +159,8 @@ def classify_bmi(bmi):
 def to_feet_inches(quantity):
     try:
         imperial_height_str = '{.magnitude:.0f}\'{.magnitude:.4g}"'
-        feet = int(quantity.to(ureg.foot).magnitude) * ureg.foot
-        inches = (quantity - feet).to(ureg.inch)
+        feet = int(quantity.to(ureg_bmi.foot).magnitude) * ureg_bmi.foot
+        inches = (quantity - feet).to(ureg_bmi.inch)
         return imperial_height_str.format(feet, inches)
     except:
         return None
@@ -185,8 +183,8 @@ def replace_foot_inch_symbol(string):
 # is_imperial(quantity) returns whether 'quantity' is an imperial unit or not.
 # is_imperial: Quantity -> Bool
 def is_imperial(quantity):
-    if (quantity.units in dir(ureg.sys.US) or
-        quantity.units in dir(ureg.sys.imperial)):
+    if (quantity.units in dir(ureg_bmi.sys.US) or
+        quantity.units in dir(ureg_bmi.sys.imperial)):
         return True
     return False
 
