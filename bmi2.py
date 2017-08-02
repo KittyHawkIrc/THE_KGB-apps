@@ -1,6 +1,7 @@
 from pint import UnitRegistry
 
 ureg = UnitRegistry()
+ureg.define('bmi = kilogram / meter **2')
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -23,150 +24,169 @@ def callback(self):
 
     try:
         mass, height, bmi = parse_input(message)
-        bmi_class = classify_bmi(bmi)
     except AttributeError:
         pass
-    except Exception as e:
-        print 'Exception: {}'.format(e)
 
-    if command == 'setbmi':
-        if not message[0].isdigit():
-            if isop:
-                user = message.split()[0]
+    if mass and height and bmi:
+        if command == 'setbmi' and len(words) > 0:
+            set_other = not message[0].isdigit() and isop
+            set_self = bool(message[0].isdigit() and bmi.magnitude < 25)
+
+            if set_other or set_self:
+                if set_other:
+                    user = words[0]
+                try:
+                    self.locker.bmi2[user.lower()] = (mass, height)
+                except:
+                    self.locker.bmi2 = {user.lower(): (mass, height)}
+
+                self.cache_save()
+
+                output = 'BMI for user [{u}] set to {b:.4g~P} / {b_c}'
+            elif set_self:
+                output = 'BMI [{b:.4g~P}] out of range settable by [{u}]'
             else:
-                return msg(channel, 'BMI for user [{}] cannot be set by user [{}]'.format(message.split()[0], user))
-
-        if isop or (bmi < 25 and bmi > 15):
-            try:
-                self.locker.bmi2[user.lower()] = mass, height
-            except:
-                self.locker.bmi2 = {user.lower(): (mass, height)}
-
-            self.cache_save()
-
-            return msg(channel, 'BMI for user [{}] set to {:.4g} bmi / {}'.format(user, bmi, bmi_class))
+                output = 'BMI for user [{w[0]}] cannot be set by user [{u}]'
         else:
-            return msg(channel, 'BMI out of range settable by [{}]'.format(user))
-
+            output = '{m:.4g~P} / {h:.4g~P} / {b:.4g~P} / {b_c}'
+    elif mass or height or bmi or command == 'setbmi':
+        output = 'Insufficient input given for {c}'
     else:
-        if bmi:
-            mass_string = '{:.4g~P}'.format(mass)
-            if is_imperial(height):
-                feet, inches = to_feet_inches(height)
-                height_string = '{.magnitude:.0f}\'{.magnitude:.4g}"'.format(feet, inches)
-            else:
-                height_string = format(height, '.4g~P')
-            bmi_string = '{:.4g} bmi'.format(bmi)
-
-            output = [mass_string, height_string, bmi_string, bmi_class]
-            
-            return msg(channel, ' / '.join(output))
-
         if len(message) > 0:
-            user = message.split()[0]
+            user = words[0]
         try:
             (mass, height) = self.locker.bmi2[user.lower()]
             if command == 'bmi':
-                bmi = (mass / height ** 2).to(ureg.kg / ureg.m ** 2).magnitude
-                bmi_class = classify_bmi(bmi)
-                output_info = '{:.4g} bmi / {}'.format(bmi, bmi_class)
+                bmi = (mass / height ** 2).to(ureg.bmi)
+                output = '{u} / {b:.4g~P} / {b_c}'
             elif command == 'height':
-                if is_imperial(height):
-                    feet, inches = to_feet_inches(height)
-                    output_info = '{.magnitude:.0f}\'{.magnitude:.4g}"'.format(feet, inches)
-                else:
-                    output_info = format(height, '.4g~P')
+                output = '{u} / {h:.4g~P}'
             else:
-                output_info = format(mass, '.4g~P')
-            return msg(channel, '{} / {}'.format(user, output_info))
+                output = '{u} / {m:.4g~P}'
         except:
             if command == 'bmi':
                 try:
-                    bmi = self.locker.bmi[user.lower()]
-                    bmi_round = format(bmi, '.4g')
-                    bmi_class = classify_bmi(bmi)
-                    return msg(channel, '{} / {}bmi / {}'.format(user, bmi_round, bmi_class))
+                    bmi = self.locker.bmi[user.lower()] * ureg.bmi
+                    output = '{u} / {b} / {b_c}'
                 except:
-                    return msg(channel, 'BMI not found for user [{}]'.format(user))
+                    output = 'BMI not found for user [{u}]'
             else:
-                return msg(channel, 'User [{}] has not updated their info since migration to bmi2, try setting BMI again'.format(user))
-        
+                output = 'User [{u}] has not updated their info since migration to bmi2, try setting BMI again'
+
+    if height and height.units == ureg.foot:
+        output = output.replace('h:.4g~P', 'i_h')
+
+    return msg(channel, output.format(w = words,   b = bmi,
+                                      u = user,    m = mass,
+                                      c = command, h = height,
+                                      i_h = to_feet_inches(height),
+                                      b_c = classify_bmi(bmi)))
+
 # parse_input(message) takes string 'message' and attempts to extract and return
 #   heights, masses, and BMIs from the string.
-# parse_input: Str -> Quantity, Quantity, Float
+# parse_input: Str -> (Quantity None), (Quantity None), (Quantity None)
 def parse_input(message):
-    words = message.replace('"','inch ').replace("'",'foot ').split()
-    
+    # replace ' and " with inch and feet before splitting message
+    words = replace_foot_inch_symbol(message).split()
+
+    # create variables
     heights = []
     masses = []
     bmi = None
 
     for i, word in enumerate(words):
+        # only allow numbers to be processed
         if not word[0].isdigit():
             continue
-        
-        if is_float(word) and (i + 1 < len(words) and not is_float(words[i + 1])):
-            word = word + words.pop(i+1)
 
+        # allow for spaces between magnitudes and units by concatenating word
+        #   with following word
+        if is_float(word) and (i+1 < len(words) and not is_float(words[i+1])):
+            word = ' '.join((word, words.pop(i+1)))
+
+        # check for bmi values included
         if len(word) > 3 and is_float(word[:-3]) and word[-3:].lower() == 'bmi':
             bmi = float(word[:-3]) * (ureg.kg / ureg.m ** 2)
             continue
 
-        quantity = ureg(word)
+        # otherwise, check for quantities recognized by ureg
+        quantity = ureg.Quantity(word)
         if is_quantity(quantity):
             if str(quantity.dimensionality) == '[length]':
                 heights.append(quantity)
             elif str(quantity.dimensionality) == '[mass]':
                 masses.append(quantity)
 
+    # sum quantities recognized by ureg
     height = sum(heights)
     mass = sum(masses)
 
-    valid = True
-
+    # fill in missing quantity with maths
     if is_quantity(height) and is_quantity(mass):
-        bmi = (mass / height ** 2).to(ureg.kg / ureg.m ** 2)
+        bmi = (mass / height ** 2).to(ureg.bmi)
     elif is_quantity(bmi) and is_quantity(height):
         mass = (bmi * height ** 2).to_base_units()
     elif is_quantity(bmi) and is_quantity(mass):
         height = ((mass / bmi) ** 0.5).to_base_units()
     else:
-        valid = False
-
-    if valid:
-        return mass, height, bmi.magnitude
-    else:
         return None, None, None
 
-# classify_bmi(bmi) takes number 'bmi' and returns string for whether a bmi of
+    # return tuple in order of mass, height (as mass/height^2=bmi)
+    return mass, height, bmi
+
+# classify_bmi(bmi) takes quantity 'bmi' and returns string for whether a bmi of
 #   'bmi' is one of underweight, normal, obese, or overweight, with IRC control
 #   codes to colour those results.
-# classify_bmi: (Int, Float, Long, Complex) -> Str
-# requires: type(bmi) in [int, float, long, complex]
+# classify_bmi: Quantity -> (Str None)
+# requires: bmi.dimensionality == {'[length]': -2.0, '[mass]': 1.0}
 def classify_bmi(bmi):
-    if bmi < 18.5:
-        return '\002\00308underweight\017'
-    if bmi < 25.0:
-        return '\002\00309normal\017'
-    if bmi < 30.0:
-        return '\002\00307overweight\017'
-    else:
-        return '\002\00304obese\017'
+    try:
+        if bmi.magnitude < 18.5:
+            return '\002\00308underweight\017'
+        if bmi.magnitude < 25.0:
+            return '\002\00309normal\017'
+        if bmi.magnitude < 30.0:
+            return '\002\00307overweight\017'
+        else:
+            return '\002\00304obese\017'
+    except:
+        return None
 
+# to_feet_inches(quantity) takes length 'quantity' and returns a tuple of the
+#   length in feet and inches.
+# to_feet_inches: Quantity -> (Str None)
+# requires: quantity.dimensionality == {'[length]': 1.0}
+def to_feet_inches(quantity):
+    try:
+        imperial_height_str = '{.magnitude:.0f}\'{.magnitude:.4g}"'
+        feet = int(quantity.to(ureg.foot).magnitude) * ureg.foot
+        inches = (quantity - feet).to(ureg.inch)
+        return imperial_height_str.format(feet, inches)
+    except:
+        return None
+
+# replace_foot_inch_symbol(string) takes string and replaces all instances of
+#   quotation marks with their respective unit (foot or inch).
+# replace_foot_inch_symbol: Str -> Str
+def replace_foot_inch_symbol(string):
+    foot_symbols = ["'", "‘", "’"]
+    inch_symbols = ['"', '“', '”']
+
+    for symbol in foot_symbols:
+        string = string.replace(symbol, 'foot ')
+
+    for symbol in inch_symbols:
+        string = string.replace(symbol, 'inch ')
+
+    return string
+
+# is_imperial(quantity) returns whether 'quantity' is an imperial unit or not.
+# is_imperial: Quantity -> Bool
 def is_imperial(quantity):
     if (quantity.units in dir(ureg.sys.US) or
         quantity.units in dir(ureg.sys.imperial)):
         return True
     return False
-
-# to_feet_inches(quantity) takes length 'quantity' and returns a tuple of the
-#   length in feet and inches.
-# to_feet_inches: Quantity -> Quantity, Quantity
-# requires: quantity.dimensionality == '[length]'
-def to_feet_inches(quantity):
-    feet = int(quantity.to(ureg.foot).magnitude) * ureg.foot
-    inches = (quantity - feet).to(ureg.inch)
-    return feet, inches
 
 # is_float(object_) takes any object 'object_' and returns a boolean for
 #   whether it can be converted into a float
@@ -184,7 +204,7 @@ def is_float(object_):
 def is_quantity(object_):
     return type(object_).__name__ == 'Quantity'
 
-##################################### TEST #####################################
+################################ START: Testing ################################
 class api:
     def msg(self, channel, text):
         return "[%s] %s" % (channel, text)
@@ -208,19 +228,27 @@ if __name__ == "__main__":
 '''
     while(True):
         _input = raw_input('Enter message here: ')
-        if _input == 'op':
+        input_split = _input.split()
+        if input_split[0] == 'op':
             setattr(api, 'isop', True)
             print 'User opped'
-        elif _input == 'deop':
+            continue
+        elif input_split[0] == 'deop':
             setattr(api, 'isop', False)
             print 'User deopped'
-        elif _input == 'quit':
-            exit()
-        else:
-            for declare in declares:
-                if declare in _input:
-                    setattr(api, 'command', declare)
+            continue
+        elif input_split[0] == 'user' and len(input_split) > 1:
+            setattr(api, 'user', input_split[1])
+            print 'User changed to {}'.format(input_split[1])
+            continue
+        elif input_split[0] == 'quit':
+            break
+        elif len(_input) > 0 and input_split[0][1:] in declares:
+            setattr(api, 'command', _input.split()[0][1:])
             setattr(api, 'message', _input)
             print callback(api)
+            continue
 '''
 ########################### END: Interactive Testing ###########################
+
+################################# END: Testing #################################
