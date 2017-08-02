@@ -44,15 +44,19 @@ def callback(self):
 
             self.cache_save()
 
-            return msg(channel, 'BMI for user [{}] set to {:.2f} bmi / {}'.format(user, bmi, bmi_class))
+            return msg(channel, 'BMI for user [{}] set to {:.4g} bmi / {}'.format(user, bmi, bmi_class))
         else:
             return msg(channel, 'BMI out of range settable by [{}]'.format(user))
 
     else:
         if bmi:
-            mass_string = '{:.2f~P}'.format(mass)
-            height_string = '{:.2f~P}'.format(height)
-            bmi_string = '{:.2f} bmi'.format(bmi)
+            mass_string = '{:.4g~P}'.format(mass)
+            if is_imperial(height):
+                feet, inches = to_feet_inches(height)
+                height_string = '{.magnitude:.0f}\'{.magnitude:.4g}"'.format(feet, inches)
+            else:
+                height_string = format(height, '.4g~P')
+            bmi_string = '{:.4g} bmi'.format(bmi)
 
             output = [mass_string, height_string, bmi_string, bmi_class]
             
@@ -65,17 +69,21 @@ def callback(self):
             if command == 'bmi':
                 bmi = (mass / height ** 2).to(ureg.kg / ureg.m ** 2).magnitude
                 bmi_class = classify_bmi(bmi)
-                output_info = '{:.2f} bmi / {}'.format(bmi, bmi_class)
+                output_info = '{:.4g} bmi / {}'.format(bmi, bmi_class)
             elif command == 'height':
-                output_info = format(height, '.2f~P')
+                if is_imperial(height):
+                    feet, inches = to_feet_inches(height)
+                    output_info = '{.magnitude:.0f}\'{.magnitude:.4g}"'.format(feet, inches)
+                else:
+                    output_info = format(height, '.4g~P')
             else:
-                output_info = format(mass, '.2f~P')
+                output_info = format(mass, '.4g~P')
             return msg(channel, '{} / {}'.format(user, output_info))
         except:
             if command == 'bmi':
                 try:
                     bmi = self.locker.bmi[user.lower()]
-                    bmi_round = format(bmi, '.2f')
+                    bmi_round = format(bmi, '.4g')
                     bmi_class = classify_bmi(bmi)
                     return msg(channel, '{} / {}bmi / {}'.format(user, bmi_round, bmi_class))
                 except:
@@ -144,6 +152,21 @@ def classify_bmi(bmi):
         return '\002\00307overweight\017'
     else:
         return '\002\00304obese\017'
+
+def is_imperial(quantity):
+    if (quantity.units in dir(ureg.sys.US) or
+        quantity.units in dir(ureg.sys.imperial)):
+        return True
+    return False
+
+# to_feet_inches(quantity) takes length 'quantity' and returns a tuple of the
+#   length in feet and inches.
+# to_feet_inches: Quantity -> Quantity, Quantity
+# requires: quantity.dimensionality == '[length]'
+def to_feet_inches(quantity):
+    feet = int(quantity.to(ureg.foot).magnitude) * ureg.foot
+    inches = (quantity - feet).to(ureg.inch)
+    return feet, inches
 
 # is_float(object_) takes any object 'object_' and returns a boolean for
 #   whether it can be converted into a float
