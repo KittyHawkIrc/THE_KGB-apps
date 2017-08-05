@@ -3,118 +3,119 @@
 import json, urllib2
 
 #Update schema
-__url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
-__version__ = 1.0
+__url__ = 'https://raw.githubusercontent.com/KittyHawkIrc/modules/production/' + __name__ + '.py'
+__version__ = 2.0
 
 def declare():
-  return {"np": "privmsg", "setlastfm": "privmsg"}
+    return {'np': 'privmsg', 'setlastfm': 'privmsg'}
 
 def callback(self):
     key = self.config_get('apikey')
     channel = self.channel
-    command = self.command
+    command = self.command.lower()
     user = self.user.split('!')[0]
-    message = self.message.split(self.command, 1)[1].strip()
     msg = self.msg
+    message = self.message.split(command, 1)[1].strip()
+    words = message.split()
 
     if command == 'setlastfm':
         if len(message) > 0:
             try:
-                self.locker.lastfm[user.lower()] = message.split()[0]
+                self.locker.lastfm[user.lower()] = words[0]
             except:
-                self.locker.lastfm = {user.lower(): message.split()[0]}
+                self.locker.lastfm = {user.lower(): words[0]}
+
             self.cache_save()
-            return msg(channel, 'Last.FM for user %s set to %s' % (self.user.split('!')[0], message))
-        return
+            return msg(channel, 'Last.FM for user [%s] set to %s' % (self.user.split('!')[0], message))
+        return msg(channel, 'Insufficient input given for %s' % command)
+    else:
+        url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={u}&api_key={k}&format=json'
 
-    if command == 'np':
+        if len(words) > 0:
+            user = words[0]
+
         try:
-            url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='
-            if len(message) == 0:
-                url += self.locker.lastfm[user.lower()]
-                u = user
-            else:
-                try:
-                    url += self.locker.lastfm[message.split()[0].lower()]
-                    u = message.split()[0]
-                except:
-                    url += message.split()[0]
-                    u = message.split()[0]
-            url += '&api_key=%s&format=json' % key
-            r = urllib2.urlopen(url)
-            lfmData = json.loads(r.read())['recenttracks']['track'][0]
+            lastfm_user = self.locker.lastfm[user.lower()]
+        except:
+            lastfm_user = user
+
+        try:
+            r = urllib2.urlopen(url.format(u = lastfm_user, k = key))
+            data = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
-            nowPlaying = '%s np: ' % u
-            npList = []
-            # use try's to bulletproof the code (api does not always return all the information it can)
-            try:
-		if lfmData['name']:
-                    npList.append(lfmData['name'])
-            except:
-                pass
-            try:
-		if lfmData['artist']['#text']:
-                    npList.append(lfmData['artist']['#text'])
-            except:
-                pass
-            try:
-		if lfmData['album']['#text']:
-                    npList.append(lfmData['album']['#text'])
-            except:
-                pass
+        except KeyError:
+            return msg(channel, 'Data for user [%s] not found.' % user)
+        except urllib2.URLError:
+            return msg(channel, 'Last.fm unavailable at the moment.')
 
-            nowPlaying = nowPlaying + ' / '.join(npList)
-            return msg(channel, nowPlaying)
-        except Exception as e:
-            return msg(channel, e)
+        np_list = [user]
 
+        if 'name' in data and data['name']:
+            np_list.append('🎵 {}'.format(data['name']))
+
+        if ('artist' in data and '#text' in data['artist'] and
+            data['artist']['#text']):
+            np_list.append('🎤 {}'.format(data['artist']['#text']))
+
+        if ('album' in data and '#text' in data['album'] and
+            data['album']['#text']):
+            np_list.append('💽 {}'.format(data['album']['#text']))
+
+        np = ' / '.join(np_list)
+        return msg(channel, np)
+
+################################ START: Testing ################################
 class api:
-	def msg(self, channel, text):
-		return '[%s] %s' % (channel, text)
+    def msg(self, channel, text):
+        return '[%s] %s' % (channel, text)
+
 class empty:
-	pass
+    pass
 
-'''
-# interactive testing:
-def cache_save():
-    print 'Cache saved'
-def config_get(item):
-    return '48a737c88c910cb86a38dd012fe27745'
-api = api()
-setattr(api, 'cache_save', cache_save)
-setattr(api, 'config_get', config_get)
-setattr(api, 'type', 'privmsg')
-setattr(api, 'channel', "#test")
-setattr(api, 'command', 'np')
-setattr(api, 'locker', empty)
-setattr(api, 'user', 'joe!username@hostmask')
-while(True):
-    _input = raw_input('Enter message here: ')
-    if '^setlastfm' in _input:
-        setattr(api, 'command', 'setlastfm')
-    if '^np' in _input:
-        setattr(api, 'command', 'np')
-    setattr(api, 'message', _input)
-    print callback(api)
-'''
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     def cache_save():
         print 'Cache saved'
     def config_get(item):
         return '48a737c88c910cb86a38dd012fe27745'
     api = api()
+    declares = declare().keys()
     setattr(api, 'cache_save', cache_save)
     setattr(api, 'config_get', config_get)
     setattr(api, 'type', 'privmsg')
-    setattr(api, 'channel', "#test")
+    setattr(api, 'channel', '#channel')
     setattr(api, 'locker', empty)
-    setattr(api, 'user', 'joe!username@hostmask')
-
+    setattr(api, 'user', 'nick!ident@host')
+    setattr(api, 'isop', False)
+########################## START: Interactive Testing ##########################
+    '''
+    while(True):
+        _input = raw_input('Enter message here: ')
+        input_split = _input.split()
+        if input_split[0] == 'op':
+            setattr(api, 'isop', True)
+            print 'User opped'
+            continue
+        elif input_split[0] == 'deop':
+            setattr(api, 'isop', False)
+            print 'User deopped'
+            continue
+        elif input_split[0] == 'user' and len(input_split) > 1:
+            setattr(api, 'user', input_split[1])
+            print 'User changed to {}'.format(input_split[1])
+            continue
+        elif input_split[0] == 'quit':
+            break
+        elif len(_input) > 0 and input_split[0][1:] in declares:
+            setattr(api, 'command', _input.split()[0][1:])
+            setattr(api, 'message', _input)
+            print callback(api)
+            continue
+            '''
+########################### END: Interactive Testing ###########################
     setattr(api, 'command', 'np')
-    setattr(api, 'message', '^np rj')
+    setattr(api, 'message', '^np')
     print callback(api)
-    if 'rj' not in callback(api):
+    if 'nick' not in callback(api):
     	exit(1)
 
     setattr(api, 'command', 'setlastfm')
@@ -126,14 +127,21 @@ if __name__ == "__main__":
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
     print callback(api)
-    if 'joe' not in callback(api):
+    if 'nick' not in callback(api):
     	exit(3)
 
     setattr(api, 'command', 'np')
-    setattr(api, 'user', 'jeb!username@hostmask')
-    setattr(api, 'message', '^np joe')
+    setattr(api, 'user', 'foo!bar@foobar')
+    setattr(api, 'message', '^np nick')
     print callback(api)
-    if 'joe' not in callback(api):
+    if 'nick' not in callback(api):
     	exit(4)
 
+    setattr(api, 'command', 'np')
+    setattr(api, 'message', '^np')
+    print callback(api)
+    if 'foo' not in callback(api):
+    	exit(5)
+
     print 'All tests passed.'
+################################# END: Testing #################################
