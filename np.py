@@ -10,6 +10,8 @@ def declare():
     return {'np': 'privmsg', 'setlastfm': 'privmsg'}
 
 def callback(self):
+    sep = ' / '
+
     key = self.config_get('apikey')
     channel = self.channel
     command = self.command.lower()
@@ -17,6 +19,8 @@ def callback(self):
     msg = self.msg
     message = self.message.split(command, 1)[1].strip()
     words = message.split()
+
+    np = None
 
     if command == 'setlastfm':
         if len(message) > 0:
@@ -26,8 +30,9 @@ def callback(self):
                 self.locker.lastfm = {user.lower(): words[0]}
 
             self.cache_save()
-            return msg(channel, 'Last.FM for user [%s] set to %s' % (self.user.split('!')[0], message))
-        return msg(channel, 'Insufficient input given for %s' % command)
+            output = 'Last.FM for user [{u}] set to {w[0]}'
+        else:
+            output = 'Insufficient input given for {c}'
     else:
         url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={u}&api_key={k}&format=json'
 
@@ -48,21 +53,23 @@ def callback(self):
         except urllib2.URLError:
             return msg(channel, 'Last.fm unavailable at the moment.')
 
-        np_list = [user]
+        np = []
 
         if 'name' in data and data['name']:
-            np_list.append('🎵 {}'.format(data['name']))
+            np.append('🎵 {}'.format(data['name']))
 
         if ('artist' in data and '#text' in data['artist'] and
             data['artist']['#text']):
-            np_list.append('🎤 {}'.format(data['artist']['#text']))
+            np.append('🎤 {}'.format(data['artist']['#text']))
 
         if ('album' in data and '#text' in data['album'] and
             data['album']['#text']):
-            np_list.append('💽 {}'.format(data['album']['#text']))
+            np.append('💽 {}'.format(data['album']['#text']))
 
-        np = ' / '.join(np_list)
-        return msg(channel, np)
+        np = sep.join(np)
+        output = '{u}{s}{np}'
+    return msg(channel, output.format(u = user, s = sep, c = command, w = words,
+                                      np = np))
 
 ################################ START: Testing ################################
 class api:
