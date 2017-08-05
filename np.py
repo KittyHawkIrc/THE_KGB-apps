@@ -42,29 +42,30 @@ def callback(self):
                     u = message.split()[0]
             url += '&api_key=%s&format=json' % key
             r = urllib2.urlopen(url)
-            lfmData = json.loads(r.read())['recenttracks']['track'][0]
+            json_loads = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
-            nowPlaying = '%s np: ' % u
-            npList = []
+            
+            now_playing = '%s np: ' % u
+            now_playing_list = []
             # use try's to bulletproof the code (api does not always return all the information it can)
             try:
-		if lfmData['name']:
-                    npList.append('%s %s' % ('🎵', lfmData['name']))
+                if json_loads['name']:
+                    now_playing_list.append('{} {}' % ('🎵', json_loads['name']))
             except:
                 pass
             try:
-		if lfmData['artist']['#text']:
-                    npList.append('%s %s' % ('🎤', lfmData['artist']['#text']))
+                if json_loads['artist']['#text']:
+                    now_playing_list.append('{} {}' % ('🎤', json_loads['artist']['#text']))
             except:
                 pass
             try:
-		if lfmData['album']['#text']:
-                    npList.append('%s %s' % ('💽', lfmData['album']['#text']))
+                if json_loads['album']['#text']:
+                    now_playing_list.append('{} {}' % ('💽', json_loads['album']['#text']))
             except:
                 pass
 
-            nowPlaying = nowPlaying + ' / '.join(npList)
-            return msg(channel, nowPlaying)
+            now_playing = now_playing + ' / '.join(now_playing_list)
+            return msg(channel, now_playing)
         except Exception as e:
             return msg(channel, e)
 
@@ -87,7 +88,7 @@ setattr(api, 'type', 'privmsg')
 setattr(api, 'channel', "#test")
 setattr(api, 'command', 'np')
 setattr(api, 'locker', empty)
-setattr(api, 'user', 'joe!username@hostmask')
+setattr(api, 'user', 'nick!ident@host')
 while(True):
     _input = raw_input('Enter message here: ')
     if '^setlastfm' in _input:
@@ -109,7 +110,7 @@ if __name__ == "__main__":
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', "#test")
     setattr(api, 'locker', empty)
-    setattr(api, 'user', 'joe!username@hostmask')
+    setattr(api, 'user', 'nick!ident@host')
 
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np rj')
