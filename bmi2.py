@@ -223,6 +223,8 @@ if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
     api = api()
+    declares = declare().keys()
+226
     declares = ['bmi', 'weight', 'mass', 'height', 'setbmi']
     setattr(api, 'cache_save', cache_save)
     setattr(api, 'type', 'privmsg')
