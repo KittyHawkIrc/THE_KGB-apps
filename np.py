@@ -3,19 +3,19 @@
 import json, urllib2
 
 #Update schema
-__url__ = 'https://raw.githubusercontent.com/KittyHawkIrc/modules/production/' + __name__ + ".py"
+__url__ = 'https://raw.githubusercontent.com/KittyHawkIrc/modules/production/' + __name__ + '.py'
 __version__ = 2.0
 
 def declare():
-    return {"np": "privmsg", "setlastfm": "privmsg"}
+    return {'np': 'privmsg', 'setlastfm': 'privmsg'}
 
 def callback(self):
     key = self.config_get('apikey')
-    msg = self.msg
-    user = self.user.split('!')[0]
     channel = self.channel
-    command = self.command
-    message = self.message.split(self.command, 1)[1]
+    command = self.command.lower()
+    user = self.user.split('!')[0]
+    msg = self.msg
+    message = self.message.split(command, 1)[1].strip()
     words = message.split()
 
     if command == 'setlastfm':
@@ -50,13 +50,15 @@ def callback(self):
 
         np_list = [user]
 
-        if 'name' in data:
+        if 'name' in data and data['name']:
             np_list.append('🎵 {}'.format(data['name']))
 
-        if 'artist' in data and '#text' in data['artist']:
+        if ('artist' in data and '#text' in data['artist'] and
+            data['artist']['#text']):
             np_list.append('🎤 {}'.format(data['artist']['#text']))
 
-        if 'album' in data and '#text' in data['album']:
+        if ('album' in data and '#text' in data['album'] and
+            data['album']['#text']):
             np_list.append('💽 {}'.format(data['album']['#text']))
 
         np = ' / '.join(np_list)
@@ -65,12 +67,12 @@ def callback(self):
 ################################ START: Testing ################################
 class api:
     def msg(self, channel, text):
-        return "[%s] %s" % (channel, text)
+        return '[%s] %s' % (channel, text)
 
 class empty:
     pass
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     def cache_save():
         print 'Cache saved'
     def config_get(item):
@@ -80,7 +82,7 @@ if __name__ == "__main__":
     setattr(api, 'cache_save', cache_save)
     setattr(api, 'config_get', config_get)
     setattr(api, 'type', 'privmsg')
-    setattr(api, 'channel', "#channel")
+    setattr(api, 'channel', '#channel')
     setattr(api, 'locker', empty)
     setattr(api, 'user', 'nick!ident@host')
     setattr(api, 'isop', False)
@@ -114,31 +116,32 @@ if __name__ == "__main__":
     setattr(api, 'message', '^np')
     print callback(api)
     if 'nick' not in callback(api):
-        exit(1)
+    	exit(1)
 
     setattr(api, 'command', 'setlastfm')
     setattr(api, 'message', '^setlastfm rj')
     print callback(api)
     if 'Last.FM for' not in callback(api):
-        exit(2)
+    	exit(2)
 
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
     print callback(api)
     if 'nick' not in callback(api):
-        exit(3)
+    	exit(3)
 
     setattr(api, 'command', 'np')
     setattr(api, 'user', 'foo!bar@foobar')
     setattr(api, 'message', '^np nick')
     print callback(api)
     if 'nick' not in callback(api):
-        exit(4)
+    	exit(4)
 
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
     print callback(api)
-    if 'nick' not in callback(api):
-        exit(5)
+    if 'foo' not in callback(api):
+    	exit(5)
 
     print 'All tests passed.'
+################################# END: Testing #################################
