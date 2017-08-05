@@ -49,17 +49,17 @@ def callback(self):
             # use try's to bulletproof the code (api does not always return all the information it can)
             try:
 		if lfmData['name']:
-                    npList.append(lfmData['name'])
+                    npList.append('%s %s' % ('🎵', lfmData['name']))
             except:
                 pass
             try:
 		if lfmData['artist']['#text']:
-                    npList.append(lfmData['artist']['#text'])
+                    npList.append('%s %s' % ('🎤', lfmData['artist']['#text']))
             except:
                 pass
             try:
 		if lfmData['album']['#text']:
-                    npList.append(lfmData['album']['#text'])
+                    npList.append('%s %s' % ('💽', lfmData['album']['#text']))
             except:
                 pass
 
