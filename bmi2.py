@@ -223,7 +223,7 @@ if __name__ == "__main__":
     def cache_save():
         print 'Cache saved'
     api = api()
-    declares = ['bmi', 'weight', 'mass', 'height', 'setbmi']
+    declares = declare().keys()
     setattr(api, 'cache_save', cache_save)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', "#channel")
@@ -256,5 +256,4 @@ if __name__ == "__main__":
             continue
 '''
 ########################### END: Interactive Testing ###########################
-
 ################################# END: Testing #################################
