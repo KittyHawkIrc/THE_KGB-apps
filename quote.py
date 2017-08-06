@@ -54,7 +54,7 @@ def callback(self):
                 if not self.isowner:
                     output = 'Quotes can only be deleted by bot owners.'
                 elif len(words) > 0 and words[0].lower() == 'all':
-                    locker.quote = None
+                    del locker.quote
                     output = 'Removed all quotes.'
                 elif (author and not quote) or (quote and quote == 'all'):
                     locker.quote.pop(author.lower())
