@@ -26,22 +26,22 @@ def callback(self):
 
     if len(words) > 0 and is_nick(words[0]):
         author = words[0]
+        if len(words) > 1:
+            quote = message[len(author):].strip()
 
     if command in ['qa', 'quoteadd']:
-        if len(words) > 1 and is_nick(author):
-            quote = message[len(words[0]):].strip()
-
+        if len(words) > 1 and author:
             if not dict_exists:
                 locker.quote = {}
-            if author not in locker.quote:
-                locker.quote[author] = []
+            if author.lower() not in locker.quote:
+                locker.quote[author.lower()] = []
 
-            quote_list = locker.quote[author]
+            quote_list = locker.quote[author.lower()]
 
-            if quote not in quote_list:
+            if quote not in quote_list and quote:
                 quote_list.append(quote)
                 self.cache_save()   #persist cache post-restarts
-                index = len(locker.quote[author])
+                index = len(locker.quote[author.lower()])
                 output = 'Quote "{q}" added as quote #{i} for user [{a}]'
             else:
                 index = quote_list.index(quote) + 1
@@ -53,35 +53,33 @@ def callback(self):
             if command in ['qd', 'quotedel']:
                 if not self.isowner:
                     output = 'Quotes can only be deleted by bot owners.'
-                elif len(words) > 1 and author:
-                    if words[1].lower() == 'all':
-                        locker.quote[author] = []
-                        output = 'Removed all quotes from user [{a}]'
-                    elif is_float(words[1]):
-                        locker.quote[author].pop(int(words[1]) - 1)
-                        output = 'Removed quote #{i} from user [{a}]'
-                    elif message[len(author):].strip() in\
-                         locker.quote[author]:
-                        quote = message[len(author):].strip()
-                        index = locker.quote[author].index(quote)
-                        locker.quote[author].pop(index)
-                        index += 1
-                        output = 'Removed quote #{i} from user [{a}]'
-                    else:
-                        output = '{c}: <nick> <quote>'
+                elif (author and not quote) or (quote and quote == 'all'):
+                    locker.quote.pop(author.lower())
+                    output = 'Removed all quotes from user [{a}]'
                 elif len(words) > 0 and words[0].lower() == 'all':
-                    locker.quote = {}
+                    locker.quote = None
                     output = 'Removed all quotes.'
+                elif author and words[1].isdigit():
+                    index = int(words[1])
+                    locker.quote[author.lower()].pop(int(words[1]) - 1)
+                    output = 'Removed quote #{i} from user [{a}]'
+                elif author and quote in locker.quote[author.lower()]:
+                    index = locker.quote[author.lower()].index(quote)
+                    locker.quote[author.lower()].pop(index)
+                    index += 1
+                    output = 'Removed quote #{i} from user [{a}]'
+                elif author and quote:
+                    output = 'Quote "{q}" not found for user [{a}]'
                 else:
-                    output = '{c}: <nick> <quote>'
+                    output = '{c}: <nick> (<quote> | <quote number>)'
             elif command in ['q', 'quote']:
                 if not author:
                     author = random.choice(key_equal_weight(locker.quote))
 
-                quote_list = locker.quote[author]
+                quote_list = locker.quote[author.lower()]
                 num_quotes = len(quote_list)
 
-                if len(words) > 1 and is_float(words[1]):
+                if len(words) > 1 and words[1].isdigit():
                     index = int(words[1]) - 1
                 else:
                     index = random.randrange(num_quotes)
@@ -93,7 +91,7 @@ def callback(self):
         except AttributeError:
             output = 'No quotes have been added yet.'
         except IndexError:
-            output = 'Quote #{i} out of range, user [{a}] had {n} quotes.'
+            output = 'Quote #{i} out of range, user [{a}] has {n} quotes.'
         except KeyError:
             output = 'No quotes stored for user [{a}]'
 
@@ -108,16 +106,6 @@ def key_equal_weight(dict_of_list):
     for key, value in dict_of_list.items():
         keys.extend([key] * len(value))
     return keys
-
-# is_float(object_) takes any object 'object_' and returns a boolean for
-#   whether it can be converted into a float
-# is_float: Any -> Bool
-def is_float(object_):
-    try:
-        float(object_)
-        return True
-    except:
-        return False
 
 # is_nick(string) takes 'string' and determines if it is a valid IRC nickname
 # is_nick: Str -> Bool
@@ -166,7 +154,7 @@ if __name__ == '__main__':
             continue
         elif input_split[0] == 'owner':
             setattr(api, 'isowner', True)
-            setattr(api, 'isop', True)87706b9652a1e7bfd6f682d11503c3fcfc7be756
+            setattr(api, 'isop', True)
             print 'User ownered'
             continue
         elif input_split[0] == 'deowner':
