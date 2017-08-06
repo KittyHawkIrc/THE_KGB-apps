@@ -35,7 +35,7 @@ def callback(self):
     elif command == 'np':
         url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={u}&api_key={k}&format=json'
 
-        if len(words) > 0:
+        if len(words) > 0 and is_nick(words[0]):
             user = words[0]
 
         try:
@@ -73,6 +73,18 @@ def callback(self):
     return msg(channel, output.format(u = user, s = sep, c = command, w = words,
                                       np = np))
 
+# is_nick(string) takes 'string' and determines if it is a valid IRC nickname
+# is_nick: Str -> Bool
+# requires: isinstance(string, str)
+def is_nick(string):
+    for i, char in enumerate(string):
+        if ((i > 0 and (char.isdigit() or char == '-')) or
+            char.isalpha() or char in '_-\[]{}^`|'):
+            continue
+        else:
+            return False
+    return True
+
 ################################ START: Testing ################################
 class api:
     def msg(self, channel, text):
@@ -97,7 +109,7 @@ if __name__ == '__main__':
     setattr(api, 'isop', False)
     setattr(api, 'isowner', False)
 ###############nick########### START: Interactive Testing ##########################
-    '''
+'''
     while(True):
         _input = raw_input('Enter message here: ')
         input_split = _input.split()
@@ -129,7 +141,7 @@ if __name__ == '__main__':
             setattr(api, 'message', _input)
             print callback(api)
             continue
-    '''
+'''
 ########################### END: Interactive Testing ###########################
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
