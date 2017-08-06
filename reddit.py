@@ -16,7 +16,7 @@ def callback(self):
     isop = self.isop
 
     if command == 'guess':
-        u = 'SwordOrSheath'
+        u = 'FitOrFat'
     else:
         try:
             u = str(msg.split(' ', 1)[1])
@@ -57,9 +57,9 @@ def callback(self):
 
             try:
                 u = str(msg.split(' ', 1)[1])
-                return self.msg(channel,  u + ": Am I male or female? " + item[1])
+                return self.msg(channel,  u + ": Am I fit or fat? " + item[1])
             except:
-                return self.msg(channel,  "Am I male or female? " + item[1])
+                return self.msg(channel,  "Am I fit or fat? " + item[1])
 
         else:
 
@@ -104,13 +104,13 @@ if __name__ == "__main__":
 
     setattr(api, 'message', '^guess')
     setattr(api, 'command', 'guess')
-    if not callback(api).startswith('[%s] Am I male or female?' % (c)):
+    if not callback(api).startswith('[%s] Am I fit or fat?' % (c)):
         print '[TESTFAIL] guess no user'
         print '[%s] Am I male or female?' % (c)
         exit(1)
 
     n = 'bob'
     setattr(api, 'message', '^guess %s' % (n))
-    if not callback(api).startswith('[%s] %s: Am I male or female?' % (c, n)):
+    if not callback(api).startswith('[%s] %s: Am I fit or fat?' % (c, n)):
         print '[TESTFAIL] guess with user'
         exit(1)
