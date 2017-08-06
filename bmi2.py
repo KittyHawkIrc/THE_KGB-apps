@@ -24,20 +24,22 @@ def callback(self):
     message = self.message.split(command, 1)[1].strip()
     words = message.split()
 
-    if command == 'clear_bmi2':
-        self.locker.bmi2 = None
-        self.cache_save()   #persist cache post-restarts
-        return msg(channel, 'All stored values cleared.')
-
     try:
         mass, height, bmi = parse_input(message)
     except AttributeError:
         pass
 
-    if mass and height and bmi:
-        if command == 'setbmi' and len(words) > 0:
-            set_other = not message[0].isdigit() and isop
-            set_self = bool(message[0].isdigit() and bmi.magnitude < 25)
+    if command == 'clear_bmi2':
+        if self.isowner:
+            self.locker.bmi2 = None
+            self.cache_save()   #persist cache post-restarts
+            return msg(channel, 'All stored values cleared.')
+        else:
+            return msg(channel, 'Operation only permitted by bot owner.')
+    elif command == 'setbmi':
+        if bmi:
+            set_other = is_nick(words[0]) and isop
+            set_self = bool(not is_nick(words[0]) and bmi.magnitude < 25)
 
             if set_other or set_self:
                 if set_other:
@@ -55,32 +57,37 @@ def callback(self):
             else:
                 output = 'BMI for user [{w[0]}] cannot be set by user [{u}]'
         else:
-            output = '{m:.4g~P} / {h:.4g~P} / {b:.4g~P} / {b_c}'
-    elif mass or height or bmi or command == 'setbmi':
-        output = 'Insufficient input given for {c}'
-    else:
-        if len(words) > 0 and not message[0].isdigit():
-            user = words[0]
-        try:
-            mass, height, bmi = self.locker.bmi2[user.lower()]
-            if command == 'bmi':
-                output = '{u} / {b:.4g~P} / {b_c}'
-            elif command == 'height':
-                output = '{u} / {h:.4g~P}'
-            else:
-                output = '{u} / {m:.4g~P}'
-        except:
-            if command == 'bmi':
-                try:
-                    bmi = self.locker.bmi[user.lower()]
-                    if is_quantity(bmi):
-                        bmi = bmi.magnitude
-                    bmi = bmi * ureg.bmi
+            output = '{c}: <magnitude> <unit>...'
+    elif command in ['bmi', 'weight', 'mass', 'height']:
+        if mass and height and bmi:
+            output = '{u} / {m:.4g~P} / {h:.4g~P} / {b:.4g~P} / {b_c}'
+        elif len(words) < 1 or is_nick(words[0]):
+            if len(words) > 0 and is_nick(words[0]):
+                user = words[0]
+            try:
+                mass, height, bmi = self.locker.bmi2[user.lower()]
+                if command == 'bmi':
                     output = '{u} / {b:.4g~P} / {b_c}'
-                except:
-                    output = 'BMI not found for user [{u}]'
-            else:
-                output = '{c} for [{u}] has not been updated since bmi2 update.'
+                elif command == 'height' and height:
+                    output = '{u} / {h:.4g~P}'
+                elif mass:
+                    output = '{u} / {m:.4g~P}'
+                else:
+                    raise
+            except:
+                if command == 'bmi':
+                    try:
+                        bmi = self.locker.bmi[user.lower()]
+                        if is_quantity(bmi):
+                            bmi = bmi.magnitude
+                        bmi = bmi * ureg.bmi
+                        output = '{u} / {b:.4g~P} / {b_c}'
+                    except:
+                        output = 'BMI not found for user [{u}]'
+                else:
+                    output = '{c} for [{u}] has not been updated for bmi2.'
+        else:
+            output = '{c}: <empty> | <nick> | <magnitude> <unit>...'
 
     if height and height.units == ureg.foot:
         output = output.replace('h:.4g~P', 'i_h')
@@ -93,7 +100,7 @@ def callback(self):
 
 # parse_input(message) takes string 'message' and attempts to extract and return
 #   heights, masses, and BMIs from the string.
-# parse_input: Str -> (Quantity None), (Quantity None), (Quantity None)
+# parse_input: Str -> (Quantity None), (Quantity None), (Quantity None)
 def parse_input(message):
     # replace ' and " with inch and feet before splitting message
     words = replace_foot_inch_symbol(message).split()
@@ -195,6 +202,18 @@ def is_imperial(quantity):
         return True
     return False
 
+# is_nick(string) takes 'string' and determines if it is a valid IRC nickname
+# is_nick: Str -> Bool
+# requires: isinstance(string, str)
+def is_nick(string):
+    for i, char in enumerate(string):
+        if ((i > 0 and (char.isdigit() or char == '-')) or
+            char.isalpha() or char in '_-\[]{}^`|'):
+            continue
+        else:
+            return False
+    return True
+
 # is_float(object_) takes any object 'object_' and returns a boolean for
 #   whether it can be converted into a float
 # is_float: Any -> Bool
@@ -230,7 +249,8 @@ if __name__ == "__main__":
     setattr(api, 'locker', empty)
     setattr(api, 'user', 'nick!ident@host')
     setattr(api, 'isop', False)
-########################## START: Interactive Testing ##########################
+    setattr(api, 'isowner', False)
+###############nick########### START: Interactive Testing ##########################
 '''
     while(True):
         _input = raw_input('Enter message here: ')
@@ -242,6 +262,15 @@ if __name__ == "__main__":
         elif input_split[0] == 'deop':
             setattr(api, 'isop', False)
             print 'User deopped'
+            continue
+        elif input_split[0] == 'owner':
+            setattr(api, 'isowner', True)
+            setattr(api, 'isop', True)
+            print 'User ownered'
+            continue
+        elif input_split[0] == 'deowner':
+            setattr(api, 'isowner', False)
+            print 'User deownered'
             continue
         elif input_split[0] == 'user' and len(input_split) > 1:
             setattr(api, 'user', input_split[1])
