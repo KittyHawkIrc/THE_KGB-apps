@@ -19,7 +19,7 @@ def callback(self):
     # find search pattern in self.message
     match = match_roll(self, self.message)
     # return roll result
-    value = roll(self, match[0], match[1])
+    value = roll(match[0], match[1])
     # raise error if length of roll_sum is greater than maximum allowed length
     if len(str(roll_sum)) <= max_len:
         return self.msg(self.channel, unicode(value))
@@ -30,11 +30,11 @@ def callback(self):
 # roll(rolls, sides) takes integers rolls and sides, and returns a random number
 #   from rolls to (rolls * sides)
 # roll: Int Int => Int
-def roll(self, rolls, sides):
+def roll(rolls, sides):
     roll_sum = 0
 
     for roll in rolls:
-        roll_sum += random.randint(sides) + 1
+        roll_sum += random.randint(min(sides, 1), sides)
 
     return roll_sum
 
