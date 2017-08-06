@@ -29,10 +29,10 @@ def callback(self):
                 self.locker.lastfm = {user.lower(): words[0]}
 
             self.cache_save()
-            output = 'Last.FM for user [{u}] set to {w[0]}'
+            output = 'Last.FM for user [{u}] set to "{w[0]}".'
         else:
-            output = 'Insufficient input given for {c}'
-    else:
+            output = '{c} <Last.fm username>'
+    elif command == 'np':
         url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={u}&api_key={k}&format=json'
 
         if len(words) > 0:
@@ -95,8 +95,9 @@ if __name__ == '__main__':
     setattr(api, 'locker', empty)
     setattr(api, 'user', 'nick!ident@host')
     setattr(api, 'isop', False)
-########################## START: Interactive Testing ##########################
-    '''
+    setattr(api, 'isowner', False)
+###############nick########### START: Interactive Testing ##########################
+'''
     while(True):
         _input = raw_input('Enter message here: ')
         input_split = _input.split()
@@ -107,6 +108,15 @@ if __name__ == '__main__':
         elif input_split[0] == 'deop':
             setattr(api, 'isop', False)
             print 'User deopped'
+            continue
+        elif input_split[0] == 'owner':
+            setattr(api, 'isowner', True)
+            setattr(api, 'isop', True)
+            print 'User ownered'
+            continue
+        elif input_split[0] == 'deowner':
+            setattr(api, 'isowner', False)
+            print 'User deownered'
             continue
         elif input_split[0] == 'user' and len(input_split) > 1:
             setattr(api, 'user', input_split[1])
