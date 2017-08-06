@@ -1,4 +1,3 @@
-apt-get install wget
 pip install pint
 
 wget https://raw.githubusercontent.com/KittyHawkIrc/core/master/encoder.py
