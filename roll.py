@@ -30,12 +30,10 @@ def callback(self):
 #   max_len
 # roll: Int Int => Int
 def roll(self, rolls, sides):
-    # return 0 if either rolls or sides are 0
-    if rolls == 0 or sides == 0:
-        return 0
-    # use randint to simulate die rolls
-    else:
-        roll_sum = random.randint(rolls, rolls * sides)
+    roll_sum = 0
+
+    for roll in rolls:
+        roll_sum += random.randint(sides) + 1
 
     # raise error if length of roll_sum is greater than maximum allowed length
     if len(str(roll_sum)) > max_len:
