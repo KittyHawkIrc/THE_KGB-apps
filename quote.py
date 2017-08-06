@@ -166,7 +166,7 @@ if __name__ == '__main__':
             continue
         elif input_split[0] == 'owner':
             setattr(api, 'isowner', True)
-            setattr(api, 'isop', True)
+            setattr(api, 'isop', True)87706b9652a1e7bfd6f682d11503c3fcfc7be756
             print 'User ownered'
             continue
         elif input_split[0] == 'deowner':
