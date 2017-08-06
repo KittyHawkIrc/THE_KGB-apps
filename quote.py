@@ -106,7 +106,7 @@ def callback(self):
 def key_equal_weight(dict_of_list):
     keys = []
     for key, value in dict_of_list.items():
-        keys.extend(key * len(value))
+        keys.extend([key] * len(value))
     return keys
 
 # is_float(object_) takes any object 'object_' and returns a boolean for
