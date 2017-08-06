@@ -7,7 +7,10 @@ __url__ = 'https://raw.githubusercontent.com/KittyHawkIrc/modules/production/' +
 __version__ = 1.0
 
 def declare():
-    declares = ['q', 'quote', 'qa', 'quoteadd', 'qd', 'quotedel']
+    declares = ['q', 'quote',
+                'qs', 'quotesearch',
+                'qa', 'quoteadd',
+                'qd', 'quotedel']
     return {command: 'privmsg' for command in declares}
 
 def callback(self):
@@ -29,6 +32,7 @@ def callback(self):
         if len(words) > 1:
             quote = message[len(author):].strip()
 
+    # Quote add
     if command in ['qa', 'quoteadd']:
         if len(words) > 1 and author:
             if not dict_exists:
@@ -50,6 +54,7 @@ def callback(self):
             output = '{c}: <nick> <quote>'
     else:
         try:
+            # Quote delete
             if command in ['qd', 'quotedel']:
                 if not self.isowner:
                     output = 'Quotes can only be deleted by bot owners.'
@@ -72,6 +77,21 @@ def callback(self):
                     output = 'Quote "{q}" not found for user [{a}]'
                 else:
                     output = '{c}: <nick> (<quote> | <quote number>)'
+            # Quote search
+            elif command in ['qs', 'quotesearch']:
+                if len(words) > 0:
+                    search_quotes = search_dict(message, locker.quote)
+                    if search_quotes:
+                        author = random.choice(key_equal_weight(search_quotes))
+                        quote_list = search_quotes[author.lower()]
+                        index, quote = random.choice(quote_list)
+                        num_quotes = len(locker.quote[author.lower()])
+                        output = '{a}{s}#{i} of {n}{s}"{q}"'
+                    else:
+                        output = 'Search string "{m}" not found.'
+                else:
+                    output = '{c}: <search string>'
+            # Standard quote retrieve
             elif command in ['q', 'quote']:
                 if not author:
                     author = random.choice(key_equal_weight(locker.quote))
@@ -87,7 +107,7 @@ def callback(self):
                 quote = quote_list[index]
 
                 index += 1
-                output  = '{a}{s}#{i} of {n}{s}"{q}"'
+                output = '{a}{s}#{i} of {n}{s}"{q}"'
         except AttributeError:
             output = 'No quotes have been added yet.'
         except IndexError:
@@ -95,8 +115,27 @@ def callback(self):
         except KeyError:
             output = 'No quotes stored for user [{a}]'
 
-    return msg(channel, output.format(u = user, a = author, s = sep, q = quote,
-                                      c = command, i = index, n = num_quotes))
+    return msg(channel, output.format(u = user, c = command, s = sep,
+                                      m = message,
+                                      a = author, q = quote, i = index,
+                                      n = num_quotes))
+
+
+# search_dict(search, dict_of_list) takes dict_of_list and returns dict_of_list
+#   where list only contains items where search in item
+# search_dict: Str Dict(Any: List(Str)) -> Dict(Any: List(Tuple(Int, Str)))
+def search_dict(search, dict_of_list):
+    out_dict = {}
+    for key, value in dict_of_list.items():
+        count = 0
+        for item in value:
+            count += 1
+            if search.upper().lower() in item.upper().lower():
+                try:
+                    out_dict[key].append((count, item))
+                except:
+                    out_dict[key] = [(count, item)]
+    return out_dict
 
 # key_equal_weight(dict_of_list) takes a dict_of_list and returns a list of its
 #   keys such that there a k for every item in dict_of_list[k]

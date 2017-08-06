@@ -15,31 +15,26 @@ def declare():
 def callback(self):
     if "joint" in self.message.lower():
         return self.msg(self.channel, "See ^4/20")
-    try:
-        # find search pattern in self.message
-        match = match_roll(self, self.message)
-        # return roll result
-        value = roll(self, match[0], match[1])
+
+    # find search pattern in self.message
+    match = match_roll(self, self.message)
+    # return roll result
+    value = roll(match[0], match[1])
+    # raise error if length of roll_sum is greater than maximum allowed length
+    if len(str(value)) <= max_len:
         return self.msg(self.channel, unicode(value))
-    except Exception as e:
+    else:
         # return error
-        return self.msg(self.channel, e)
+        return self.msg(self.channel, 'Overflow!')
 
 # roll(rolls, sides) takes integers rolls and sides, and returns a random number
-#   from rolls to (rolls * sides), except when result is greater than global var
-#   max_len
+#   from rolls to (rolls * sides)
 # roll: Int Int => Int
-def roll(self, rolls, sides):
-    # return 0 if either rolls or sides are 0
-    if rolls == 0 or sides == 0:
-        return 0
-    # use randint to simulate die rolls
-    else:
-        roll_sum = random.randint(rolls, rolls * sides)
+def roll(rolls, sides):
+    roll_sum = 0
 
-    # raise error if length of roll_sum is greater than maximum allowed length
-    if len(str(roll_sum)) > max_len:
-        raise ValueError('Overflow!')
+    for roll in range(rolls):
+        roll_sum += random.randint(min(sides, 1), sides)
 
     return roll_sum
 
