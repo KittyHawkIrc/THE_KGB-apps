@@ -33,7 +33,7 @@ def callback(self):
 def roll(rolls, sides):
     roll_sum = 0
 
-    for roll in rolls:
+    for roll in range(rolls):
         roll_sum += random.randint(min(sides, 1), sides)
 
     return roll_sum
