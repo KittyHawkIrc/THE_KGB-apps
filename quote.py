@@ -54,7 +54,7 @@ def callback(self):
                 if not self.isowner:
                     output = 'Quotes can only be deleted by bot owners.'
                 elif len(words) > 0 and words[0].lower() == 'all':
-                    locker.quote = None
+                    del locker.quote
                     output = 'Removed all quotes.'
                 elif (author and not quote) or (quote and quote == 'all'):
                     locker.quote.pop(author.lower())
@@ -140,7 +140,7 @@ if __name__ == '__main__':
     setattr(api, 'isop', False)
     setattr(api, 'isowner', False)
 ###############nick########### START: Interactive Testing ##########################
-'''
+
     while(True):
         _input = raw_input('Enter message here: ')
         input_split = _input.split()
@@ -172,6 +172,6 @@ if __name__ == '__main__':
             setattr(api, 'message', _input)
             print callback(api)
             continue
-'''
+
 ########################### END: Interactive Testing ###########################
 ################################# END: Testing #################################
