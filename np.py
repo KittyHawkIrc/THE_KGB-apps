@@ -129,7 +129,7 @@ if __name__ == '__main__':
             setattr(api, 'message', _input)
             print callback(api)
             continue
-            '''
+        '''
 ########################### END: Interactive Testing ###########################
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
