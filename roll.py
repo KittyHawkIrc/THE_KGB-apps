@@ -21,7 +21,7 @@ def callback(self):
     # return roll result
     value = roll(match[0], match[1])
     # raise error if length of roll_sum is greater than maximum allowed length
-    if len(str(roll_sum)) <= max_len:
+    if len(str(value)) <= max_len:
         return self.msg(self.channel, unicode(value))
     else:
         # return error
