@@ -53,12 +53,12 @@ def callback(self):
             if command in ['qd', 'quotedel']:
                 if not self.isowner:
                     output = 'Quotes can only be deleted by bot owners.'
-                elif (author and not quote) or (quote and quote == 'all'):
-                    locker.quote.pop(author.lower())
-                    output = 'Removed all quotes from user [{a}]'
                 elif len(words) > 0 and words[0].lower() == 'all':
                     locker.quote = None
                     output = 'Removed all quotes.'
+                elif (author and not quote) or (quote and quote == 'all'):
+                    locker.quote.pop(author.lower())
+                    output = 'Removed all quotes from user [{a}]'
                 elif author and words[1].isdigit():
                     index = int(words[1])
                     locker.quote[author.lower()].pop(int(words[1]) - 1)
