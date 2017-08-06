@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import json, time, urllib2
-try:
-    from unidecode import unidecode
-except:
-    def unidecode(uni):
-        return str(uni)
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -74,9 +69,11 @@ def callback(self):
             weather = ''
 
             # specific units not given in api response, so they must be set here
-            tempUnit = 'C'
+            degSign = u'\xb0'
+	
+            tempUnit = degSign + 'C'
             if units == 'us':
-                tempUnit = 'F'
+                tempUnit = degSign + 'F'
                 windUnit = 'mph'
             elif units == 'si':
                 windUnit = 'm/s'
@@ -172,7 +169,7 @@ def callback(self):
                 timeinfo = '%s / %s / %s / DST: %s' %\
                            (name, timezone, time.strftime("%I:%M %p", currentTime), bool(dst))
 
-            timeinfo = unidecode(unicode(' '.join(timeinfo.split())))
+            timeinfo = ' '.join(timeinfo.split())
 
             return msg(channel, timeinfo)
         except:
