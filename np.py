@@ -41,9 +41,9 @@ def callback(self):
                     self.locker.emoji[user.lower()] = False
             except:
                 if words[0].upper().lower() == 'true':
-                    self.locker.emoji = {user.lower() = True}
+                    self.locker.emoji = {user.lower(): True}
                 else:
-                    self.locker.emoji = {user.lower() = False}
+                    self.locker.emoji = {user.lower(): False}
 
             self.cache_save()
             output = 'Emoji output for user [{u}] set to "{w[0]}".'
