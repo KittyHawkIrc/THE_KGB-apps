@@ -79,7 +79,7 @@ def callback(self):
 
             try:
                 if self.locker.emoji[user.lower()] == False:
-                    np_list = [item[1:] for item in  np_list]
+                    np_list = [item[2:] for item in  np_list]
             except Exception as e:
                 print e
 
