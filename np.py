@@ -32,8 +32,8 @@ def callback(self):
             output = 'Last.FM for user [{u}] set to "{w[0]}".'
         else:
             output = '{c} <Last.fm username>'
-    if command == 'npemoji':
-        if len(message) > 0 and words[0].upper().lower() in ['true', 'false']:
+    elif command == 'npemoji':
+        if len(words) > 0 and words[0].upper().lower() in ['true', 'false']:
             try:
                 if words[0].upper().lower() == 'true':
                     self.locker.emoji[user.lower()] = True
