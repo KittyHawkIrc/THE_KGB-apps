@@ -7,7 +7,7 @@ __url__ = 'https://raw.githubusercontent.com/KittyHawkIrc/modules/production/' +
 __version__ = 2.0
 
 def declare():
-    return {'np': 'privmsg', 'setlastfm': 'privmsg'}
+    return {'np': 'privmsg', 'setlastfm': 'privmsg', 'npemoji': 'privmsg'}
 
 def callback(self):
     key = self.config_get('apikey')
