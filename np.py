@@ -65,23 +65,31 @@ def callback(self):
             data = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
             np_list = []
+            
+            try:
+                emoji = self.locker.emoji[user.lower()]
+            except:
+                emoji = True
 
             if 'name' in data and data['name']:
-                np_list.append('🎵 {}'.format(data['name']))
+                if emoji:
+                    np_list.append('🎵 {}'.format(data['name']))
+                else:
+                    np_list.append('track: {}'.format(data['name']))
 
             if ('artist' in data and '#text' in data['artist'] and
                 data['artist']['#text']):
-                np_list.append('🎤 {}'.format(data['artist']['#text']))
+                if emoji:
+                    np_list.append('🎤 {}'.format(data['artist']['#text']))
+                else:
+                    np_list.append('artist: {}'.format(data['artist']['#text']))
 
             if ('album' in data and '#text' in data['album'] and
                 data['album']['#text']):
-                np_list.append('💽 {}'.format(data['album']['#text']))
-
-            try:
-                if self.locker.emoji[user.lower()] == False:
-                    np_list = [item[2:] for item in  np_list]
-            except Exception as e:
-                print e
+                if emoji:
+                    np_list.append('💽 {}'.format(data['album']['#text']))
+                else:
+                    np_list.append('album: {}'.format(data['album']['#text']))
 
             np = sep.join(np_list)
             
