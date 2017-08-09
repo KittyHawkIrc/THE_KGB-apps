@@ -32,6 +32,23 @@ def callback(self):
             output = 'Last.FM for user [{u}] set to "{w[0]}".'
         else:
             output = '{c} <Last.fm username>'
+    if command == 'npemoji':
+        if len(message) > 0 and words[0].upper().lower() in ['true', 'false']:
+            try:
+                if words[0].upper().lower() == 'true':
+                    self.locker.emoji[user.lower()] = True
+                else:
+                    self.locker.emoji[user.lower()] = False
+            except:
+                if words[0].upper().lower() == 'true':
+                    self.locker.emoji = {user.lower(): True}
+                else:
+                    self.locker.emoji = {user.lower(): False}
+
+            self.cache_save()
+            output = 'Emoji output for user [{u}] set to "{w[0]}".'
+        else:
+            output = '{c} <"true" | "false">'
     elif command == 'np':
         url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={u}&api_key={k}&format=json'
 
@@ -48,19 +65,34 @@ def callback(self):
             data = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
             np_list = []
+            
+            try:
+                emoji = self.locker.emoji[user.lower()]
+            except:
+                emoji = True
 
             if 'name' in data and data['name']:
-                np_list.append('🎵 {}'.format(data['name']))
+                if emoji:
+                    np_list.append('🎵 {}'.format(data['name']))
+                else:
+                    np_list.append('track: {}'.format(data['name']))
 
             if ('artist' in data and '#text' in data['artist'] and
                 data['artist']['#text']):
-                np_list.append('🎤 {}'.format(data['artist']['#text']))
+                if emoji:
+                    np_list.append('🎤 {}'.format(data['artist']['#text']))
+                else:
+                    np_list.append('artist: {}'.format(data['artist']['#text']))
 
             if ('album' in data and '#text' in data['album'] and
                 data['album']['#text']):
-                np_list.append('💽 {}'.format(data['album']['#text']))
+                if emoji:
+                    np_list.append('💽 {}'.format(data['album']['#text']))
+                else:
+                    np_list.append('album: {}'.format(data['album']['#text']))
 
             np = sep.join(np_list)
+            
             if not np_list:
                 raise KeyError('No np info found.')
             else:
@@ -173,6 +205,19 @@ if __name__ == '__main__':
     print callback(api)
     if 'foo' not in callback(api):
     	exit(5)
+
+    setattr(api, 'command', 'npemoji')
+    setattr(api, 'user', 'nick!ident@hose')
+    setattr(api, 'message', '^npemoji false')
+    print callback(api)
+    if 'Emoji output' not in callback(api):
+    	exit(6)
+
+    setattr(api, 'command', 'np')
+    setattr(api, 'message', '^np')
+    print callback(api)
+    if '🎵' in callback(api):
+    	exit(7)
 
     print 'All tests passed.'
 ################################# END: Testing #################################
