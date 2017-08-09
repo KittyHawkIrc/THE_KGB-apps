@@ -77,16 +77,17 @@ def callback(self):
                 data['album']['#text']):
                 np_list.append('💽 {}'.format(data['album']['#text']))
 
+            try:
+                if self.locker.emoji[user.lower()] == False:
+                    np = [item[1:] for item in  np]
+            except Exception as e:
+                print e
+
             np = sep.join(np_list)
             
             if not np_list:
                 raise KeyError('No np info found.')
             else:
-                try:
-                    if self.locker.emoji[user.lower()] == False:
-                        np.replace('🎵', 'track').replace('🎤', 'artist:').replace('💽', 'album:')
-                except Exception as e:
-                    print e
                 output = '{u}{s}{np}'
         except KeyError:
             output = 'Scrobble data for user [{u}] not found.'
