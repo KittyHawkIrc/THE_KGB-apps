@@ -32,6 +32,23 @@ def callback(self):
             output = 'Last.FM for user [{u}] set to "{w[0]}".'
         else:
             output = '{c} <Last.fm username>'
+    if command == 'setnpemoji':
+        if len(message) > 0 and words[0].upper().lower() in ['true', 'false']:
+            try:
+                if words[0].upper().lower() == 'true':
+                    self.locker.emoji[user.lower()] = True
+                else:
+                    self.locker.emoji[user.lower()] = False
+            except:
+                if words[0].upper().lower() == 'true':
+                    self.locker.emoji = {user.lower(): True}
+                else:
+                    self.locker.emoji = {user.lower(): False}
+
+            self.cache_save()
+            output = 'Emoji output for user [{u}] set to "{w[0]}".'
+        else:
+            output = '{c} <"true" | "false">'
     elif command == 'np':
         url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={u}&api_key={k}&format=json'
 
@@ -61,6 +78,13 @@ def callback(self):
                 np_list.append('💽 {}'.format(data['album']['#text']))
 
             np = sep.join(np_list)
+            
+            try:
+                if not self.locker.emoji[user.lower()]:
+                    np.replace('🎵', 'track').replace('🎤', 'artist:').replace('💽', 'album:')
+            except:
+                pass
+            
             if not np_list:
                 raise KeyError('No np info found.')
             else:
