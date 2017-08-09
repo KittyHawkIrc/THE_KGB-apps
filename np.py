@@ -19,7 +19,7 @@ def callback(self):
     words = message.split()
 
     sep = ' / '
-    np = None
+    np = ''
 
     if command == 'setlastfm':
         if len(message) > 0:
