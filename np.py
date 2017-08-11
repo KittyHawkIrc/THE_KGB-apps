@@ -73,37 +73,36 @@ def callback(self):
 
             if 'name' in data and data['name']:
                 if emoji:
-                    np_list.append('🎵 {}'.format(data['name']))
+                    np_list.append(u'🎵 {}'.format(data['name']))
                 else:
-                    np_list.append('track: {}'.format(data['name']))
+                    np_list.append(u'track: {}'.format(data['name']))
 
             if ('artist' in data and '#text' in data['artist'] and
                 data['artist']['#text']):
                 if emoji:
-                    np_list.append('🎤 {}'.format(data['artist']['#text']))
+                    np_list.append(u'🎤 {}'.format(data['artist']['#text']))
                 else:
-                    np_list.append('artist: {}'.format(data['artist']['#text']))
+                    np_list.append(u'artist: {}'.format(data['artist']['#text']))
 
             if ('album' in data and '#text' in data['album'] and
                 data['album']['#text']):
                 if emoji:
-                    np_list.append('💽 {}'.format(data['album']['#text']))
+                    np_list.append(u'💽 {}'.format(data['album']['#text']))
                 else:
-                    np_list.append('album: {}'.format(data['album']['#text']))
+                    np_list.append(u'album: {}'.format(data['album']['#text']))
 
             np = sep.join(np_list)
             
             if not np_list:
                 raise KeyError('No np info found.')
             else:
-                output = '{u}{s}{np}'
+                output = u'{u}{s}{np}'
         except KeyError:
             output = 'Scrobble data for user [{u}] not found.'
         except urllib2.URLError:
             output = 'Last.fm unavailable at the moment.'
 
-    return msg(channel, output.format(u = user, s = sep, c = command, w = words,
-                                      np = np))
+    return msg(channel, output.format(u = user, s = sep, c = command, w = words, np = np))
 
 # is_nick(string) takes 'string' and determines if it is a valid IRC nickname
 # is_nick: Str -> Bool
@@ -216,7 +215,7 @@ if __name__ == '__main__':
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
     print callback(api)
-    if '🎵' in callback(api):
+    if u'🎵' in callback(api):
     	exit(7)
 
     print 'All tests passed.'
