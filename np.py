@@ -32,8 +32,8 @@ def callback(self):
             output = 'Last.FM for user [{u}] set to "{w[0]}".'
         else:
             output = '{c} <Last.fm username>'
-    elif command == 'npemoji':
-        if len(words) > 0 and words[0].upper().lower() in ['true', 'false']:
+    if command == 'npemoji':
+        if len(message) > 0 and words[0].upper().lower() in ['true', 'false']:
             try:
                 if words[0].upper().lower() == 'true':
                     self.locker.emoji[user.lower()] = True
@@ -73,23 +73,23 @@ def callback(self):
 
             if 'name' in data and data['name']:
                 if emoji:
-                    np_list.append(u'🎵 %s' % data['name'])
+                    np_list.append(u'🎵 {}'.format(data['name']))
                 else:
-                    np_list.append(u'track: %s' % data['name'])
+                    np_list.append(u'track: {}'.format(data['name']))
 
             if ('artist' in data and '#text' in data['artist'] and
                 data['artist']['#text']):
                 if emoji:
-                    np_list.append(u'🎤 %s' % data['artist']['#text'])
+                    np_list.append(u'🎤 {}'.format(data['artist']['#text']))
                 else:
-                    np_list.append(u'artist: %s' % data['artist']['#text'])
+                    np_list.append(u'artist: {}'.format(data['artist']['#text']))
 
             if ('album' in data and '#text' in data['album'] and
                 data['album']['#text']):
                 if emoji:
-                    np_list.append(u'💽 %s' % data['album']['#text'])
+                    np_list.append(u'💽 {}'.format(data['album']['#text']))
                 else:
-                    np_list.append(u'album: %s' % data['album']['#text'])
+                    np_list.append(u'album: {}'.format(data['album']['#text']))
 
             np = sep.join(np_list)
             
