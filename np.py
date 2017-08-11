@@ -215,7 +215,7 @@ if __name__ == '__main__':
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
     print callback(api)
-    if '🎵' in callback(api):
+    if u'🎵' in callback(api):
     	exit(7)
 
     print 'All tests passed.'
