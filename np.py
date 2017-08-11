@@ -96,14 +96,13 @@ def callback(self):
             if not np_list:
                 raise KeyError('No np info found.')
             else:
-                output = '{u}{s}{np}'
+                output = u'{u}{s}{np}'
         except KeyError:
             output = 'Scrobble data for user [{u}] not found.'
         except urllib2.URLError:
             output = 'Last.fm unavailable at the moment.'
 
-    return msg(channel, output.format(u = user, s = sep, c = command, w = words,
-                                      np = np))
+    return msg(channel, output.format(u = user, s = sep, c = command, w = words, np = np))
 
 # is_nick(string) takes 'string' and determines if it is a valid IRC nickname
 # is_nick: Str -> Bool
