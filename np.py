@@ -19,7 +19,7 @@ def callback(self):
     words = message.split()
 
     sep = ' / '
-    np = ''
+    np = None
 
     if command == 'setlastfm':
         if len(message) > 0:
@@ -73,23 +73,23 @@ def callback(self):
 
             if 'name' in data and data['name']:
                 if emoji:
-                    np_list.append('🎵 %s' % data['name'])
+                    np_list.append(u'🎵 %s' % data['name'])
                 else:
-                    np_list.append('track: %s' % data['name'])
+                    np_list.append(u'track: %s' % data['name'])
 
             if ('artist' in data and '#text' in data['artist'] and
                 data['artist']['#text']):
                 if emoji:
-                    np_list.append('🎤 %s' % data['artist']['#text'])
+                    np_list.append(u'🎤 %s' % data['artist']['#text'])
                 else:
-                    np_list.append('artist: %s' % data['artist']['#text'])
+                    np_list.append(u'artist: %s' % data['artist']['#text'])
 
             if ('album' in data and '#text' in data['album'] and
                 data['album']['#text']):
                 if emoji:
-                    np_list.append('💽 %s' % data['album']['#text'])
+                    np_list.append(u'💽 %s' % data['album']['#text'])
                 else:
-                    np_list.append('album: %s' % data['album']['#text'])
+                    np_list.append(u'album: %s' % data['album']['#text'])
 
             np = sep.join(np_list)
             
