@@ -73,23 +73,23 @@ def callback(self):
 
             if 'name' in data and data['name']:
                 if emoji:
-                    np_list.append('🎵 {}'.format(data['name']))
+                    np_list.append('🎵 ' + data['name'])
                 else:
-                    np_list.append('track: {}'.format(data['name']))
+                    np_list.append('track: ' + data['name'])
 
             if ('artist' in data and '#text' in data['artist'] and
                 data['artist']['#text']):
                 if emoji:
-                    np_list.append('🎤 {}'.format(data['artist']['#text']))
+                    np_list.append('🎤 ' + data['artist']['#text'])
                 else:
-                    np_list.append('artist: {}'.format(data['artist']['#text']))
+                    np_list.append('artist: ' + data['artist']['#text'])
 
             if ('album' in data and '#text' in data['album'] and
                 data['album']['#text']):
                 if emoji:
-                    np_list.append('💽 {}'.format(data['album']['#text']))
+                    np_list.append('💽 ' + data['album']['#text'])
                 else:
-                    np_list.append('album: {}'.format(data['album']['#text']))
+                    np_list.append('album: ' + data['album']['#text'])
 
             np = sep.join(np_list)
             
