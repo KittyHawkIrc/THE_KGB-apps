@@ -42,16 +42,16 @@ def callback(self):
             set_self = bool(not is_nick(words[0]) and bmi.magnitude < 25)
 
             if set_other or set_self:
-                mass = mass.magnitude
-                height = height.magnitude
-                bmi = bmi.magnitude
-                
                 if set_other:
                     user = words[0]
                 try:
-                    self.locker.bmi2[user.lower()] = (mass, height, bmi)
+                    self.locker.bmi2[user.lower()] = (mass.magnitude,
+                                                      height.magnitude,
+                                                      bmi.magnitude)
                 except:
-                    self.locker.bmi2 = {user.lower(): (mass, height, bmi)}
+                    self.locker.bmi2 = {user.lower(): (mass.magnitude,
+                                                       height.magnitude,
+                                                       bmi.magnitude)}
 
                 self.cache_save()   #persist cache post-restarts
 
@@ -70,11 +70,11 @@ def callback(self):
                 user = words[0]
             try:
                 mass, height, bmi = self.locker.bmi2[user.lower()]
-                
+
                 mass = mass * ureg.kg
                 height = mass * ureg.cm
                 bmi = bmi * ureg.bmi
-                
+
                 if command == 'bmi':
                     output = '{u} / {b:.4g~P} / {b_c}'
                 elif command == 'height' and height:
