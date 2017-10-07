@@ -98,7 +98,7 @@ def callback(self):
         else:
             output = '{c}: <empty> | <nick> | <magnitude> <unit>...'
 
-    if height and height.units == ureg.foot:
+    if height and is_quantity(height) and height.units == ureg.foot:
         output = output.replace('h:.4g~P', 'i_h')
 
     return msg(channel, output.format(w = words,   b = bmi,
