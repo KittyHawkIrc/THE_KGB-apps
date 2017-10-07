@@ -2,6 +2,9 @@
 
 from pint import UnitRegistry
 
+ureg = UnitRegistry()
+ureg.define('bmi = kilogram / meter **2')
+
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 2.0
@@ -20,9 +23,6 @@ def callback(self):
     isop = self.isop
     message = self.message.split(command, 1)[1].strip()
     words = message.split()
-
-    ureg = UnitRegistry()
-    ureg.define('bmi = kilogram / meter **2')
 
     try:
         mass, height, bmi = parse_input(message)
