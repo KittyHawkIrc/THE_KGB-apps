@@ -17,7 +17,7 @@ def callback(self):
 
         if self.command.lower() == 'hello':
             return self.msg(self.channel, "And a hello to you too, " + ("operator" if self.isop else "user") + " %s (%s)!" % (self.profile.username, self.profile.userhost))
-        return self.msg(self.channel, "and a henlo 2 u 2, " + ("operator" if self.isop else "user") + " %s (%s)!" % (self.profile.username, self.profile.userhost))
+        return self.msg(self.channel, "and a henlo 2 u STINKY, " + ("operator" if self.isop else "user") + " %s (%s), go post a shit ugly" % (self.profile.username, self.profile.userhost))
 
 class api:
 
