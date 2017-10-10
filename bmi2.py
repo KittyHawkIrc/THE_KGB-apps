@@ -45,9 +45,13 @@ def callback(self):
                 if set_other:
                     user = words[0]
                 try:
-                    self.locker.bmi2[user.lower()] = (mass, height, bmi)
+                    self.locker.bmi2[user.lower()] = (mass.magnitude,
+                                                      height.magnitude,
+                                                      bmi.magnitude)
                 except:
-                    self.locker.bmi2 = {user.lower(): (mass, height, bmi)}
+                    self.locker.bmi2 = {user.lower(): (mass.magnitude,
+                                                       height.magnitude,
+                                                       bmi.magnitude)}
 
                 self.cache_save()   #persist cache post-restarts
 
@@ -64,32 +68,24 @@ def callback(self):
         elif len(words) < 1 or is_nick(words[0]):
             if len(words) > 0 and is_nick(words[0]):
                 user = words[0]
-            try:
-                mass, height, bmi = self.locker.bmi2[user.lower()]
-                if command == 'bmi':
-                    output = '{u} / {b:.4g~P} / {b_c}'
-                elif command == 'height' and height:
-                    output = '{u} / {h:.4g~P}'
-                elif mass:
-                    output = '{u} / {m:.4g~P}'
-                else:
-                    raise
-            except:
-                if command == 'bmi':
-                    try:
-                        bmi = self.locker.bmi[user.lower()]
-                        if is_quantity(bmi):
-                            bmi = bmi.magnitude
-                        bmi = bmi * ureg.bmi
-                        output = '{u} / {b:.4g~P} / {b_c}'
-                    except:
-                        output = 'BMI not found for user [{u}]'
-                else:
-                    output = '{c} for [{u}] has not been updated for bmi2.'
+            mass, height, bmi = self.locker.bmi2[user.lower()]
+
+            mass *= ureg.kg
+            height *= ureg.cm
+            bmi *= ureg.bmi
+
+            if command == 'bmi':
+                output = '{u} / {b:.4g~P} / {b_c}'
+            elif command == 'height' and height:
+                output = '{u} / {h:.4g~P}'
+            elif mass:
+                output = '{u} / {m:.4g~P}'
+            else:
+                output = 'BMI not found for user [{u}]'
         else:
             output = '{c}: <empty> | <nick> | <magnitude> <unit>...'
 
-    if height and height.units == ureg.foot:
+    if height and is_quantity(height) and height.units == ureg.foot:
         output = output.replace('h:.4g~P', 'i_h')
 
     return msg(channel, output.format(w = words,   b = bmi,
