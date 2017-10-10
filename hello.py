@@ -5,7 +5,7 @@ except:
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
-__version__ = 1.1
+__version__ = 1.0
 
 def declare():
     return {"hello": "privmsg", "henlo": "privmsg"}
@@ -16,8 +16,8 @@ def callback(self):
             self.user = encoder.encode('b64:' + self.user)
 
         if self.command.lower() == 'hello':
-            return self.msg(self.channel, "And a hello to you too, " + ("operator" if self.isop else "user") + "  %s (%s)!" % (self.profile.username, self.profile.userhost))
-        return self.msg(self.channel, "and a henlo 2 u 2, " + ("operator" if self.isop else "user") + "  %s (%s)!" % (self.profile.username, self.profile.userhost))
+            return self.msg(self.channel, "And a hello to you too, " + ("operator" if self.isop else "user") + " %s (%s)!" % (self.profile.username, self.profile.userhost))
+        return self.msg(self.channel, "and a henlo 2 u 2, " + ("operator" if self.isop else "user") + " %s (%s)!" % (self.profile.username, self.profile.userhost))
 
 class api:
 
@@ -45,5 +45,5 @@ if __name__ == "__main__":
     setattr(api, 'profile', profile)
 
 
-    if callback(api) != '[%s] And a hello to you too, operator %s (%s)!' % (api.channel, api.profile.userhost, api.profile.username):
+    if callback(api) != "[#test] And a hello to you too, operator joe (joe!username@hostmask)!":
         exit(1)
