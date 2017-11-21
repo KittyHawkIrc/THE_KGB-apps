@@ -7,19 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  
-  <title>API reference - KittyHawk Documentation</title>
-  
-
   <link rel="shortcut icon" href="../img/favicon.ico">
-
-  
+  <title>API reference - KittyHawk Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../css/highlight.css">
-
   
   <script>
     // Current page data
@@ -30,9 +24,7 @@
   
   <script src="../js/jquery-2.1.1.min.js"></script>
   <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script>
-  <script src="../js/theme.js"></script> 
-
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
   
 </head>
 
@@ -52,43 +44,43 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        <ul class="current">
+	<ul class="current">
+	  
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="..">Intro</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Intro</a>
+	    </li>
           
-            <li>
-    <li class="toctree-l1 current">
-        <a class="current" href="./">API reference</a>
-        
-            <ul>
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">API reference</a>
+    <ul class="subnav">
             
-                <li class="toctree-l3"><a href="#api-reference">API Reference</a></li>
-                
-                    <li><a class="toctree-l4" href="#variables">Variables</a></li>
-                
-                    <li><a class="toctree-l4" href="#functions">Functions</a></li>
-                
-                    <li><a class="toctree-l4" href="#persistent-storage">persistent storage</a></li>
-                
-                    <li><a class="toctree-l4" href="#configuration-settings">Configuration settings</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l2"><a href="#api-reference">API Reference</a></li>
+    
+        <ul>
         
-    </li>
-<li>
+            <li><a class="toctree-l3" href="#variables">Variables</a></li>
+        
+            <li><a class="toctree-l3" href="#functions">Functions</a></li>
+        
+            <li><a class="toctree-l3" href="#persistent-storage">persistent storage</a></li>
+        
+            <li><a class="toctree-l3" href="#configuration-settings">Configuration settings</a></li>
+        
+            <li><a class="toctree-l3" href="#profilemanager">profileManager</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../tutorial/">Tutorial</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="../tutorial/">Tutorial</a>
+	    </li>
           
         </ul>
       </div>
@@ -350,6 +342,201 @@ print self.locker.value
 self.config_remove('fake_item')
 &gt;&gt;&gt; False
 </code></pre>
+
+<h2 id="profilemanager">profileManager</h2>
+<h3 id="profile">Profile</h3>
+<p>A standard profile object, items stored:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>description</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>username</td>
+<td>A users internal username.</td>
+<td><code>steve</code></td>
+</tr>
+<tr>
+<td>nickname</td>
+<td>A users nickname.</td>
+<td><code>this!something@something</code></td>
+</tr>
+<tr>
+<td>ident</td>
+<td>A users ident.</td>
+<td><code>something!this@something</code></td>
+</tr>
+<tr>
+<td>hostname</td>
+<td>A users hostname.</td>
+<td><code>something!something@this</code></td>
+</tr>
+<tr>
+<td>userhost</td>
+<td>A users complete hostmask.</td>
+<td><code>all!of@this</code></td>
+</tr>
+<tr>
+<td>lat</td>
+<td>A users latitude.</td>
+<td><code>-6.34406322</code></td>
+</tr>
+<tr>
+<td>lon</td>
+<td>A users longitude.</td>
+<td><code>-145.0785707</code></td>
+</tr>
+<tr>
+<td>unit</td>
+<td>A users unit, defaults to <code>us</code>.</td>
+<td><code>us, si, ca, uk2</code></td>
+</tr>
+<tr>
+<td>gender</td>
+<td>A users gender, <code>True</code> for male and <code>False</code> for female.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>height</td>
+<td>A users height in <code>cm</code></td>
+<td><code>163</code></td>
+</tr>
+<tr>
+<td>weight</td>
+<td>A users weight in <code>kg</code></td>
+<td><code>58</code></td>
+</tr>
+<tr>
+<td>privacy</td>
+<td>Reports if a user has privacy enabled, returns a <code>bool</code>.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>isverfied</td>
+<td>Reports if a user is verified, returns a <code>bool</code>.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>isop</td>
+<td>Reports if a user is an op, reports a <code>bool</code>.</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td>trusted</td>
+<td>Reports if a user is trusted, reports a <code>bool</code>.</td>
+<td><code>True</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="registerusermask">register(usermask)</h3>
+<p>Registers a user, typically called automatically</p>
+<p>The usermask is returned upon success, <code>False</code> otherwise.</p>
+<pre><code>self.profileManager.register('nickname!ident@hostmask')
+</code></pre>
+
+<h3 id="getuserusermask">getuser(usermask)</h3>
+<p>Returns a Profile object from a usermask, registers a user if none exists.</p>
+<pre><code>self.profileManager.getuser('nickname!ident@hostmask')
+
+</code></pre>
+
+<h3 id="getuser_bynameusername">getuser_byname(username)</h3>
+<p>Returns a profile object by username alone, user is marked <strong>not</strong> trusted!</p>
+<p>False is returned if no user exists.</p>
+<pre><code>self.profileManager.getuser_byname(username)
+</code></pre>
+
+<h3 id="getuser_bynickusername">getuser_bynick(username)</h3>
+<p>Returns a profile object by nickname alone, user is marked <strong>not</strong> trusted!</p>
+<p>False is returned if no user exists.</p>
+<pre><code>self.profileManager.getuser_byname(username)
+</code></pre>
+
+<h3 id="updateusername-etc-see-below">update(username, etc (see below))</h3>
+<table>
+<thead>
+<tr>
+<th>argument</th>
+<th>type</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>username</td>
+<td>required</td>
+<td><code>joe</code></td>
+</tr>
+<tr>
+<td>nickname</td>
+<td>optional</td>
+<td><code>joe123</code></td>
+</tr>
+<tr>
+<td>ident</td>
+<td>optional</td>
+<td><code>~jman</code></td>
+</tr>
+<tr>
+<td>hostname</td>
+<td>optional</td>
+<td><code>123.ca.us.isp.com</code> or <code>a.cool.guy</code></td>
+</tr>
+<tr>
+<td>lat</td>
+<td>optional</td>
+<td><code>-6.34406322</code></td>
+</tr>
+<tr>
+<td>lon</td>
+<td>optional</td>
+<td><code>-145.0785707</code></td>
+</tr>
+<tr>
+<td>unit</td>
+<td>optional</td>
+<td><code>ca</code></td>
+</tr>
+<tr>
+<td>gender</td>
+<td>optional</td>
+<td><code>True</code> for male</td>
+</tr>
+<tr>
+<td>height</td>
+<td>optional</td>
+<td><code>163</code> in cm</td>
+</tr>
+<tr>
+<td>weight</td>
+<td>optional</td>
+<td><code>58</code> in kg</td>
+</tr>
+<tr>
+<td>privacy</td>
+<td>optional</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>isverfied</td>
+<td>optional</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td>isop</td>
+<td>optional</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<p>Updates a users profile data. Only username is required, returns <code>False</code> if a user doesn't exist.</p>
+<p>Please pass the same format of data returned by the Profiles objects as documented above.</p>
+<pre><code>self.profileManager.update('username', privacy=True, unit='ca', lat='-6.34406322', lon='-145.0785707')
+</code></pre>
               
             </div>
           </div>
@@ -374,7 +561,7 @@ self.config_remove('fake_item')
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
@@ -382,7 +569,7 @@ self.config_remove('fake_item')
 
   </div>
 
-<div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
@@ -393,6 +580,10 @@ self.config_remove('fake_item')
       
     </span>
 </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
 
 </body>
 </html>
