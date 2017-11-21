@@ -273,3 +273,95 @@ self.config_remove('api_key')
 self.config_remove('fake_item')
 >>> False
 ```
+
+
+## profileManager
+
+### Profile
+A standard profile object, items stored:
+
+Item | description | example
+--- | --- | ---
+username | A users internal username. | `steve`
+nickname | A users nickname.  | `this!something@something`
+ident | A users ident. | `something!this@something`
+hostname | A users hostname. | `something!something@this`
+userhost | A users complete hostmask. | `all!of@this`
+lat | A users latitude. | `-6.34406322`
+lon | A users longitude. | `-145.0785707`
+unit| A users unit, defaults to `us`. | `us, si, ca, uk2`
+gender | A users gender, `True` for male and `False` for female. | `True`
+height | A users height in `cm` | `163`
+weight | A users weight in `kg` | `58`
+privacy | Reports if a user has privacy enabled, returns a `bool`. | `True`
+isverfied | Reports if a user is verified, returns a `bool`. | `True`
+isop | Reports if a user is an op, reports a `bool`. | `False`
+trusted | Reports if a user is trusted, reports a `bool`. | `True`
+
+
+### register(usermask)
+Registers a user, typically called automatically
+
+The usermask is returned upon success, `False` otherwise.
+
+```
+self.profileManager.register('nickname!ident@hostmask')
+```
+
+
+### getuser(usermask)
+Returns a Profile object from a usermask, registers a user if none exists.
+
+```
+self.profileManager.getuser('nickname!ident@hostmask')
+
+```
+
+### getuser_byname(username)
+Returns a profile object by username alone, user is marked **not** trusted!
+
+False is returned if no user exists.
+
+```
+self.profileManager.getuser_byname(username)
+```
+
+### getuser_bynick(username)
+Returns a profile object by nickname alone, user is marked **not** trusted!
+
+False is returned if no user exists.
+
+```
+self.profileManager.getuser_byname(username)
+```
+
+### update(username, etc (see below))
+
+argument | type | example
+--- | --- | ---
+username | required | `joe`
+nickname | optional | `joe123`
+ident | optional | `~jman`
+hostname | optional | `123.ca.us.isp.com` or `a.cool.guy`
+lat | optional | `-6.34406322`
+lon | optional | `-145.0785707`
+unit | optional | `ca`
+gender | optional | `True` for male
+height | optional | `163` in cm
+weight | optional | `58` in kg
+privacy | optional | `True`
+isverfied | optional | `False`
+isop | optional | `False`
+
+
+
+
+
+
+Updates a users profile data. Only username is required, returns `False` if a user doesn't exist.
+
+Please pass the same format of data returned by the Profiles objects as documented above.
+
+```
+self.profileManager.update('username', privacy=True, unit='ca', lat='-6.34406322', lon='-145.0785707')
+```
