@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import json, time, urllib2
+import json, time, urllib.request, urllib.error, urllib.parse
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -59,7 +59,7 @@ def callback(self):
 
             # remove unnecessary categories
             options = '?units=%s&exclude=minutely,hourly' % units
-            r = urllib2.urlopen(baseurl + fApiKey + '/%s,%s' % (lat, lng) + options)
+            r = urllib.request.urlopen(baseurl + fApiKey + '/%s,%s' % (lat, lng) + options)
             wdata = json.loads(r.read())
             r.close()
 
@@ -69,7 +69,7 @@ def callback(self):
             weather = ''
 
             # specific units not given in api response, so they must be set here
-            degSign = u'\xb0'
+            degSign = '\xb0'
 	
             tempUnit = degSign + 'C'
             if units == 'us':
@@ -152,7 +152,7 @@ def callback(self):
             currentTime = time.time()
             baseurl = 'https://maps.googleapis.com/maps/api/timezone/json?location='
             params = '%s,%s&timestamp=%s' % (lat, lng, currentTime)
-            r = urllib2.urlopen(baseurl + params)
+            r = urllib.request.urlopen(baseurl + params)
             timedata = json.loads(r.read())
             r.close()
 
@@ -202,7 +202,7 @@ def getLatLong(location):
     else:
         try:
             baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-            r = urllib2.urlopen(baseurl + '+'.join(location.split()))
+            r = urllib.request.urlopen(baseurl + '+'.join(location.split()))
             geodata = json.loads(r.read())
             r.close()
 
@@ -263,7 +263,7 @@ while(True):
 
 if __name__ == "__main__":
     def cache_save():
-        print 'Cache saved'
+        print('Cache saved')
     def config_get(item):
         return 'ffbdb8ef8349e1d93e5c3d503dfda8a8'
     api = api()
@@ -276,46 +276,46 @@ if __name__ == "__main__":
 
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w Los Angeles')
-    print callback(api)
+    print(callback(api))
     if 'Los Angeles, CA' not in callback(api):
     	exit(1)
 
     setattr(api, 'command', 'time')
     setattr(api, 'message', '^time Los Angeles')
-    print callback(api)
+    print(callback(api))
     if 'Pacific' not in callback(api):
     	exit(2)
 
     setattr(api, 'command', 'setlocation')
     setattr(api, 'message', '^setlocation Los Angeles')
-    print callback(api)
+    print(callback(api))
     if 'Location for' not in callback(api):
     	exit(3)
 
     setattr(api, 'command', 'w')
     setattr(api, 'message', '^w')
-    print callback(api)
+    print(callback(api))
     if 'joe /' not in callback(api):
     	exit(4)
 
     setattr(api, 'command', 'time')
     setattr(api, 'message', '^time')
-    print callback(api)
+    print(callback(api))
     if 'joe /' not in callback(api):
     	exit(5)
 
     setattr(api, 'command', 'w')
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^w joe')
-    print callback(api)
+    print(callback(api))
     if 'joe /' not in callback(api):
     	exit(6)
 
     setattr(api, 'command', 'time')
     setattr(api, 'user', 'jeb!username@hostmask')
     setattr(api, 'message', '^time joe')
-    print callback(api)
+    print(callback(api))
     if 'joe /' not in callback(api):
     	exit(7)
 
-    print 'All tests passed.'
+    print('All tests passed.')

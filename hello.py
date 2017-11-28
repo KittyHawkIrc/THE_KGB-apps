@@ -1,7 +1,7 @@
 try:
     import encoder
 except:
-    print ''
+    print('')
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"

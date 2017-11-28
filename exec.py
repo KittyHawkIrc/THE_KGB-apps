@@ -1,13 +1,13 @@
-import sys, urllib2
+import sys, urllib.request, urllib.error, urllib.parse
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except:
-    from StringIO import StringIO
+    from io import StringIO
 
 
 def declare():
@@ -20,8 +20,8 @@ def callback(self):
         if self.command == 'exec':
             text = self.message.split('^exec ')[1]
         else:
-            req = urllib2.Request(self.message.split('^exec_url ')[1])
-            fd = urllib2.urlopen(req)
+            req = urllib.request.Request(self.message.split('^exec_url ')[1])
+            fd = urllib.request.urlopen(req)
             text = fd.read()
             fd.close()
 
@@ -32,7 +32,7 @@ def callback(self):
             exec(text)
             return self.msg(self.channel, log.getvalue())
 
-        except Exception, e:
+        except Exception as e:
             return self.msg(self.channel, str(e))
 
         log.close()

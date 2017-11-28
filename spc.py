@@ -6,7 +6,7 @@ speshulcmds = {'ultimatetruth': 'RielDtok is a tranny'}#, 'msc': '^billdred\n<Ms
 
 def declare():
     dec = {}
-    cmdlist = speshulcmds.keys()
+    cmdlist = list(speshulcmds.keys())
     for cmd in cmdlist:
         dec[cmd] = 'privmsg'
     return dec
@@ -17,7 +17,7 @@ def callback(self):
     except:
         user = None
 
-    cmdlist = speshulcmds.keys()
+    cmdlist = list(speshulcmds.keys())
 
     for cmd in cmdlist:
         if self.command == cmd:
@@ -40,22 +40,22 @@ if __name__ == "__main__":
     setattr(api, 'command', 'ultimatetruth')
     setattr(api, 'message', '^ultimatetruth')
 
-    print callback(api)
+    print(callback(api))
     if 'RielDtok is a tranny' not in callback(api):
         exit(1)
 
     setattr(api, 'message', '^ultimatetruth cats')
-    print callback(api)
+    print(callback(api))
     if 'cats: RielDtok' not in callback(api):
         exit(2)
 
     setattr(api, 'command', 'msc')
     setattr(api, 'message', '^msc')
-    print callback(api)
+    print(callback(api))
     #if '^billdred\n<MsC>' not in callback(api):
     #    exit(3)
 
     setattr(api, 'message', '^msc cats')
-    print callback(api)
+    print(callback(api))
     #if 'cats: ^billdred' not in callback(api):
     #    exit(4)

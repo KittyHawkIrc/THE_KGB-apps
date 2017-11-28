@@ -1,4 +1,4 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from time import ctime
 
 #Update schema
@@ -35,7 +35,7 @@ def addPoints(self, c, u, t, p):
     pimpToChan(self, "%s <%s> %s[%s]'s changes %s[%s]'s points by %s" % (ts,c,u,self.locker.pimpdb[c][u]-p,t,self.locker.pimpdb[c][t]-p,p))
 
 def pimpToChan(self, s):
-    for k,v in self.locker.pimpToChandb.items():
+    for k,v in list(self.locker.pimpToChandb.items()):
         if v:
             self.msg(k, s)
 
@@ -166,14 +166,14 @@ def callback(self):
             pimpToChan(self, "%s <>  All self.channel values dumped by op %s" % (ts, u))
 
         elif com == 'load':
-            req = urllib2.Request(self.message.lower().split('load')[1])
-            fd = urllib2.urlopen(req)
+            req = urllib.request.Request(self.message.lower().split('load')[1])
+            fd = urllib.request.urlopen(req)
             self.locker.pimpdb = eval(fd.read())
             fd.close()
             pimpToChan(self, "%s <> All self.channel values dumped by op %s" % (ts, u))
 
         elif com == 'inflate': #target == value to multiply by
-            for k, v in self.locker.pimpdb[chan].items():
+            for k, v in list(self.locker.pimpdb[chan].items()):
                 if v > 0:
                     self.locker.pimpdb[chan][k] *= int(target)
                 else:
@@ -181,7 +181,7 @@ def callback(self):
             pimpToChan(self, "%s <%s> Inflated by %s, by op %s" % (ts, chan, target, u))
 
         elif com == 'addtoall': #target == value to add to each self.user
-            for k,v in self.locker.pimpdb[chan].items():
+            for k,v in list(self.locker.pimpdb[chan].items()):
                 self.locker.pimpdb[chan][k] += int(target)
             pimpToChan(self, "%s <%s> Increased by %s, by op %s" % (ts, chan, target, u))
 
@@ -198,7 +198,7 @@ def callback(self):
 
 class api:
     def msg(self, channel, text):
-        print "[%s] %s" % (channel, text)
+        print("[%s] %s" % (channel, text))
 
 class persist:
     pass

@@ -104,9 +104,9 @@ if __name__ == "__main__":
 	setattr(api, 'message', '^time')
 	api.lockerbox['timepassed'].time[api.outgoing_channel] = api.lockerbox['timepassed'].time[api.outgoing_channel] - datetime.timedelta(seconds=6310)
 	if "1 hours and 45 minute" not in callback(api):
-		print callback(api)
+		print(callback(api))
 		exit(7)
 	setattr(api, 'outgoing_channel', '#notchan')
 	if callback(api) != 'WRONGCHANNEL':
 		exit(8)
-	print(api.store.timepassed['#soopersekrit'])
+	print((api.store.timepassed['#soopersekrit']))

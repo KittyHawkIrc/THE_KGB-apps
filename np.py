@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import json, urllib2
+import json, urllib.request, urllib.error, urllib.parse
 
 #Update schema
 __url__ = 'https://raw.githubusercontent.com/KittyHawkIrc/modules/production/' + __name__ + '.py'
@@ -61,7 +61,7 @@ def callback(self):
             lastfm_user = user
 
         try:
-            r = urllib2.urlopen(url.format(u = lastfm_user, k = key))
+            r = urllib.request.urlopen(url.format(u = lastfm_user, k = key))
             data = json.loads(r.read())['recenttracks']['track'][0]
             r.close()
             np_list = []
@@ -73,33 +73,33 @@ def callback(self):
 
             if 'name' in data and data['name']:
                 if emoji:
-                    np_list.append(u'🎵 {}'.format(data['name']))
+                    np_list.append('🎵 {}'.format(data['name']))
                 else:
-                    np_list.append(u'track: {}'.format(data['name']))
+                    np_list.append('track: {}'.format(data['name']))
 
             if ('artist' in data and '#text' in data['artist'] and
                 data['artist']['#text']):
                 if emoji:
-                    np_list.append(u'🎤 {}'.format(data['artist']['#text']))
+                    np_list.append('🎤 {}'.format(data['artist']['#text']))
                 else:
-                    np_list.append(u'artist: {}'.format(data['artist']['#text']))
+                    np_list.append('artist: {}'.format(data['artist']['#text']))
 
             if ('album' in data and '#text' in data['album'] and
                 data['album']['#text']):
                 if emoji:
-                    np_list.append(u'💽 {}'.format(data['album']['#text']))
+                    np_list.append('💽 {}'.format(data['album']['#text']))
                 else:
-                    np_list.append(u'album: {}'.format(data['album']['#text']))
+                    np_list.append('album: {}'.format(data['album']['#text']))
 
             np = sep.join(np_list)
             
             if not np_list:
                 raise KeyError('No np info found.')
             else:
-                output = u'{u}{s}{np}'
+                output = '{u}{s}{np}'
         except KeyError:
             output = 'Scrobble data for user [{u}] not found.'
-        except urllib2.URLError:
+        except urllib.error.URLError:
             output = 'Last.fm unavailable at the moment.'
 
     return msg(channel, output.format(u = user, s = sep, c = command, w = words, np = np))
@@ -126,11 +126,11 @@ class empty:
 
 if __name__ == '__main__':
     def cache_save():
-        print 'Cache saved'
+        print('Cache saved')
     def config_get(item):
         return '48a737c88c910cb86a38dd012fe27745'
     api = api()
-    declares = declare().keys()
+    declares = list(declare().keys())
     setattr(api, 'cache_save', cache_save)
     setattr(api, 'config_get', config_get)
     setattr(api, 'type', 'privmsg')
@@ -176,47 +176,47 @@ if __name__ == '__main__':
 ########################### END: Interactive Testing ###########################
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
-    print callback(api)
+    print(callback(api))
     if 'nick' not in callback(api):
     	exit(1)
 
     setattr(api, 'command', 'setlastfm')
     setattr(api, 'message', '^setlastfm rj')
-    print callback(api)
+    print(callback(api))
     if 'Last.FM for' not in callback(api):
     	exit(2)
 
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
-    print callback(api)
+    print(callback(api))
     if 'nick' not in callback(api):
     	exit(3)
 
     setattr(api, 'command', 'np')
     setattr(api, 'user', 'foo!bar@foobar')
     setattr(api, 'message', '^np nick')
-    print callback(api)
+    print(callback(api))
     if 'nick' not in callback(api):
     	exit(4)
 
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
-    print callback(api)
+    print(callback(api))
     if 'foo' not in callback(api):
     	exit(5)
 
     setattr(api, 'command', 'npemoji')
     setattr(api, 'user', 'nick!ident@hose')
     setattr(api, 'message', '^npemoji false')
-    print callback(api)
+    print(callback(api))
     if 'Emoji output' not in callback(api):
     	exit(6)
 
     setattr(api, 'command', 'np')
     setattr(api, 'message', '^np')
-    print callback(api)
-    if u'🎵' in callback(api):
+    print(callback(api))
+    if '🎵' in callback(api):
     	exit(7)
 
-    print 'All tests passed.'
+    print('All tests passed.')
 ################################# END: Testing #################################

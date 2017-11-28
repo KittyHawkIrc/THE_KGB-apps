@@ -236,9 +236,9 @@ class empty:
 
 if __name__ == "__main__":
     def cache_save():
-        print 'Cache saved'
+        print('Cache saved')
     api = api()
-    declares = declare().keys()
+    declares = list(declare().keys())
     setattr(api, 'cache_save', cache_save)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', "#channel")

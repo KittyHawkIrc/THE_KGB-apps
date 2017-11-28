@@ -1,10 +1,10 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
 __version__ = 1.0
 
-req = urllib2.Request('https://raw.githubusercontent.com/KittyHawkIrc/FPS-verified/master/users.txt')
+req = urllib.request.Request('https://raw.githubusercontent.com/KittyHawkIrc/FPS-verified/master/users.txt')
 
 
 
@@ -20,7 +20,7 @@ def nounderscore(u):
 def callback(self):
     if self.channel == '#fatpeoplesuck':
 
-        fd = urllib2.urlopen(req)
+        fd = urllib.request.urlopen(req)
         isverified = eval(fd.read())
         fd.close()
 

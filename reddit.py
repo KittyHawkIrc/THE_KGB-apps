@@ -1,4 +1,4 @@
-import json, random, urllib2
+import json, random, urllib.request, urllib.error, urllib.parse
 
 #Update schema
 __url__ = "https://raw.githubusercontent.com/KittyHawkIrc/modules/production/" + __name__ + ".py"
@@ -25,8 +25,8 @@ def callback(self):
 
     try:
 
-        req = urllib2.Request("https://www.reddit.com/r/" + u + "/new.json", headers={ 'User-Agent': 'UNIX:the_kgb:reddit https://github.com/stqism/THE_KGB-apps' })
-        fd = urllib2.urlopen(req)
+        req = urllib.request.Request("https://www.reddit.com/r/" + u + "/new.json", headers={ 'User-Agent': 'UNIX:the_kgb:reddit https://github.com/stqism/THE_KGB-apps' })
+        fd = urllib.request.urlopen(req)
         reddit_api = json.loads(fd.read())
         fd.close()
 
@@ -69,7 +69,7 @@ def callback(self):
             else:
                 return self.msg(channel, str(item[0] + " " + item[1]))
 
-    except Exception, e:
+    except Exception as e:
         return self.msg('#the_kgb', str(e))
 
 
@@ -89,28 +89,28 @@ if __name__ == "__main__":
 
     setattr(api, 'message', '^reddit')
     if callback(api) != '[%s] Please specify a subreddit!' % (c):
-        print '[TESTFAIL] no arguments'
+        print('[TESTFAIL] no arguments')
         exit(1)
 
     setattr(api, 'message', '^reddit fatpeoplehate')
     if callback(api) != '[#the_kgb] HTTP Error 404: Not Found':
-        print '[TESTFAIL] error catcher'
+        print('[TESTFAIL] error catcher')
         exit(1)
 
     setattr(api, 'message', '^reddit fatlogic')
     if not callback(api).startswith('[%s] ' % (c)):
-        print '[TESTFAIL] Subreddit loader'
+        print('[TESTFAIL] Subreddit loader')
         exit(1)
 
     setattr(api, 'message', '^guess')
     setattr(api, 'command', 'guess')
     if not callback(api).startswith('[%s] Am I fit or fat?' % (c)):
-        print '[TESTFAIL] guess no user'
-        print '[%s] Am I male or female?' % (c)
+        print('[TESTFAIL] guess no user')
+        print('[%s] Am I male or female?' % (c))
         exit(1)
 
     n = 'bob'
     setattr(api, 'message', '^guess %s' % (n))
     if not callback(api).startswith('[%s] %s: Am I fit or fat?' % (c, n)):
-        print '[TESTFAIL] guess with user'
+        print('[TESTFAIL] guess with user')
         exit(1)

@@ -1,4 +1,4 @@
-import json, urllib2
+import json, urllib.request, urllib.error, urllib.parse
 try:
     from unidecode import unidecode
 except:
@@ -18,7 +18,7 @@ def callback(self):
     message = self.message.split(self.command, 1)[1].strip()
     if message:
         try:
-            r = urllib2.urlopen('http://api.urbandictionary.com/v0/define?term=' + '+'.join(message.split()))
+            r = urllib.request.urlopen('http://api.urbandictionary.com/v0/define?term=' + '+'.join(message.split()))
             data = json.loads(r.read())
             r.close()
         except:
@@ -31,7 +31,7 @@ def callback(self):
 
             if len(definition + ' %s' % data['list'][0]['permalink']) > maxChars:
                 definition = definition[:maxChars-(4 + len(data['list'][0]['permalink']))] + '...'
-            return self.msg(self.channel, unidecode(unicode(definition + ' %s' % data['list'][0]['permalink'])))
+            return self.msg(self.channel, unidecode(str(definition + ' %s' % data['list'][0]['permalink'])))
         except:
             return self.msg(self.channel, 'No definition for %s.' % message)
     return self.msg(self.channel, 'You need to give me something to look for!')
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     setattr(api, 'channel', "#test")
     setattr(api, 'message', '^ud Hitler')
 
-    print callback(api)
+    print(callback(api))
 
     if "urbanup" not in callback(api):
         exit(1)

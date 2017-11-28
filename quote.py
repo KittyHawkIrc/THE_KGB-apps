@@ -126,7 +126,7 @@ def callback(self):
 # search_dict: Str Dict(Any: List(Str)) -> Dict(Any: List(Tuple(Int, Str)))
 def search_dict(search, dict_of_list):
     out_dict = {}
-    for key, value in dict_of_list.items():
+    for key, value in list(dict_of_list.items()):
         count = 0
         for item in value:
             count += 1
@@ -142,7 +142,7 @@ def search_dict(search, dict_of_list):
 # key_equal_weight: Dict(Any: List(Any)) -> List(Any)
 def key_equal_weight(dict_of_list):
     keys = []
-    for key, value in dict_of_list.items():
+    for key, value in list(dict_of_list.items()):
         keys.extend([key] * len(value))
     return keys
 
@@ -168,9 +168,9 @@ class empty:
 
 if __name__ == '__main__':
     def cache_save():
-        print 'Cache saved'
+        print('Cache saved')
     api = api()
-    declares = declare().keys()
+    declares = list(declare().keys())
     setattr(api, 'cache_save', cache_save)
     setattr(api, 'type', 'privmsg')
     setattr(api, 'channel', '#channel')
