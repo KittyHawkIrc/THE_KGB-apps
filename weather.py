@@ -140,7 +140,7 @@ def geocode(location):
         return add, lat, lon
 
 def cardinalize(deg):
-    directions = [u'↑',u'↗',u'→',u'↘',u'↓',u'↙',u'←',u'↖']
+    directions = [u'↓',u'↙',u'←',u'↖',u'↑',u'↗',u'→',u'↘']
 
     span = 360.0/len(directions)
     start = span/-2.0
@@ -153,4 +153,4 @@ def cardinalize(deg):
         count += 1
         start += span
 
-    return u'↑'
+    return u'↓'
