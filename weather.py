@@ -24,7 +24,7 @@ def callback(self):
         return self.msg(self.channel, 'Invalid input for geocoding.')
 
     if self.command == 'setunit':
-        if message.split()[0].lower() in units:
+        if len(message) > 0 and message.split()[0].lower() in units:
             self.profileManager.update(username, unit=message.split()[0].lower())
             return self.msg(self.channel, '[%s]\'s units set to "%s"' % (username, message.split()[0].lower()))
         return self.msg(self.channel, '"%s" is not a valid unit, valid units are %s' % (message.split()[0], units))
@@ -38,7 +38,9 @@ def callback(self):
         for i in units:
             if i in message.split():
                 unit = i
-                message = ' '.join(message.split().remove(unit))
+                message_list = message.split()
+                message_list.remove(unit)
+                message = ' '.join(message_list)
 
         if len(message) == 0:
             profile = self.profile
