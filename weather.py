@@ -126,7 +126,7 @@ def callback(self):
 
         return self.msg(self.channel, weather)
 
-def geocode(location):
+def geocode(location, iterations = 3):
     try:
         baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
         r = urllib2.urlopen(baseurl + '+'.join(location.split()))
@@ -137,7 +137,10 @@ def geocode(location):
         lat = geodata['results'][0]['geometry']['location']['lat']
         lon = geodata['results'][0]['geometry']['location']['lng']
     except:
-        add, lat, lon = None, None, None
+        if iterations:
+            add, lat, lon = geocode(location, iterations - 1)
+        else:
+            add, lat, lon = None, None, None
     finally:
         return add, lat, lon
 
