@@ -24,7 +24,7 @@ def callback(self):
         return self.msg(self.channel, 'Invalid input for geocoding.')
 
     if self.command == 'setunit':
-        if message.split()[0].lower() in units:
+        if len(message) > 0 and message.split()[0].lower() in units:
             self.profileManager.update(username, unit=message.split()[0].lower())
             return self.msg(self.channel, '[%s]\'s units set to "%s"' % (username, message.split()[0].lower()))
         return self.msg(self.channel, '"%s" is not a valid unit, valid units are %s' % (message.split()[0], units))
@@ -38,7 +38,9 @@ def callback(self):
         for i in units:
             if i in message.split():
                 unit = i
-                message = ' '.join(message.split().remove(unit))
+                message_list = message.split()
+                message_list.remove(unit)
+                message = ' '.join(message_list)
 
         if len(message) == 0:
             profile = self.profile
@@ -124,7 +126,7 @@ def callback(self):
 
         return self.msg(self.channel, weather)
 
-def geocode(location):
+def geocode(location, iterations = 3):
     try:
         baseurl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
         r = urllib2.urlopen(baseurl + '+'.join(location.split()))
@@ -135,12 +137,15 @@ def geocode(location):
         lat = geodata['results'][0]['geometry']['location']['lat']
         lon = geodata['results'][0]['geometry']['location']['lng']
     except:
-        add, lat, lon = None, None, None
+        if iterations:
+            add, lat, lon = geocode(location, iterations - 1)
+        else:
+            add, lat, lon = None, None, None
     finally:
         return add, lat, lon
 
 def cardinalize(deg):
-    directions = [u'↑',u'↗',u'→',u'↘',u'↓',u'↙',u'←',u'↖']
+    directions = [u'↓',u'↙',u'←',u'↖',u'↑',u'↗',u'→',u'↘']
 
     span = 360.0/len(directions)
     start = span/-2.0
@@ -153,4 +158,4 @@ def cardinalize(deg):
         count += 1
         start += span
 
-    return u'↑'
+    return u'↓'
