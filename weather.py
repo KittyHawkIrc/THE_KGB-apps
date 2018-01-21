@@ -64,7 +64,7 @@ def callback(self):
 
             data = json.loads(r.read())
             r.close()
-        except HTTPError:
+        except urllib2.HTTPError:
             return self.msg(self.channel, 'Error: Cannot connect to weather API.')
 
         current = data['currently']
