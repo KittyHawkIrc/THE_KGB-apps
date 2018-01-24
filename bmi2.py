@@ -1,3 +1,4 @@
+# Pastebin JI5ugwWt
 # -*- coding: utf-8 -*-
 
 from pint import UnitRegistry
@@ -31,7 +32,7 @@ def callback(self):
 
     if self.command == 'setbmi':
         if bmi:
-            if self.profile.isop or bmi.magnitude < 25:
+            if self.profile.isop or (30 > bmi.magnitude > 16):
                 if self.profileManager.getuser_bynick(words[0]):
                     username = self.profileManager.getuser_bynick(words[0]).username
                 elif self.profileManager.getuser_byname(words[0]):
@@ -71,19 +72,13 @@ def callback(self):
                     height = profile.height * ureg.m
                     weight = profile.weight * ureg.kg
                     bmi = (weight / height ** 2).to(ureg.bmi)
-            except NameError:
+            except:
                 pass
-
-            if self.command == 'bmi':
-                output = '{u} / {b:.4g~P} / {b_c}'
-            elif self.command == 'weight' or self.command == 'mass':
-                output = '{u} / {m:.4g~P}'
-            elif self.command == 'height':
-                output = '{u} / {h:.4g~P}'
 
             if unit == 'us':
                 weight = weight.to(ureg.lb)
-                output = output.replace('h:.4g~P', 'i_h')
+
+            output = '{u} / {m:.4g~P} / {h:.4g~P} / {b:.4g~P} / {b_c}'
         except:
             if len(message) == 0:
                 output = '{u}: ^setbmi <magnitude> <unit>...'
@@ -91,6 +86,9 @@ def callback(self):
                 output = 'User [{u}] has no BMI set'
             else:
                 output = '{c}: <none> | <nick> | <name> | <magnitude> <unit>...'
+
+        if unit == 'us':
+            output = output.replace('h:.4g~P', 'i_h')
 
     return self.msg(self.channel, output.format(w = words,  u = username,
                                                 b = bmi, m = weight, h = height,
