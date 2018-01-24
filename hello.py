@@ -25,16 +25,27 @@ class api:
         return "[%s] %s" % (channel, text)
 
 class profile:
-
     pass
 
 if __name__ == "__main__":
     api = api()
     profile = profile()
 
-    setattr(profile, 'username', "joe")
-    setattr(profile, 'userhost', "joe!username@hostmask")
+    setattr(profile, 'username', 'joe')
+    setattr(profile, 'nickname', 'joe')
+    setattr(profile, 'ident', '~user')
+    setattr(profile, 'hostname', '@kitty.hawk')
+    setattr(profile, 'userhost', 'joe!~user@kitty.hawk')
+    setattr(profile, 'lat', -8.783195)
+    setattr(profile, 'lon', -124.508523)
+    setattr(profile, 'unit', 'us')
+    setattr(profile, 'gender', 1)
+    setattr(profile, 'height', 1.8542)
+    setattr(profile, 'weight', 90)
+    setattr(profile, 'privacy', False)
+    setattr(profile, 'isverified', True)
     setattr(profile, 'isop', True)
+    setattr(profile, 'trusted', True)
 
     setattr(api, 'isop', profile.isop)
     setattr(api, 'type', 'privmsg')
@@ -45,5 +56,5 @@ if __name__ == "__main__":
     setattr(api, 'profile', profile)
 
 
-    if callback(api) != "[#test] And a hello to you too, operator joe (joe!username@hostmask)!":
+    if callback(api) != "[#test] And a hello to you too, operator joe (joe!~user@kitty.hawk)!":
         exit(1)
