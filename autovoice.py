@@ -40,6 +40,10 @@ def callback(self):
                     elif 'n' in privlist[2].lower():
                         self.profileManager.update(selector.username, isverified=False)
 
+                    else:
+                        return self.msg(self.channel, "%s: That doesn't look like a real value" % (
+                            self.profile.nickname))
+
                     return self.msg(self.channel, "%s: %s %s verified." % (
                         self.profile.nickname, selector.nickname, ("is now" if self.profileManager.getuser_bynick(privlist[1]).isverified else "is no longer")))
 
