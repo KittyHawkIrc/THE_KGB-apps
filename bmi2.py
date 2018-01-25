@@ -194,13 +194,6 @@ def replace_smartquote(string):
 def is_quantity(object_):
     return type(object_).__name__ == 'Quantity'
 
-def is_float(string):
-    try:
-        float(string)
-        return True
-    except:
-        return False
-
 '''
 #####################################TEST#######################################
 class api:
